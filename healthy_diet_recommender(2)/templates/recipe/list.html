@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}我的食谱 - 益食安康{% endblock %}
+
+{% block content %}
+<div class="recipe-list-container">
+    <div class="page-header">
+        <h1 class="page-title">📋 我的食谱</h1>
+        <a href="{{ url_for('recipe.generate_recipe') }}" class="btn btn-primary">🤖 生成新食谱</a>
+    </div>
+
+    {% if recipes %}
+    <div class="recipe-list">
+        {% for recipe in recipes %}
+        <div class="recipe-list-item">
+            <div class="recipe-list-info">
+                <h3>
+                    <a href="{{ url_for('recipe.get_recipe', recipe_id=recipe.id) }}">{{ recipe.title }}</a>
+                    {% set adv = advices.get(recipe.id) %}
+                    {% if adv %}<span class="gi-badge gi-badge-{{ adv.tier }}">{{ adv.tier_label }}</span>{% endif %}
+                </h3>
+                <p class="recipe-list-meta">
+                    ⏱ {{ recipe.cooking_time or '未知' }} 分钟 ·
+                    🍽 {{ recipe.servings or '—' }} 人份 ·
+                    📅 {{ recipe.created_at.strftime('%Y-%m-%d') }}
+                </p>
+                {% include 'recipe/_tags.html' %}
+                <p class="recipe-list-ingredients">
+                    🥕 {{ recipe.ingredients[:100] }}{% if recipe.ingredients|length > 100 %}...{% endif %}
+                </p>
+            </div>
+            <div class="recipe-list-actions">
+                <a href="{{ url_for('recipe.get_recipe', recipe_id=recipe.id) }}" class="btn btn-sm btn-outline">查看</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">🍳</div>
+        <h2>还没有食谱</h2>
+        <p>上传健康报告和冰箱照片后，让 AI 为您生成第一份个性化食谱吧！</p>
+        <a href="{{ url_for('recipe.generate_recipe') }}" class="btn btn-primary">立即生成</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

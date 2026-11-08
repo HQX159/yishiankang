@@ -1,0 +1,125 @@
+{# 「升糖标签是怎么来的」—— 依据的完整版（R5 第 4 项 E，2026-10-20）
+   ------------------------------------------------------------
+   为什么要有这一页
+     详情页的展开层（_gi_why.html）只说了一条菜的几味食材。用户（和老师）
+     真正会追问的是："你们整张表凭什么？是不是挑着对自己有利的写？"
+     这一页就是回答：出处、界线、以及**我们和国标不一致的每一条**。
+
+   设计取舍
+     · 数字全部由 build_method_page() 算出来，模板里一个都不写死 ——
+       表里加一味，这页自己变。这一页存在的意义就是"可核对"，
+       写死就等于过几天变成假话。
+     · 五块内容按"先给结论、再给细节、最后给承诺"排，不堆术语。
+     · 第三块（不一致的条目）放在最显眼的位置，不是偷偷塞在页脚：
+       只列对自己有利的数字，比不给依据更可疑。
+
+   路由：/api/recipes/gi-method（不要求登录，页面无任何用户数据）
+   数据：utils.diabetes_advice.build_method_page() #}
+{% extends "base.html" %}
+{% block title %}升糖标签是怎么来的 - 益食安康{% endblock %}
+
+{% block content %}
+<div class="gi-method-page">
+
+    <a href="javascript:history.back()" class="back-link">← 返回上一页</a>
+
+    <h1 class="gi-method-title">升糖标签是怎么来的</h1>
+    <p class="gi-method-lead">
+        食谱里每个食材后面的「低 / 中 / 高升糖」，不是我们凭感觉估的。
+        下面把出处、分档办法，以及<b>我们和国标不一样的地方</b>全部列出来，你可以自己核。
+    </p>
+
+    {# ── 一、三个数字 ─────────────────────────────────────── #}
+    <section class="gi-method-card">
+        <h2 class="gi-method-h2">一、先看三个数字</h2>
+        <ul class="gi-method-stats">
+            <li>
+                <b class="gi-method-num">{{ m.total }}</b>
+                <span class="gi-method-unit">味常见食材进了我们的表</span>
+            </li>
+            <li>
+                <b class="gi-method-num">{{ m.listed_count }}</b>
+                <span class="gi-method-unit">味在国标里查得到 GI 值</span>
+            </li>
+            <li>
+                <b class="gi-method-num">{{ m.unlisted_count }}</b>
+                <span class="gi-method-unit">味国标没有收录，我们不给数字</span>
+            </li>
+        </ul>
+        <p class="gi-method-note">
+            能查的给标准号，查不到的说查不到 ——
+            而不是给每一样食材都摆一个看起来专业的数字。
+        </p>
+    </section>
+
+    {# ── 二、数据从哪来 ───────────────────────────────────── #}
+    <section class="gi-method-card">
+        <h2 class="gi-method-h2">二、数据从哪来</h2>
+        <p class="gi-method-p">{{ m.source_long }}</p>
+        <p class="gi-method-p"><b>分档界线（国标原话）：</b>{{ m.boundary }}。</p>
+        <p class="gi-method-note">
+            标准名称里写的是「妊娠期」糖尿病。GI 是食物本身的属性，
+            跟吃的人是否怀孕无关，这些数值可以直接用于一般糖友 ——
+            名字我们照抄原文，没有为了好看改写。
+        </p>
+    </section>
+
+    {# ── 三、与国标不一致的条目，逐条交代 ──────────────────── #}
+    <section class="gi-method-card">
+        <h2 class="gi-method-h2">三、{{ m.conflict_count }} 味和国标不一样，逐条交代</h2>
+        <p class="gi-method-p">
+            为什么会不一样：{{ m.note }}
+        </p>
+        <ol class="gi-method-conflicts">
+            {% for r in m.conflicts %}
+            <li class="gi-method-conflict">
+                <div class="gi-method-row-head">
+                    <span class="gi-method-food">{{ r.name }}</span>
+                    <span class="gi-method-gi">国标 GI {{ r.gi_text }}</span>
+                    {%- if r.src == 'near' %}
+                    <span class="gi-method-tag">同类参考</span>
+                    {%- endif %}
+                </div>
+                <p class="gi-method-verdict">
+                    按国标算 <b>{{ r.gi_tier_label }}</b>，
+                    我们标 <b class="gi-method-ours">{{ r.our_label }}</b>
+                </p>
+                <p class="gi-method-why">{{ r.why }}</p>
+            </li>
+            {% endfor %}
+        </ol>
+    </section>
+
+    {# ── 四、国标没收录的怎么办 ────────────────────────────── #}
+    <section class="gi-method-card">
+        <h2 class="gi-method-h2">四、国标没收录的 {{ m.unlisted_count }} 味怎么办</h2>
+        <ul class="gi-method-rules">
+            {% for rule in m.unlisted_rules %}
+            <li>{{ rule }}</li>
+            {% endfor %}
+        </ul>
+        <p class="gi-method-note">
+            比如：{{ m.unlisted_sample | join('、') }}
+            {%- if m.unlisted_more %} 等，共 {{ m.unlisted_count }} 味{% endif %}。
+        </p>
+    </section>
+
+    {# ── 五、我们不做的事 ─────────────────────────────────── #}
+    <section class="gi-method-card">
+        <h2 class="gi-method-h2">五、我们不做的事</h2>
+        <ul class="gi-method-rules">
+            {% for p in m.promises %}
+            <li>{{ p }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <div class="gi-method-final">
+        <p>
+            一句话：<b>能查的给标准号，查不到的说查不到，
+            和国标不一致的写在明面上。</b>
+        </p>
+    </div>
+
+</div>
+{% endblock %}

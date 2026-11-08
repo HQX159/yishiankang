@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% block title %}仪表盘 - 益食安康{% endblock %}
+
+{% block body_class %}dashboard-page{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}?v=20261106">
+{% endblock %}
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}?v=20261106" defer></script>
+{% endblock %}
+{% block content %}
+<div class="dashboard dashboard-redesign">
+    <a class="dashboard-skip" href="#daily-checkin">跳转到今日血糖记录</a>
+    <header class="dashboard-heading">
+        <div><p class="dashboard-eyebrow">益食安康 · 日常饮食管理</p>
+        <h1 class="page-title">健康仪表盘</h1></div>
+        <a class="dashboard-text-link" href="{{ url_for('upload.upload_health_report') }}">查看健康数据 <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <section class="dashboard-welcome" aria-labelledby="welcome-title">
+        <div class="welcome-copy">
+            <span class="welcome-kicker"><span aria-hidden="true"></span> 从今天的一餐开始</span>
+            <h2 id="welcome-title">好好吃饭，<br>让每一天更安心。</h2>
+            <p>记下身体的变化，用身边的食材，安排适合自己的每一餐。</p>
+            <a class="btn btn-primary" href="{{ url_for('recipe.generate_recipe') }}">开始搭配食谱 <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="welcome-art" aria-hidden="true">
+            <svg viewBox="0 0 360 270" focusable="false">
+                <defs><filter id="plate-shadow"><feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#365c3f" flood-opacity=".12"/></filter></defs>
+                <circle cx="185" cy="138" r="119" fill="#dfe8d9"/>
+                <g filter="url(#plate-shadow)"><circle cx="185" cy="130" r="106" fill="#fffdf7"/><circle cx="185" cy="130" r="85" fill="#f1f1e6" stroke="#e5e6d8" stroke-width="2"/></g>
+                <path d="M182 48V212M104 134H268" stroke="#d4dccb" stroke-width="2" stroke-dasharray="4 6"/>
+                <g fill="#66865b"><ellipse cx="145" cy="87" rx="18" ry="30" transform="rotate(-40 145 87)"/><ellipse cx="123" cy="121" rx="18" ry="26" transform="rotate(-70 123 121)"/><ellipse cx="155" cy="123" rx="19" ry="29" transform="rotate(28 155 123)"/></g>
+                <path d="M123 79L165 139M107 117L161 135" fill="none" stroke="#a7bc8c" stroke-width="2"/>
+                <g fill="#9db77a"><circle cx="133" cy="169" r="18"/><circle cx="157" cy="179" r="16"/><circle cx="150" cy="156" r="17"/></g>
+                <g fill="#bc694d"><circle cx="118" cy="151" r="11"/><circle cx="164" cy="90" r="10"/></g>
+                <g fill="#d7ad71" stroke="#bb935c" stroke-width="1.5"><rect x="202" y="75" width="38" height="22" rx="8" transform="rotate(27 221 86)"/><rect x="205" y="102" width="38" height="22" rx="8" transform="rotate(27 224 113)"/></g>
+                <g fill="#c8bda1"><ellipse cx="216" cy="160" rx="23" ry="12" transform="rotate(-25 216 160)"/><ellipse cx="220" cy="179" rx="23" ry="12" transform="rotate(-25 220 179)"/></g>
+                <g stroke="#fffdf7" stroke-width="2"><path d="M204 160l15-6m-9 13l15-6m-17 19l15-6m-8 13l15-6"/></g>
+                <path d="M308 76v126m-9-126v30q9 15 18 0V76m-9 42h0M57 76v126m0-126q-18 30 0 52" stroke="#68836a" stroke-width="5" fill="none" stroke-linecap="round"/>
+                <path d="M284 235q18-31 47-24q-4 24-36 24M40 37q28-4 33 22q-26 4-33-22" fill="#9cb68b"/>
+            </svg>
+            <span class="plate-caption">一餐一记录 · 一点一滴照顾自己</span>
+        </div>
+    </section>
+
+    {# 就诊沟通清单（R5 第 3 项）—— 排在记录卡**之前**：
+       指标已经偏高时，"要不要去医院、去了怎么说"比"再填一个数"更紧急。
+       visit.show=False（指标都正常）时整块不渲染。 #}
+    {% with visit = stats.visit %}
+    {% include 'health/_visit_card.html' %}
+    {% endwith %}
+
+    {# 每日血糖记录（R5）—— 放在统计卡正下方，第一屏就能点到。
+       糖友每天来一次只为做这件事，不该让他们再往下找。 #}
+    <div class="dashboard-daily-layout">
+    <div id="daily-checkin" class="dashboard-daily-main">
+    {% with checkin = stats.checkin %}
+    {% include 'health/_checkin_card.html' %}
+    {% endwith %}
+
+    </div>
+    <aside class="dashboard-tools" aria-labelledby="tools-title">
+        <div class="dashboard-section-label"><span>日常工具</span><span aria-hidden="true">↗</span></div>
+        <h2 id="tools-title">今天，想吃点什么？</h2>
+        <p>从一份食材，到一餐的安排。</p>
+        <a class="dashboard-tool spotlight-card" href="{{ url_for('nutrition.food_guide_page') }}">
+            <span class="tool-icon" aria-hidden="true">⌕</span><span><strong>查查食物怎么吃</strong><small>水果、零食与日常加餐</small></span><span aria-hidden="true">↗</span>
+        </a>
+        <a class="dashboard-tool spotlight-card" href="{{ url_for('upload.upload_fridge_image') }}">
+            <span class="tool-icon" aria-hidden="true">▧</span><span><strong>拍照识别食材</strong><small>看看冰箱里有什么</small></span><span aria-hidden="true">↗</span>
+        </a>
+        <a class="dashboard-tool spotlight-card" href="{{ url_for('recipe.meal_plan') }}">
+            <span class="tool-icon" aria-hidden="true">▦</span><span><strong>安排一份膳食计划</strong><small>提前想好，吃饭更从容</small></span><span aria-hidden="true">↗</span>
+        </a>
+        <a class="dashboard-text-link" href="{{ url_for('nutrition.intake_page') }}">查看营养摄入 <span aria-hidden="true">→</span></a>
+    </aside>
+    </div>
+
+    <div class="dashboard-section-heading"><h2>我的健康档案</h2><span>每一次记录，都在这里</span></div>
+    <!-- 统计卡片 -->
+    <div class="stats-grid">
+        <a href="{{ url_for('recipe.get_recipes') }}" class="stat-card stat-card-link spotlight-card">
+            <div class="stat-icon" aria-hidden="true">▤</div>
+            <div class="stat-value">{{ stats.recipe_count }}</div>
+            <div class="stat-label">生成食谱</div>
+        </a>
+        <a href="{{ url_for('recipe.get_favorites') }}" class="stat-card stat-card-link spotlight-card">
+            <div class="stat-icon" aria-hidden="true">☆</div>
+            <div class="stat-value">{{ stats.favorite_count }}</div>
+            <div class="stat-label">收藏食谱</div>
+        </a>
+        <a href="{{ url_for('upload.upload_health_report') }}" class="stat-card stat-card-link spotlight-card">
+            <div class="stat-icon" aria-hidden="true">▥</div>
+            <div class="stat-value">{{ stats.report_count }}</div>
+            <div class="stat-label">健康报告</div>
+        </a>
+        <a href="{{ url_for('upload.upload_fridge_image') }}" class="stat-card stat-card-link spotlight-card">
+            <div class="stat-icon" aria-hidden="true">♧</div>
+            <div class="stat-value">{{ stats.ingredient_count }}</div>
+            <div class="stat-label">识别食材</div>
+        </a>
+    </div>
+
+    <!-- 健康报告摘要 & 食材概况 -->
+    <div class="info-row">
+        <div class="info-card">
+            <h2>最新健康报告</h2>
+            {% if stats.latest_health %}
+            <p class="info-filename">{{ stats.latest_health.filename }}</p>
+            <p class="info-date">上传于 {{ stats.latest_health.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</p>
+            <div class="info-preview">{{ stats.latest_health.content_text[:300] or '正在解析中...' }}</div>
+            {% else %}
+            <p class="info-empty">暂无健康报告，<a href="{{ url_for('upload.upload_health_report') }}">立即上传</a></p>
+            {% endif %}
+        </div>
+
+        <div class="info-card">
+            <h2>冰箱现有食材</h2>
+            {% if stats.latest_ingredients %}
+            <div class="ingredient-tags">
+                {% for ing in stats.latest_ingredients %}
+                <span class="ingredient-tag">{{ ing.name }}
+                    <small>({{ "%.0f"|format(ing.confidence * 100) }}%)</small>
+                </span>
+                {% endfor %}
+            </div>
+            <p class="info-date">来自 {{ stats.latest_fridge.uploaded_at.strftime('%Y-%m-%d %H:%M') }} 的照片</p>
+            {% else %}
+            <p class="info-empty">暂无食材数据，<a href="{{ url_for('upload.upload_fridge_image') }}">拍照上传</a></p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- 最近食谱 -->
+    <div class="section">
+        <h2>最近生成的食谱</h2>
+        {% if stats.recent_recipes %}
+        <div class="recipe-cards">
+            {% for recipe in stats.recent_recipes %}
+            <div class="recipe-card-mini">
+                <h3>
+                    <a href="{{ url_for('recipe.get_recipe', recipe_id=recipe.id) }}">{{ recipe.title }}</a>
+                    {% set adv = stats.recent_advices.get(recipe.id) %}
+                    {% if adv %}<span class="gi-badge gi-badge-{{ adv.tier }}">{{ adv.tier_label }}</span>{% endif %}
+                </h3>
+                <p class="recipe-date">{{ recipe.created_at.strftime('%Y-%m-%d') }}</p>
+                {% include 'recipe/_tags.html' %}
+            </div>
+            {% endfor %}
+        </div>
+        <a href="{{ url_for('recipe.get_recipes') }}" class="btn btn-outline">查看全部 →</a>
+        {% else %}
+        <p class="info-empty">还没有生成过食谱，<a href="{{ url_for('recipe.generate_recipe') }}">立即生成</a></p>
+        {% endif %}
+    </div>
+
+    <!-- 社区最新分享（R3）-->
+    <div class="section">
+        <h2>社区最新分享</h2>
+        {% if stats.community_latest %}
+        <div class="post-list">
+            {% for post in stats.community_latest %}
+            {% include 'community/_card.html' %}
+            {% endfor %}
+        </div>
+        <div class="section-actions">
+            <a href="{{ url_for('community.square') }}" class="btn btn-primary">进入社区 →</a>
+            {% if stats.my_share_count %}
+            <a href="{{ url_for('community.mine') }}" class="btn btn-outline">我的分享（{{ stats.my_share_count }} 条）</a>
+            {% endif %}
+        </div>
+        {% else %}
+        <p class="info-empty">社区里还没有人分享，
+            <a href="{{ url_for('recipe.get_recipes') }}">去我的食谱</a>分享第一道吧。</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

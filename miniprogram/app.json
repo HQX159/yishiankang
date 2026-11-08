@@ -1,0 +1,58 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/recipes/recipes",
+    "pages/generate/generate",
+    "pages/favorites/favorites",
+    "pages/profile/profile",
+    "pages/recipe-detail/recipe-detail",
+    "pages/meal-plan/meal-plan",
+    "pages/upload-health/upload-health",
+    "pages/upload-fridge/upload-fridge",
+    "pages/food-guide/food-guide",
+    "pages/risk-alert/risk-alert"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTitleText": "益食安康",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f9fafb"
+  },
+  "tabBar": {
+    "color": "#9ca3af",
+    "selectedColor": "#16a34a",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/icons/home.png",
+        "selectedIconPath": "images/icons/home-active.png"
+      },
+      {
+        "pagePath": "pages/recipes/recipes",
+        "text": "食谱",
+        "iconPath": "images/icons/recipes.png",
+        "selectedIconPath": "images/icons/recipes-active.png"
+      },
+      {
+        "pagePath": "pages/generate/generate",
+        "text": "AI生成",
+        "iconPath": "images/icons/generate.png",
+        "selectedIconPath": "images/icons/generate-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "images/icons/profile.png",
+        "selectedIconPath": "images/icons/profile-active.png"
+      }
+    ]
+  },
+  "networkTimeout": {
+    "request": 30000,
+    "uploadFile": 60000
+  },
+  "sitemapLocation": "sitemap.json"
+}

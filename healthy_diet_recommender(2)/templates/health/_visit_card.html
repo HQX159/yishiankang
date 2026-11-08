@@ -1,0 +1,115 @@
+{# templates/health/_visit_card.html
+   「就诊沟通清单」卡片 —— 指标偏高 / 需就医时出现，仪表盘与「健康报告」页共用。
+
+   为什么不是一张"推荐吃什么药"的卡片
+       docs/01-产品与方案/R5-改进方案与实施记录.md 第三节：面向公众推荐处方药属于
+       医疗建议/药品推荐，团队没有互联网诊疗资质。所以这里给的是
+       **就医提醒 → 带得走的记录 → 能直接问医生的问题** 三件套，
+       药物只有"类别"科普，没有药名、没有剂量、没有"你应该吃"。
+
+   调用方需要提供
+       visit —— utils.visit_advice.build_visit_advice() 的返回值
+                其中 show=False 时本片段整块不渲染，调用方不用自己判 level。
+
+   可选参数
+       visit_no_title —— 传 true 时不画标题行。用在「健康报告」页：
+                         那里上面已经有一张红色的 .risk-alert 说了"尽快就医"，
+                         再标题一遍就成了两句重复的话。
+
+   红线
+       {{ visit.disclaimer }} 必须留在 <details> **之外**、与内容同屏可见 ——
+       与「血糖偏高提示不许折叠」同一条规矩。
+#}
+{% set v = visit if (visit is defined and visit) else {} %}
+{% if v.get('show') %}
+{% set vrec = v.get('records') or {} %}
+{% set v_level = v.get('level') %}
+<section class="visit-card is-{{ v_level }}" aria-labelledby="visit-title">
+    {% if not (visit_no_title is defined and visit_no_title) %}
+    <div class="visit-head">
+        <span class="visit-icon" aria-hidden="true">🩺</span>
+        <h2 class="visit-title" id="visit-title">{{ v.get('title') }}</h2>
+        <span class="visit-tag">{% if v_level == 'critical' %}需就医{% else %}偏高{% endif %}</span>
+    </div>
+    {% endif %}
+
+    {% if v.get('lead') %}
+    {# lead 里有 <b>，在 Python 层就写死了固定文案、没有用户数据拼进去，所以可以 |safe #}
+    <p class="visit-lead">{{ v.get('lead') | safe }}</p>
+    {% endif %}
+
+    {% if v.get('findings') %}
+    <ul class="visit-findings">
+        {% for f in v.get('findings') %}
+        <li class="visit-finding{% if f.level != 'critical' %} is-warn{% endif %}">
+            <span class="visit-finding-label">{{ f.label }}</span>
+            <span class="visit-finding-value">{{ f.value_text }} {{ f.unit }}</span>
+            <span class="visit-finding-flag">{% if f.level == 'critical' %}需就医{% else %}偏高{% endif %}</span>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <div class="visit-block">
+        <h3 class="visit-h3"><span class="visit-step">①</span> 去之前准备这些</h3>
+        <ul class="visit-prep">
+            {% for p in v.get('prep') or [] %}
+            <li class="visit-prep-item">
+                <b class="visit-prep-title">{{ p.title }}</b>
+                <span class="visit-prep-detail">{{ p.detail }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+
+        {% if vrec.get('rows') %}
+        <details class="visit-records">
+            <summary>看逐条记录（近 {{ vrec.get('days') }} 天，共 {{ vrec.get('count') }} 次）</summary>
+            <ul class="visit-record-list">
+                {% for r in vrec.get('rows') %}
+                <li class="visit-record{% if r.above %} is-above{% endif %}">
+                    <span class="visit-record-date">{{ r.date }}</span>
+                    <span class="visit-record-label">{{ r.label }}</span>
+                    <span class="visit-record-value">{{ r.value_text }} {{ r.unit }}</span>
+                    <span class="visit-record-source">{{ r.source }}</span>
+                    {% if r.above %}<span class="visit-record-flag">偏高</span>{% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+            <p class="visit-records-hint">看病时把这一页直接给医生看就行，不用自己抄。</p>
+        </details>
+        {% endif %}
+    </div>
+
+    <div class="visit-block">
+        <h3 class="visit-h3"><span class="visit-step">②</span> 可以照这样问医生</h3>
+        {# 问题里的数值是用户**自己的**记录，句式统一是"我这样，需要调整吗"，
+           不预设答案、也不替医生下结论。 #}
+        <ol class="visit-questions">
+            {% for q in v.get('questions') or [] %}
+            <li class="visit-question">{{ q }}</li>
+            {% endfor %}
+        </ol>
+    </div>
+
+    <details class="visit-classes">
+        <summary><span class="visit-step">③</span> 医生可能会提到的药物类别（科普，不是用药建议）</summary>
+        <div class="visit-classes-body">
+            <p class="visit-classes-lead">{{ v.get('classes_lead') }}</p>
+            <dl class="visit-class-list">
+                {% for c in v.get('classes') or [] %}
+                <div class="visit-class">
+                    <dt class="visit-class-name">{{ c.name }}</dt>
+                    <dd class="visit-class-desc">
+                        {{ c.how }}
+                        <span class="visit-class-note">注意：{{ c.note }}</span>
+                    </dd>
+                </div>
+                {% endfor %}
+            </dl>
+        </div>
+    </details>
+
+    {# ⚠️ 免责声明放最后、在 <details> 之外 —— 折叠起来等于没有 #}
+    <p class="visit-disclaimer">{{ v.get('disclaimer') }}</p>
+</section>
+{% endif %}

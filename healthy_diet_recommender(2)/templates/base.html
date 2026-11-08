@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}益食安康 — 糖尿病饮食管理系统{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=20261103-input-reflow">
+    {# 适老化：阅读字号要在正文渲染前应用，避免打开页面时字号闪一下（R1） #}
+    <script src="{{ url_for('static', filename='js/a11y.js') }}?v=20261101-xl"></script>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('dashboard') }}" class="nav-brand">🥗 益食安康<span class="nav-brand-sub">糖尿病饮食管理</span></a>
+            {# 适老化：字号快捷调节（2026-11-01）。
+               不登录也能用 —— 登录页同样继承本模板，而看不清登录页的老人
+               恰恰最需要这一格。别把它挪进「设置」页或折叠菜单。 #}
+            <div class="a11y-quick" role="group" aria-label="调整阅读字号">
+                <button type="button" id="a11y-size-dec" class="a11y-quick-btn"
+                        aria-label="减小字号" title="减小字号">A<span aria-hidden="true">−</span></button>
+                <span class="a11y-quick-now js-a11y-size-now" aria-live="polite"
+                      title="当前字号（像素）">20</span>
+                <button type="button" id="a11y-size-inc" class="a11y-quick-btn"
+                        aria-label="放大字号" title="放大字号">A<span aria-hidden="true">+</span></button>
+            </div>
+            {% if session.user_id %}
+            {# 大字模式下导航收进这个按钮（第 6 步，2026-11-01）。
+               40px 档下品牌 + 字号按钮 + 5 个导航项要占 3 行，把正文挤出首屏；
+               平时（≤ 29px）这个按钮是 display:none，不影响任何人。 #}
+            <button type="button" id="nav-toggle" class="nav-toggle"
+                    aria-expanded="false" aria-controls="nav-menu">
+                <span aria-hidden="true">☰</span> 菜单
+            </button>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="{{ url_for('dashboard') }}">仪表盘</a></li>
+
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-dd-toggle">健康数据 ▾</a>
+                    <ul class="nav-dd-menu">
+                        <li><a href="{{ url_for('upload.upload_fridge_image') }}">上传食材</a></li>
+                        <li><a href="{{ url_for('upload.upload_health_report') }}">健康报告</a></li>
+                        <li><a href="{{ url_for('nutrition.intake_page') }}">营养摄入</a></li>
+                        <li><a href="{{ url_for('nutrition.food_guide_page') }}">食品科普 · 加餐查询</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-dd-toggle">食谱 ▾</a>
+                    <ul class="nav-dd-menu">
+                        <li><a href="{{ url_for('recipe.generate_recipe') }}">生成食谱</a></li>
+                        <li><a href="{{ url_for('recipe.get_recipes') }}">我的食谱</a></li>
+                        <li><a href="{{ url_for('recipe.get_favorites') }}">收藏夹</a></li>
+                        <li><a href="{{ url_for('recipe.meal_plan') }}">膳食计划</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="{{ url_for('community.square') }}">社区</a></li>
+
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-dd-toggle">个人中心 ▾</a>
+                    <ul class="nav-dd-menu">
+                        <li><a href="{{ url_for('user.settings') }}">设置（字号）</a></li>
+                        <li><a href="{{ url_for('community.mine') }}">我的分享</a></li>
+                        <li><a href="{{ url_for('user.change_password') }}">修改密码</a></li>
+                        <li><a href="{{ url_for('user.logout') }}" class="nav-logout"
+                               onclick="return confirm('确定要退出登录吗？');">退出</a></li>
+                    </ul>
+                </li>
+            </ul>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Flash 消息 -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-container">
+        {% for category, message in messages %}
+        <div class="flash-message flash-{{ category }}">
+            <span>{{ message }}</span>
+            <button class="flash-close" onclick="this.parentElement.remove()">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- 主内容区 -->
+    <main class="main-content" id="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p>&copy; 2026 益食安康 — 让糖尿病患者的每一餐都更安心</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}?v=20261106-native-audio"></script>
+    {# 社区卡片（含仪表盘上的最新分享）都带点赞/收藏按钮，脚本放全站，
+       否则仪表盘上的按钮点了没反应。没有 .btn-action 的页面它什么都不做。 #}
+    <script src="{{ url_for('static', filename='js/community.js') }}?v=20261016-r3"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

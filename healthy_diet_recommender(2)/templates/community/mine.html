@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}我的分享 - 益食安康{% endblock %}
+
+{% block content %}
+<div class="community-container">
+    <div class="community-header">
+        <a href="{{ url_for('community.square') }}" class="back-link">← 返回社区</a>
+        <h1 class="page-title">我的分享</h1>
+        <p class="community-sub">这些是你分享到社区的食谱，别人都能看到。</p>
+    </div>
+
+    {% if posts %}
+    <div class="post-list">
+        {% for post in posts %}
+        <article class="post-card" data-post-id="{{ post.id }}">
+            <h3 class="post-card-title">
+                <a href="{{ url_for('community.post_detail', post_id=post.id) }}">{{ post.title }}</a>
+            </h3>
+
+            {% set tags = post.tags() %}
+            {% if tags %}
+            <div class="post-tags">
+                {% for label, value in tags %}
+                <span class="post-tag"><i>{{ label }}</i>{{ value }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if post.note %}<p class="post-note">「{{ post.note }}」</p>{% endif %}
+
+            <p class="post-card-meta">
+                <span>📅 {{ post.created_at.strftime('%Y-%m-%d') }}</span>
+                <span>👍 收到 {{ post.like_count }} 个赞</span>
+            </p>
+
+            <div class="post-actions">
+                <a class="btn btn-outline" href="{{ url_for('community.post_detail', post_id=post.id) }}">查看</a>
+                <form method="post" action="{{ url_for('community.remove', post_id=post.id) }}"
+                      class="inline-form"
+                      onsubmit="return confirm('确定要把这条分享从社区删掉吗？删掉以后别人就看不到了，你自己收藏的食谱不受影响。');">
+                    <button type="submit" class="btn btn-danger">🗑 从社区删除</button>
+                </form>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="empty-state">
+        <p>你还没有分享过食谱。</p>
+        <p class="empty-hint">打开「我的食谱」里任意一道菜，点「分享到社区」，它就会出现在这里。</p>
+        <a class="btn btn-primary" href="{{ url_for('recipe.get_recipes') }}">去我的食谱</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

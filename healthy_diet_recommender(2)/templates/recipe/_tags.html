@@ -1,0 +1,18 @@
+{# R4 三维度标签行（详情 / 列表 / 收藏 / 仪表盘 共用）
+
+   依赖作用域里有个 recipe 对象。
+   改造前生成的老食谱这三列都是空的 -> has_tags 为假 -> 整行不渲染
+   （不显示"—"占位，免得老数据看起来像坏了）。 #}
+{% if recipe.has_tags %}
+<div class="tag-row">
+    {% if recipe.purpose %}
+    <span class="tag-chip tag-chip-purpose">🎯 {{ recipe.purpose_label }}</span>
+    {% endif %}
+    {% if recipe.flavor %}
+    <span class="tag-chip">🍲 {{ recipe.flavor_label }}</span>
+    {% endif %}
+    {% if recipe.meal_time %}
+    <span class="tag-chip">🕐 {{ recipe.meal_time_label }}</span>
+    {% endif %}
+</div>
+{% endif %}

@@ -1,0 +1,26 @@
+{# 档位之外的提醒（R5 第 4 项收口，2026-10-20）
+   ------------------------------------------------------------
+   要回答的是：「既然写着低升糖，为什么还要少吃？」
+     五花肉的 GI 确实低（肉几乎不含碳水），但脂肪约三成、热量接近瘦肉两倍。
+     档位没说错，是解读缺了一环 —— 所以档位一个字不改，另挂一条提醒。
+
+   两种情形（由 utils.diabetes_advice.build_advice 决定，模板不做判断）：
+     kind='fat'  菜里有高脂部位 / 加工肉 → 点名是哪几味 + 一餐掌心大小
+     kind='oil'  作者自己写的用油量 ≥ 20 ml → 给出油量折合的热量
+
+   ⚠️ 一道菜最多一条（fat 优先），避免两张黄条叠在一起。
+   ⚠️ 与 .gi-warn 的分工：gi-warn 说「换成什么」，本块说「为什么还是要少」。
+   ⚠️ 两个页面共用（食谱详情、社区帖子详情）—— 改这里两边同时生效。 #}
+{% if advice.caution %}
+<div class="gi-caution gi-caution-{{ advice.caution.kind }}">
+    <p class="gi-caution-head">⚠️ {{ advice.caution.head }}{% if advice.caution.names %}：<b>{{ advice.caution.names | join('、') }}</b>{% endif %}</p>
+    {% if advice.caution.rows %}
+    <ul class="gi-caution-list">
+        {% for r in advice.caution.rows %}
+        <li><b>{{ r.name }}</b>{% for lb in r.labels %}<span class="gi-caution-tag">{{ lb }}</span>{% endfor %} —— {{ r.why }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <p class="gi-caution-body">{{ advice.caution.body }}</p>
+</div>
+{% endif %}

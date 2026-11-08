@@ -1,0 +1,8 @@
+<!-- components/loading-overlay/loading-overlay.wxml -->
+<view class="loading-overlay" wx:if="{{visible}}">
+  <view class="loading-card">
+    <view class="spinner"></view>
+    <view class="loading-text">{{text || '加载中...'}}</view>
+    <view class="loading-sub" wx:if="{{subText}}">{{subText}}</view>
+  </view>
+</view>

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}膳食计划 - 益食安康{% endblock %}
+
+{% block content %}
+<div class="meal-plan-container">
+    <h1 class="page-title">📅 控糖膳食计划</h1>
+    <p class="page-subtitle">按五餐制排的控糖方案：每餐标出碳水克数，把一天的碳水摊开，避免某一餐把血糖顶高</p>
+
+    {# 报告指标达危险水平：不出膳食计划，改为提示就医 #}
+    {% if risk and risk.blocked %}
+    {% include 'health/_risk_alert.html' %}
+    {% else %}
+    <div class="meal-plan-form-card">
+        <form method="POST" action="{{ url_for('recipe.meal_plan') }}" class="meal-plan-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="days">计划天数</label>
+                    <select id="days" name="days">
+                        <option value="3">3 天</option>
+                        <option value="7" selected>7 天</option>
+                        <option value="14">14 天</option>
+                    </select>
+                    {# 原来的 30 天选项已去掉：五餐制下要写 150 餐，模型一次写不完会截断，
+                       用户拿到的是一份只排了几天的残缺计划，比没有更糟。 #}
+                </div>
+                <div class="form-group">
+                    <label for="preference">饮食偏好（可选）</label>
+                    <input type="text" id="preference" name="preference"
+                           placeholder="如：不吃海鲜、牙口不好要软烂些、爱吃面食...">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">📋 生成膳食计划</button>
+        </form>
+    </div>
+    {% endif %}
+
+    {% if meal_plan and meal_plan.days %}
+    <div class="meal-plan-result">
+        <p class="meal-plan-note">
+            🍚 <b>为什么一天要排五餐：</b>两次加餐不是为了多吃，是把主食的碳水分摊到全天，
+            让每一餐的血糖上升都平缓一些。下面的「碳水约 xx g」是每餐的参考量，全天合计写在每天标题右边。
+        </p>
+        {% for day in meal_plan.days %}
+        <div class="meal-day">
+            <h2 class="meal-day-title">📌 第 {{ day.day }} 天
+                {% if day.carb_total %}<span class="meal-day-carb">全天碳水约 {{ day.carb_total }} g</span>{% endif %}
+            </h2>
+            <div class="meal-cards">
+                {% for meal in day.meals %}
+                <div class="meal-card meal-{{ meal.type }}{% if 'snack' in meal.type %} meal-card-snack{% endif %}">
+                    <div class="meal-type">{{ meal.type_cn }}
+                        {% if meal.carb %}<span class="meal-carb">碳水 {{ meal.carb }}g</span>{% endif %}
+                    </div>
+                    <div class="meal-name">{{ meal.name }}</div>
+                    {% if meal.description %}
+                    <div class="meal-desc">{{ meal.description }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+
+        {% if meal_plan.advice %}
+        <div class="meal-advice">
+            <h2>💡 总体控糖建议</h2>
+            <div class="meal-advice-text">{{ meal_plan.advice | replace('\n', '<br>') | safe }}</div>
+        </div>
+        {% endif %}
+
+        {% if disclaimer %}
+        {# 本页开始给碳水克数，已经是"像处方"的信息了，必须挂免责说明 #}
+        <p class="meal-disclaimer">{{ disclaimer }}</p>
+        {% endif %}
+    </div>
+    {% elif meal_plan is not none %}
+    <div class="empty-state">
+        <p>膳食计划生成失败，请确保已上传健康报告和食材照片后重试</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

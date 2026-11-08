@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block title %}营养摄入 - 益食安康{% endblock %}
+
+{# 2026-10-12 全站视觉对齐：本页原来内联了一整份 .nutri-* 样式，
+   与 templates/health/_metrics_panel.html 里的 .metric-* 逐行重复、数值还各不相同。
+   两份已合并进 static/css/style.css（「指标卡 / 营养卡」+「营养摄入页专有」两节），
+   类名不变。这里不再需要 extra_head。 #}
+
+{% block content %}
+<div class="dashboard">
+    <h1 class="page-title">🍽️ 营养摄入</h1>
+    <p class="page-subtitle">按您已生成的食谱估算，看看 AI 给您配的菜大概是什么量级</p>
+
+    {% if not entries %}
+    <div class="empty-state">
+        <div class="empty-icon">🍽️</div>
+        <h2>还没有生成过食谱</h2>
+        <p>先生成一份食谱，这里就会把它的热量和三大营养素汇总出来。</p>
+        <a href="{{ url_for('recipe.generate_recipe') }}" class="btn btn-primary">🤖 AI 生成食谱</a>
+    </div>
+    {% else %}
+
+    <div class="nutri-note">
+        <b>先说清口径，避免误会：</b><br>
+        ① 这里统计的是<b>已生成的食谱</b>，不是您实际吃了什么 —— 一天生成 7 份食谱不代表吃了 7 顿，所以本页<b>不做"每日摄入合计"</b>，只按份看。<br>
+        ② 数字是从食谱文本里读出来的（目前由 AI 估算），<b>尚未经过食物成分表核验</b>；换用标准成分表回算是下一步的事。<br>
+        ③ 本页只把数字摆出来，<b>不下"够不够健康"的结论</b>，具体情况请听医师或营养师的意见。
+    </div>
+
+    <!-- 概览 -->
+    <div class="nutri-grid">
+        <div class="nutri-card">
+            <div class="nutri-name">读出营养的食谱</div>
+            <div class="nutri-value">{{ parsed_count }}<span class="nutri-unit">/ {{ total_count }} 份</span></div>
+            <div class="nutri-meta">读不出的会列在页面底部</div>
+        </div>
+        <div class="nutri-card">
+            <div class="nutri-name">平均每份热量</div>
+            <div class="nutri-value">{{ avg_kcal_text }}<span class="nutri-unit">kcal</span></div>
+            <div class="nutri-meta">最高一份 {{ peak_text }} kcal</div>
+        </div>
+        <div class="nutri-card">
+            <div class="nutri-name">平均每份蛋白质</div>
+            <div class="nutri-value">{{ avg_protein_text }}<span class="nutri-unit">g</span></div>
+            <div class="nutri-meta">均值，非推荐量</div>
+        </div>
+        <div class="nutri-card is-plain">
+            <div class="nutri-name">时间跨度</div>
+            <div class="nutri-value" style="font-size:15px;">{{ span_text }}</div>
+            <div class="nutri-meta">{{ total_count }} 份食谱</div>
+        </div>
+    </div>
+
+    <!-- 每份食谱的热量 -->
+    <div class="section">
+        <h2>📊 每份食谱的热量</h2>
+        <div class="nutri-chart-card">
+            <div class="nutri-chart-head">
+                <h3 class="nutri-chart-title">最近 {{ chart_count }} 份食谱</h3>
+                <span class="nutri-chart-note">横轴是生成日期 · 点柱子看数值</span>
+            </div>
+            {% if chart %}
+            {{ chart | safe }}
+            {% else %}
+            <div class="nutri-empty">暂时没有读出热量的食谱</div>
+            {% endif %}
+            <p class="nutri-hint">
+                一根柱子 = 一份食谱。<b>没有按天合并</b>：一天生成好几份食谱，是几个备选，不是吃了几顿。
+                纵轴从 0 起，柱子高度可直接互相比较。
+            </p>
+        </div>
+    </div>
+
+    <!-- 供能占比 -->
+    {% if ratio_rows %}
+    <div class="section">
+        <h2>🥗 三大营养素供能占比</h2>
+        <div class="nutri-chart-card">
+            <div class="nutri-chart-head">
+                <h3 class="nutri-chart-title">已生成食谱的平均值</h3>
+                <span class="nutri-chart-note">绿色区间 = 参考范围</span>
+            </div>
+
+            {% for row in ratio_rows %}
+            <div class="ratio-row">
+                <div class="ratio-label">{{ row.label }}</div>
+                <div class="ratio-track">
+                    <div class="ratio-band"
+                         style="left:{{ row.band_left }}%; width:{{ row.band_width }}%;"></div>
+                    <div class="ratio-mark"
+                         style="left:{{ row.bar_left }}%; background:{{ row.color }};"></div>
+                </div>
+                <div class="ratio-value">{{ row.value_text }}</div>
+                <div class="ratio-guide">参考 {{ row.guide_text }}（每日口径）</div>
+            </div>
+            {% endfor %}
+
+            <p class="nutri-hint">
+                占比 = 该营养素产热 ÷ 三者产热之和（碳水与蛋白质 4 kcal/g、脂肪 9 kcal/g）。
+                <b>参考区间是"每日"口径</b>，不是单份食谱的门槛，所以别拿单份去对号入座。
+                竖线落在绿区之外不等于"不健康"——比如高蛋白增肌餐的蛋白质本就偏高。
+            </p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- 明细 -->
+    <div class="section">
+        <h2>📋 逐份明细</h2>
+        {% for group in groups %}
+        <div class="nutri-day">
+            <div class="nutri-day-head">
+                {{ group.friendly_date }}
+                <span>生成 {{ group['items']|length }} 份</span>
+            </div>
+            {% for item in group['items'] %}
+            <div class="nutri-item">
+                <div class="nutri-item-main">
+                    <a class="nutri-item-title"
+                       href="{{ url_for('recipe.get_recipe', recipe_id=item.id) }}"
+                       title="{{ item.title }}">{{ item.title }}</a>
+                    <div class="nutri-item-time">{{ item.datetime }}</div>
+                </div>
+                <div class="nutri-macros">
+                    <span>蛋白 <b>{{ item.protein_text }}</b> g</span>
+                    <span>碳水 <b>{{ item.carb_text }}</b> g</span>
+                    <span>脂肪 <b>{{ item.fat_text }}</b> g</span>
+                </div>
+                {% if item.nutrition %}
+                <div class="nutri-kcal">
+                    ≈{{ item.kcal_text }}<small>kcal</small>
+                    {% if item.nutrition.kcal_range %}
+                    <span class="nutri-range">原文 {{ item.nutrition.kcal_range }}</span>
+                    {% endif %}
+                </div>
+                {% else %}
+                <div class="nutri-kcal is-none">未读出</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- 读不出的 -->
+    {% if unparsed %}
+    <div class="section">
+        <h2>⚪ 读不出营养数字的食谱（{{ unparsed|length }} 份）</h2>
+        <div class="nutri-chart-card">
+            <ul style="margin:0; padding-left:20px; font-size:13px; color:var(--gray-600); line-height:2;">
+                {% for item in unparsed %}
+                <li>
+                    <a href="{{ url_for('recipe.get_recipe', recipe_id=item.id) }}"
+                       style="color:var(--gray-700);">{{ item.title }}</a>
+                    <span style="color:var(--gray-400);">（{{ item.date }}）</span>
+                </li>
+                {% endfor %}
+            </ul>
+            <p class="nutri-hint">
+                这些食谱的文本里<b>没有写出具体热量值</b>，所以本页拿不到数字 —— 属于"读不出"，
+                不是"数值为 0"。系统不会替它猜一个数填上。
+            </p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% endif %}
+</div>
+{% endblock %}

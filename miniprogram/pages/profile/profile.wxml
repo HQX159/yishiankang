@@ -1,0 +1,47 @@
+<!-- pages/profile/profile.wxml -->
+<view class="container">
+  <view class="profile-header">
+    <view class="profile-avatar">👤</view>
+    <view class="profile-name">{{displayName}}</view>
+  </view>
+
+  <view class="profile-stats">
+    <view class="profile-stat" bindtap="goRecipes">
+      <view class="profile-stat-value">{{recipeCount}}</view>
+      <view class="profile-stat-label">食谱</view>
+    </view>
+    <view class="profile-stat" bindtap="goFavorites">
+      <view class="profile-stat-value">{{favoriteCount}}</view>
+      <view class="profile-stat-label">收藏</view>
+    </view>
+    <view class="profile-stat">
+      <view class="profile-stat-value">{{reportCount}}</view>
+      <view class="profile-stat-label">报告</view>
+    </view>
+  </view>
+
+  <view class="profile-menu">
+    <view class="profile-menu-item" bindtap="goUploadHealth">
+      <text>上传健康报告</text>
+      <text style="color:#9ca3af;">›</text>
+    </view>
+    <view class="profile-menu-item" bindtap="goUploadFridge">
+      <text>拍照识别食材</text>
+      <text style="color:#9ca3af;">›</text>
+    </view>
+    <view class="profile-menu-item" bindtap="goMealPlan">
+      <text>膳食计划</text>
+      <text style="color:#9ca3af;">›</text>
+    </view>
+    <view class="profile-menu-item" bindtap="goFavorites">
+      <text>我的收藏</text>
+      <text style="color:#9ca3af;">›</text>
+    </view>
+  </view>
+
+  <view style="padding:60rpx 0;text-align:center;">
+    <button class="btn btn-outline" bindtap="logout" style="color:#ef4444;border-color:#fecaca;">
+      退出登录
+    </button>
+  </view>
+</view>

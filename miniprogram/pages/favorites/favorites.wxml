@@ -1,0 +1,25 @@
+<!-- pages/favorites/favorites.wxml -->
+<view class="container">
+  <view class="page-title">我的收藏</view>
+  <view class="page-subtitle">您收藏的食谱，方便随时回顾</view>
+
+  <view wx:if="{{showList}}" class="recipe-list">
+    <view class="recipe-item" wx:for="{{displayRecipes}}" wx:key="id"
+          bindtap="goDetail" data-id="{{item.id}}">
+      <view class="recipe-item-title">{{item.title}}</view>
+      <view class="recipe-item-meta">{{item.meta}}</view>
+      <view style="display:flex;justify-content:flex-end;margin-top:16rpx;">
+        <button class="btn btn-outline btn-sm" catchtap="removeFav" data-id="{{item.id}}">
+          取消收藏
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <view wx:else class="empty-state">
+    <view class="empty-icon">⭐</view>
+    <view class="empty-title">收藏夹还是空的</view>
+    <view class="empty-desc">在食谱详情页点击收藏，您喜欢的食谱就会出现在这里</view>
+    <button class="btn btn-primary" bindtap="goRecipes">浏览食谱</button>
+  </view>
+</view>

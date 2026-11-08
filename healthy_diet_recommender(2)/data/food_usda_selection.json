@@ -1,0 +1,750 @@
+{
+  "verified_on": "2026-11-03",
+  "foods": [
+    {
+      "id": "watermelon",
+      "name": "西瓜",
+      "category": "fruit",
+      "fdc_id": 167765,
+      "aliases": [
+        "西瓜果肉"
+      ],
+      "expected_description": "Watermelon, raw",
+      "operation": "enrich"
+    },
+    {
+      "id": "lychee",
+      "name": "荔枝",
+      "category": "fruit",
+      "fdc_id": 169086,
+      "aliases": [
+        "鲜荔枝"
+      ],
+      "expected_description": "Litchis, raw",
+      "operation": "enrich"
+    },
+    {
+      "id": "longan",
+      "name": "龙眼",
+      "category": "fruit",
+      "fdc_id": 169089,
+      "aliases": [
+        "鲜桂圆"
+      ],
+      "expected_description": "Longans, raw",
+      "operation": "enrich"
+    },
+    {
+      "id": "egg",
+      "name": "水煮蛋",
+      "category": "snack",
+      "fdc_id": 173424,
+      "aliases": [
+        "白煮蛋"
+      ],
+      "expected_description": "Egg, whole, cooked, hard-boiled",
+      "operation": "enrich"
+    },
+    {
+      "id": "kiwi_green",
+      "name": "绿心猕猴桃",
+      "category": "fruit",
+      "fdc_id": 168153,
+      "aliases": [
+        "猕猴桃",
+        "奇异果"
+      ],
+      "expected_description": "Kiwifruit, green, raw",
+      "operation": "append"
+    },
+    {
+      "id": "kumquat",
+      "name": "金橘",
+      "category": "fruit",
+      "fdc_id": 168154,
+      "aliases": [
+        "金桔"
+      ],
+      "expected_description": "Kumquats, raw",
+      "operation": "append"
+    },
+    {
+      "id": "lemon_raw",
+      "name": "柠檬（去皮）",
+      "category": "fruit",
+      "fdc_id": 167746,
+      "aliases": [
+        "柠檬"
+      ],
+      "expected_description": "Lemons, raw, without peel",
+      "operation": "append"
+    },
+    {
+      "id": "lime_raw",
+      "name": "青柠",
+      "category": "fruit",
+      "fdc_id": 168155,
+      "aliases": [
+        "青柠檬"
+      ],
+      "expected_description": "Limes, raw",
+      "operation": "append"
+    },
+    {
+      "id": "orange_raw",
+      "name": "橙子",
+      "category": "fruit",
+      "fdc_id": 169097,
+      "aliases": [
+        "鲜橙"
+      ],
+      "expected_description": "Oranges, raw, all commercial varieties",
+      "operation": "append"
+    },
+    {
+      "id": "mandarin_raw",
+      "name": "橘子",
+      "category": "fruit",
+      "fdc_id": 169105,
+      "aliases": [
+        "桔子",
+        "蜜橘"
+      ],
+      "expected_description": "Tangerines, (mandarin oranges), raw",
+      "operation": "append"
+    },
+    {
+      "id": "clementine_raw",
+      "name": "克莱门氏小柑橘",
+      "category": "fruit",
+      "fdc_id": 168195,
+      "aliases": [
+        "小柑橘"
+      ],
+      "expected_description": "Clementines, raw",
+      "operation": "append"
+    },
+    {
+      "id": "cantaloupe_raw",
+      "name": "橙肉甜瓜（cantaloupe）",
+      "category": "fruit",
+      "fdc_id": 169092,
+      "aliases": [
+        "网纹甜瓜"
+      ],
+      "expected_description": "Melons, cantaloupe, raw",
+      "operation": "append"
+    },
+    {
+      "id": "honeydew_raw",
+      "name": "蜜瓜",
+      "category": "fruit",
+      "fdc_id": 169911,
+      "aliases": [
+        "蜜露甜瓜"
+      ],
+      "expected_description": "Melons, honeydew, raw",
+      "operation": "append"
+    },
+    {
+      "id": "cherry_sweet",
+      "name": "甜樱桃",
+      "category": "fruit",
+      "fdc_id": 171719,
+      "aliases": [
+        "樱桃",
+        "车厘子"
+      ],
+      "expected_description": "Cherries, sweet, raw",
+      "operation": "append"
+    },
+    {
+      "id": "apricot_raw",
+      "name": "鲜杏",
+      "category": "fruit",
+      "fdc_id": 171697,
+      "aliases": [
+        "杏子"
+      ],
+      "expected_description": "Apricots, raw",
+      "operation": "append"
+    },
+    {
+      "id": "nectarine_raw",
+      "name": "油桃",
+      "category": "fruit",
+      "fdc_id": 169914,
+      "aliases": [],
+      "expected_description": "Nectarines, raw",
+      "operation": "append"
+    },
+    {
+      "id": "avocado_raw",
+      "name": "牛油果",
+      "category": "fruit",
+      "fdc_id": 171705,
+      "aliases": [
+        "鳄梨"
+      ],
+      "expected_description": "Avocados, raw, all commercial varieties",
+      "operation": "append"
+    },
+    {
+      "id": "fig_raw",
+      "name": "鲜无花果",
+      "category": "fruit",
+      "fdc_id": 173021,
+      "aliases": [
+        "无花果"
+      ],
+      "expected_description": "Figs, raw",
+      "operation": "append"
+    },
+    {
+      "id": "guava_raw",
+      "name": "番石榴",
+      "category": "fruit",
+      "fdc_id": 173044,
+      "aliases": [
+        "芭乐"
+      ],
+      "expected_description": "Guavas, common, raw",
+      "operation": "append"
+    },
+    {
+      "id": "jackfruit_raw",
+      "name": "菠萝蜜",
+      "category": "fruit",
+      "fdc_id": 174687,
+      "aliases": [],
+      "expected_description": "Jackfruit, raw",
+      "operation": "append"
+    },
+    {
+      "id": "loquat_raw",
+      "name": "枇杷",
+      "category": "fruit",
+      "fdc_id": 169908,
+      "aliases": [],
+      "expected_description": "Loquats, raw",
+      "operation": "append"
+    },
+    {
+      "id": "mulberry_raw",
+      "name": "桑葚",
+      "category": "fruit",
+      "fdc_id": 169913,
+      "aliases": [
+        "桑椹"
+      ],
+      "expected_description": "Mulberries, raw",
+      "operation": "append"
+    },
+    {
+      "id": "jujube_raw",
+      "name": "鲜枣",
+      "category": "fruit",
+      "fdc_id": 168151,
+      "aliases": [
+        "鲜枣"
+      ],
+      "expected_description": "Jujube, raw",
+      "operation": "append"
+    },
+    {
+      "id": "durian_raw",
+      "name": "榴莲（生鲜或冷冻）",
+      "category": "fruit",
+      "fdc_id": 168192,
+      "aliases": [
+        "榴莲"
+      ],
+      "expected_description": "Durian, raw or frozen",
+      "operation": "append"
+    },
+    {
+      "id": "blackberry_raw",
+      "name": "黑莓",
+      "category": "fruit",
+      "fdc_id": 173946,
+      "aliases": [],
+      "expected_description": "Blackberries, raw",
+      "operation": "append"
+    },
+    {
+      "id": "blackcurrant_raw",
+      "name": "黑加仑",
+      "category": "fruit",
+      "fdc_id": 173963,
+      "aliases": [
+        "黑醋栗"
+      ],
+      "expected_description": "Currants, european black, raw",
+      "operation": "append"
+    },
+    {
+      "id": "redcurrant_raw",
+      "name": "红白醋栗",
+      "category": "fruit",
+      "fdc_id": 173964,
+      "aliases": [
+        "红醋栗",
+        "白醋栗"
+      ],
+      "expected_description": "Currants, red and white, raw",
+      "operation": "append"
+    },
+    {
+      "id": "cranberry_raw",
+      "name": "鲜蔓越莓",
+      "category": "fruit",
+      "fdc_id": 171722,
+      "aliases": [
+        "蔓越莓"
+      ],
+      "expected_description": "Cranberries, raw",
+      "operation": "append"
+    },
+    {
+      "id": "passionfruit_raw",
+      "name": "紫色百香果",
+      "category": "fruit",
+      "fdc_id": 169108,
+      "aliases": [
+        "百香果"
+      ],
+      "expected_description": "Passion-fruit, (granadilla), purple, raw",
+      "operation": "append"
+    },
+    {
+      "id": "pomelo_raw",
+      "name": "柚子",
+      "category": "fruit",
+      "fdc_id": 167754,
+      "aliases": [
+        "文旦",
+        "蜜柚"
+      ],
+      "expected_description": "Pummelo, raw",
+      "operation": "append"
+    },
+    {
+      "id": "asianpear_raw",
+      "name": "亚洲梨",
+      "category": "fruit",
+      "fdc_id": 168177,
+      "aliases": [
+        "沙梨"
+      ],
+      "expected_description": "Pears, asian, raw",
+      "operation": "append"
+    },
+    {
+      "id": "apple_peeled_raw",
+      "name": "苹果（去皮生食）",
+      "category": "fruit",
+      "fdc_id": 171689,
+      "aliases": [
+        "去皮苹果"
+      ],
+      "expected_description": "Apples, raw, without skin",
+      "operation": "append"
+    },
+    {
+      "id": "date_medjool",
+      "name": "椰枣（Medjool 品种）",
+      "category": "snack",
+      "fdc_id": 168191,
+      "aliases": [
+        "椰枣"
+      ],
+      "expected_description": "Dates, medjool",
+      "operation": "append"
+    },
+    {
+      "id": "prune_dried",
+      "name": "西梅干（未烹调）",
+      "category": "snack",
+      "fdc_id": 168162,
+      "aliases": [
+        "西梅干"
+      ],
+      "expected_description": "Plums, dried (prunes), uncooked",
+      "operation": "append"
+    },
+    {
+      "id": "longan_dried",
+      "name": "干桂圆",
+      "category": "snack",
+      "fdc_id": 169907,
+      "aliases": [
+        "桂圆干",
+        "龙眼干"
+      ],
+      "expected_description": "Longans, dried",
+      "operation": "append"
+    },
+    {
+      "id": "lychee_dried",
+      "name": "荔枝干",
+      "category": "snack",
+      "fdc_id": 169087,
+      "aliases": [],
+      "expected_description": "Litchis, dried",
+      "operation": "append"
+    },
+    {
+      "id": "fig_dried",
+      "name": "无花果干",
+      "category": "snack",
+      "fdc_id": 174665,
+      "aliases": [],
+      "expected_description": "Figs, dried, uncooked",
+      "operation": "append"
+    },
+    {
+      "id": "apricot_dried",
+      "name": "杏干（硫处理）",
+      "category": "snack",
+      "fdc_id": 173941,
+      "aliases": [
+        "杏干"
+      ],
+      "expected_description": "Apricots, dried, sulfured, uncooked",
+      "operation": "append"
+    },
+    {
+      "id": "goji_dried",
+      "name": "枸杞干",
+      "category": "snack",
+      "fdc_id": 173032,
+      "aliases": [
+        "枸杞"
+      ],
+      "expected_description": "Goji berries, dried",
+      "operation": "append"
+    },
+    {
+      "id": "persimmon_dried",
+      "name": "柿饼",
+      "category": "snack",
+      "fdc_id": 169942,
+      "aliases": [
+        "干柿子"
+      ],
+      "expected_description": "Persimmons, japanese, dried",
+      "operation": "append"
+    },
+    {
+      "id": "raisin_dark",
+      "name": "黑葡萄干（无籽）",
+      "category": "snack",
+      "fdc_id": 168165,
+      "aliases": [
+        "黑葡萄干"
+      ],
+      "expected_description": "Raisins, dark, seedless (Includes foods for USDA's Food Distribution Program)",
+      "operation": "append"
+    },
+    {
+      "id": "cranberry_dried_sweet",
+      "name": "蔓越莓干（加糖）",
+      "category": "snack",
+      "fdc_id": 171723,
+      "aliases": [
+        "蔓越莓干"
+      ],
+      "expected_description": "Cranberries, dried, sweetened (Includes foods for USDA's Food Distribution Program)",
+      "operation": "append"
+    },
+    {
+      "id": "blueberry_dried_sweet",
+      "name": "蓝莓干（加糖）",
+      "category": "snack",
+      "fdc_id": 168158,
+      "aliases": [
+        "蓝莓干"
+      ],
+      "expected_description": "Blueberries, dried, sweetened",
+      "operation": "append"
+    },
+    {
+      "id": "mango_dried_sweet",
+      "name": "芒果干（加糖）",
+      "category": "snack",
+      "fdc_id": 169091,
+      "aliases": [
+        "芒果干"
+      ],
+      "expected_description": "Mango, dried, sweetened",
+      "operation": "append"
+    },
+    {
+      "id": "walnut_raw",
+      "name": "核桃仁（原味）",
+      "category": "snack",
+      "fdc_id": 170187,
+      "aliases": [
+        "核桃",
+        "核桃仁"
+      ],
+      "expected_description": "Nuts, walnuts, english",
+      "operation": "append"
+    },
+    {
+      "id": "almond_raw",
+      "name": "扁桃仁（原味）",
+      "category": "snack",
+      "fdc_id": 170567,
+      "aliases": [
+        "巴旦木",
+        "扁桃仁"
+      ],
+      "expected_description": "Nuts, almonds",
+      "operation": "append"
+    },
+    {
+      "id": "peanut_raw",
+      "name": "花生仁（生）",
+      "category": "snack",
+      "fdc_id": 172430,
+      "aliases": [
+        "花生",
+        "生花生"
+      ],
+      "expected_description": "Peanuts, all types, raw",
+      "operation": "append"
+    },
+    {
+      "id": "cashew_raw",
+      "name": "腰果（生）",
+      "category": "snack",
+      "fdc_id": 170162,
+      "aliases": [
+        "腰果"
+      ],
+      "expected_description": "Nuts, cashew nuts, raw",
+      "operation": "append"
+    },
+    {
+      "id": "pistachio_raw",
+      "name": "开心果仁（生）",
+      "category": "snack",
+      "fdc_id": 170184,
+      "aliases": [
+        "开心果"
+      ],
+      "expected_description": "Nuts, pistachio nuts, raw",
+      "operation": "append"
+    },
+    {
+      "id": "macadamia_raw",
+      "name": "夏威夷果仁（生）",
+      "category": "snack",
+      "fdc_id": 170178,
+      "aliases": [
+        "夏威夷果",
+        "澳洲坚果"
+      ],
+      "expected_description": "Nuts, macadamia nuts, raw",
+      "operation": "append"
+    },
+    {
+      "id": "pecan_raw",
+      "name": "碧根果仁（原味）",
+      "category": "snack",
+      "fdc_id": 170182,
+      "aliases": [
+        "碧根果"
+      ],
+      "expected_description": "Nuts, pecans",
+      "operation": "append"
+    },
+    {
+      "id": "hazelnut_raw",
+      "name": "榛子仁（原味）",
+      "category": "snack",
+      "fdc_id": 170581,
+      "aliases": [
+        "榛子"
+      ],
+      "expected_description": "Nuts, hazelnuts or filberts",
+      "operation": "append"
+    },
+    {
+      "id": "pumpkin_seed_dried",
+      "name": "南瓜子仁（干）",
+      "category": "snack",
+      "fdc_id": 170556,
+      "aliases": [
+        "南瓜子"
+      ],
+      "expected_description": "Seeds, pumpkin and squash seed kernels, dried",
+      "operation": "append"
+    },
+    {
+      "id": "sunflower_seed_dried",
+      "name": "葵花子仁（干）",
+      "category": "snack",
+      "fdc_id": 170562,
+      "aliases": [
+        "葵花子",
+        "瓜子"
+      ],
+      "expected_description": "Seeds, sunflower seed kernels, dried",
+      "operation": "append"
+    },
+    {
+      "id": "chia_dried",
+      "name": "奇亚籽（干）",
+      "category": "snack",
+      "fdc_id": 170554,
+      "aliases": [
+        "奇亚籽"
+      ],
+      "expected_description": "Seeds, chia seeds, dried",
+      "operation": "append"
+    },
+    {
+      "id": "flaxseed",
+      "name": "亚麻籽",
+      "category": "snack",
+      "fdc_id": 169414,
+      "aliases": [],
+      "expected_description": "Seeds, flaxseed",
+      "operation": "append"
+    },
+    {
+      "id": "brown_rice_cooked",
+      "name": "糙米饭（长粒，熟）",
+      "category": "staple",
+      "fdc_id": 169704,
+      "aliases": [
+        "糙米饭"
+      ],
+      "expected_description": "Rice, brown, long-grain, cooked (Includes foods for USDA's Food Distribution Program)",
+      "operation": "append"
+    },
+    {
+      "id": "millet_cooked",
+      "name": "小米饭（熟）",
+      "category": "staple",
+      "fdc_id": 168871,
+      "aliases": [
+        "小米饭"
+      ],
+      "expected_description": "Millet, cooked",
+      "operation": "append"
+    },
+    {
+      "id": "quinoa_cooked",
+      "name": "藜麦（熟）",
+      "category": "staple",
+      "fdc_id": 168917,
+      "aliases": [
+        "藜麦饭"
+      ],
+      "expected_description": "Quinoa, cooked",
+      "operation": "append"
+    },
+    {
+      "id": "rice_noodle_cooked",
+      "name": "米粉（熟）",
+      "category": "staple",
+      "fdc_id": 168914,
+      "aliases": [
+        "熟米粉"
+      ],
+      "expected_description": "Rice noodles, cooked",
+      "operation": "append"
+    },
+    {
+      "id": "soba_cooked",
+      "name": "日式荞麦面（熟）",
+      "category": "staple",
+      "fdc_id": 168907,
+      "aliases": [
+        "荞麦面"
+      ],
+      "expected_description": "Noodles, japanese, soba, cooked",
+      "operation": "append"
+    },
+    {
+      "id": "somen_cooked",
+      "name": "日式素面（熟）",
+      "category": "staple",
+      "fdc_id": 168909,
+      "aliases": [
+        "日式素面"
+      ],
+      "expected_description": "Noodles, japanese, somen, cooked",
+      "operation": "append"
+    },
+    {
+      "id": "wholewheat_pasta_cooked",
+      "name": "全麦意面（熟）",
+      "category": "staple",
+      "fdc_id": 168910,
+      "aliases": [
+        "全麦意大利面"
+      ],
+      "expected_description": "Pasta, whole-wheat, cooked (Includes foods for USDA's Food Distribution Program)",
+      "operation": "append"
+    },
+    {
+      "id": "pasta_cooked",
+      "name": "意面（熟，未强化，无额外加盐）",
+      "category": "staple",
+      "fdc_id": 168928,
+      "aliases": [
+        "意大利面"
+      ],
+      "expected_description": "Pasta, cooked, unenriched, without added salt",
+      "operation": "append"
+    },
+    {
+      "id": "sticky_rice_cooked",
+      "name": "糯米饭（熟）",
+      "category": "staple",
+      "fdc_id": 169711,
+      "aliases": [
+        "糯米饭"
+      ],
+      "expected_description": "Rice, white, glutinous, unenriched, cooked",
+      "operation": "append"
+    },
+    {
+      "id": "barley_cooked",
+      "name": "珍珠大麦（熟）",
+      "category": "staple",
+      "fdc_id": 170285,
+      "aliases": [
+        "大麦饭"
+      ],
+      "expected_description": "Barley, pearled, cooked",
+      "operation": "append"
+    },
+    {
+      "id": "bulgur_cooked",
+      "name": "布格麦（熟）",
+      "category": "staple",
+      "fdc_id": 170287,
+      "aliases": [
+        "布格麦"
+      ],
+      "expected_description": "Bulgur, cooked",
+      "operation": "append"
+    },
+    {
+      "id": "couscous_cooked",
+      "name": "库斯库斯（熟）",
+      "category": "staple",
+      "fdc_id": 169700,
+      "aliases": [
+        "库斯库斯"
+      ],
+      "expected_description": "Couscous, cooked",
+      "operation": "append"
+    }
+  ]
+}

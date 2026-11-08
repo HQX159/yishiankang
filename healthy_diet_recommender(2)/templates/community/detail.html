@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }}（社区分享） - 益食安康{% endblock %}
+
+{% block content %}
+<div class="recipe-detail-container">
+    <div class="recipe-detail-header">
+        <a href="{{ url_for('community.square') }}" class="back-link">← 返回社区</a>
+        <h1 class="recipe-detail-title">{{ post.title }}</h1>
+
+        <div class="post-byline">
+            <span>👤 <b>{{ post.author_name }}</b> 分享</span>
+            <span>📅 {{ post.created_at.strftime('%Y-%m-%d') }}</span>
+        </div>
+
+        {% set tags = post.tags() %}
+        {% if tags %}
+        <div class="post-tags">
+            {% for label, value in tags %}
+            <span class="post-tag"><i>{{ label }}</i>{{ value }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if post.note %}
+        <p class="post-note post-note-detail">「{{ post.note }}」</p>
+        {% endif %}
+    </div>
+
+    <div class="post-actions post-actions-detail">
+        <button type="button"
+                class="btn-action btn-like btn-action-lg{% if liked %} is-on{% endif %}"
+                data-post-id="{{ post.id }}" data-kind="like"
+                aria-pressed="{{ 'true' if liked else 'false' }}">
+            <span class="action-icon" aria-hidden="true">👍</span>
+            <span class="action-text">点赞</span>
+            <span class="action-count">{{ post.like_count }}</span>
+        </button>
+        <button type="button"
+                class="btn-action btn-fav btn-action-lg{% if faved %} is-on{% endif %}"
+                data-post-id="{{ post.id }}" data-kind="favorite"
+                aria-pressed="{{ 'true' if faved else 'false' }}">
+            <span class="action-icon" aria-hidden="true">⭐</span>
+            <span class="action-text">收藏</span>
+        </button>
+
+        {% if is_author %}
+        <form method="post" action="{{ url_for('community.remove', post_id=post.id) }}"
+              class="inline-form"
+              onsubmit="return confirm('确定要把这条分享从社区删掉吗？删掉以后别人就看不到了，你自己收藏的食谱不受影响。');">
+            <button type="submit" class="btn btn-danger">🗑 从社区删除</button>
+        </form>
+        {% endif %}
+    </div>
+
+    <div class="recipe-detail-body">
+        {% if advice %}
+        <div class="recipe-section gi-advice">
+            <h2>🩸 控糖提示</h2>
+
+            <div class="gi-head">
+                <span class="gi-badge gi-badge-{{ advice.tier }}">{{ advice.tier_label }}</span>
+                <span class="gi-head-note">按食材的升糖快慢，给这道菜定的档</span>
+            </div>
+
+            {% if advice.known %}
+            <div class="gi-metrics">
+                <div class="gi-metric">
+                    <div class="gi-metric-value">{{ advice.carb_text }}</div>
+                    <div class="gi-metric-label">碳水 · 一人份粗估</div>
+                </div>
+                <div class="gi-metric">
+                    <div class="gi-metric-value">{{ advice.sugar_text }}</div>
+                    <div class="gi-metric-label">糖 · 一人份粗估</div>
+                </div>
+                <div class="gi-metric">
+                    <div class="gi-metric-value">{{ advice.food_items | length }} 种</div>
+                    <div class="gi-metric-label">认出的食材</div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if advice.high_names %}
+            <p class="gi-warn">⚠️ 这道菜里有升糖较快的食材：<b>{{ advice.high_names | join('、') }}</b>。
+                能换就换成同类的低升糖食材（白米饭 → 杂粮饭，土豆 / 南瓜 → 山药、西兰花），这一餐会更稳。</p>
+            {% endif %}
+
+            {# 与食谱详情页共用同一片段：别人分享的食谱也要能核对依据 #}
+            {% include 'recipe/_gi_why.html' %}
+
+            <p class="gi-portion"><b>建议份量：</b>{{ advice.portion_text }}</p>
+
+            {# 「低升糖」不等于「可以多吃」—— 与食谱详情页共用同一片段 #}
+            {% include 'recipe/_gi_caution.html' %}
+
+            {% if advice.consult %}
+            <p class="gi-consult">💬 {{ advice.consult_text }}</p>
+            {% endif %}
+
+            <p class="gi-note">{{ advice.note }}</p>
+        </div>
+        {% endif %}
+
+        {% if post.recipe %}
+        <div class="recipe-section recipe-ingredients">
+            <h2>🥕 所需食材</h2>
+            <ul class="ingredient-list">
+                {% for line in post.recipe.ingredients.split('\n') %}
+                    {% set item = line.strip(' -•·*') %}
+                    {% if item %}<li class="ingredient-item">{{ item }}</li>{% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+
+        {% if steps %}
+        <div class="recipe-section recipe-steps">
+            <h2>👨‍🍳 烹饪步骤</h2>
+            <ol class="step-list">
+                {% for step in steps %}
+                <li class="step-item">{{ step }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+        {% endif %}
+
+        {% if nut %}
+        <div class="recipe-section recipe-nutrition">
+            <h2>📊 营养信息</h2>
+
+            {% if nut.metrics %}
+            <div class="gi-metrics nut-metrics">
+                {% for m in nut.metrics %}
+                <div class="gi-metric">
+                    <div class="gi-metric-value">{{ m.value }}</div>
+                    <div class="gi-metric-label">{{ m.label }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            <p class="nut-source">一人份估算，按食材用量推算</p>
+            {% endif %}
+
+            {% if nut.highlight %}
+            <div class="nut-lead">
+                <span class="nut-lead-tag">{{ nut.highlight.label }}</span>
+                <p class="nut-lead-text">{{ nut.highlight.text }}</p>
+            </div>
+            {% elif nut.fallback %}
+            <p class="nut-lead-text">{{ nut.fallback }}</p>
+            {% endif %}
+
+            {% if nut.notice %}
+            <p class="nut-notice">⚠️ {{ nut.notice }}</p>
+            {% endif %}
+
+            {% if nut.points %}
+            <details class="nut-more">
+                <summary>还有 {{ nut.points | length }} 条饮食说明</summary>
+                <ul class="nut-points">
+                    {% for p in nut.points %}
+                    <li>
+                        {% if p.label %}<span class="nut-point-tag">{{ p.label }}</span>{% endif %}
+                        {{ p.text }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </details>
+            {% endif %}
+
+            {% if nut.disclaimer %}
+            <p class="nut-disclaimer">{{ nut.disclaimer }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+        {% endif %}
+    </div>
+
+    {% if related %}
+    <div class="related-block">
+        <h2 class="section-heading">同类推荐</h2>
+        <p class="related-hint">同样是「{{ post.recipe.purpose_label }}」的分享，可以换着做。</p>
+        <div class="post-list">
+            {% for post in related %}
+            {% include 'community/_card.html' %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <p class="community-disclaimer">
+        这条食谱由用户分享、AI 辅助生成，仅供参考，不能代替医生或营养师的建议。身体有不舒服，请及时就医。
+    </p>
+</div>
+{% endblock %}

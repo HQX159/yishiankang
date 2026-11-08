@@ -1,0 +1,46 @@
+{# 社区帖子卡片（广场 / 我的分享 共用）
+   需要上下文：post、liked_ids、faved_ids、viewer_id #}
+<article class="post-card" data-post-id="{{ post.id }}">
+    <h3 class="post-card-title">
+        <a href="{{ url_for('community.post_detail', post_id=post.id) }}">{{ post.title }}</a>
+    </h3>
+
+    {% set tags = post.tags() %}
+    {% if tags %}
+    <div class="post-tags">
+        {% for label, value in tags %}
+        <span class="post-tag"><i>{{ label }}</i>{{ value }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if post.note %}
+    <p class="post-note">「{{ post.note }}」</p>
+    {% endif %}
+
+    <p class="post-card-meta">
+        <span>👤 {{ post.author_name }}</span>
+        <span>📅 {{ post.created_at.strftime('%Y-%m-%d') }}</span>
+        {% if post.user_id == viewer_id %}<span class="post-mine">我分享的</span>{% endif %}
+    </p>
+
+    <div class="post-actions">
+        <button type="button"
+                class="btn-action btn-like{% if post.id in liked_ids %} is-on{% endif %}"
+                data-post-id="{{ post.id }}" data-kind="like"
+                aria-pressed="{{ 'true' if post.id in liked_ids else 'false' }}"
+                aria-label="点赞这道食谱">
+            <span class="action-icon" aria-hidden="true">👍</span>
+            <span class="action-text">点赞</span>
+            <span class="action-count">{{ post.like_count }}</span>
+        </button>
+        <button type="button"
+                class="btn-action btn-fav{% if post.id in faved_ids %} is-on{% endif %}"
+                data-post-id="{{ post.id }}" data-kind="favorite"
+                aria-pressed="{{ 'true' if post.id in faved_ids else 'false' }}"
+                aria-label="收藏这条分享">
+            <span class="action-icon" aria-hidden="true">⭐</span>
+            <span class="action-text">收藏</span>
+        </button>
+    </div>
+</article>

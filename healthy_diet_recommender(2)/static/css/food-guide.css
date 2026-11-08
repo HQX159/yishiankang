@@ -1,0 +1,109 @@
+.food-guide { max-width:var(--page-w); margin:0 auto; font-size:var(--fs-body); color:var(--gray-800); }
+.food-guide h2 { font-size:var(--fs-h2); margin-bottom:12px; }
+.food-guide h3 { font-size:var(--fs-h3); margin:12px 0; }
+.food-guide p { line-height:1.8; margin:10px 0; }
+.fg-intro { border-left:5px solid var(--green-600); padding:8px 0 8px 22px; margin:16px 0 28px; }
+.fg-eyebrow { display:block; color:var(--green-800); margin-bottom:10px; }
+.fg-search,.fg-result,.fg-card,.fg-footnote,.fg-empty { background:white; border:1px solid var(--gray-200); border-radius:var(--radius); padding:24px; }
+.fg-search { background:var(--green-50); border-color:var(--green-200); }
+.fg-search-row { display:flex; flex-wrap:wrap; gap:10px; margin:8px 0 14px; }
+.food-guide input,.food-guide select { font:inherit; padding:12px; border:1px solid var(--gray-400); border-radius:var(--radius-sm); background:white; color:var(--gray-900); min-height:48px; min-width:0; max-width:100%; }
+.fg-search-row input { flex:1; width:160px; }
+.fg-fields { display:flex; flex-wrap:wrap; align-items:end; gap:16px; }
+.fg-fields label { display:grid; gap:6px; }
+.food-guide .btn { white-space:normal; min-height:48px; }
+.fg-hot a { display:inline-block; padding:6px 12px; color:var(--green-800); text-decoration:underline; }
+.fg-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr)); gap:18px; }
+.fg-card { display:flex; flex-direction:column; padding:20px; }
+.fg-card-top { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px; }
+.fg-card-top>span:first-child,.fg-muted,.fg-section-heading>span { color:var(--gray-600); }
+.fg-badge { padding:4px 10px; border-radius:var(--radius-sm); font-weight:600; }
+.fg-recommend { color:#166534; background:#dcfce7; }
+.fg-limit { color:#854d0e; background:#fef9c3; }
+.fg-occasional { color:#9a3412; background:#ffedd5; }
+.fg-reference { color:#374151; background:#f3f4f6; }
+.fg-portion strong { color:var(--green-800); font-size:1.2em; }
+.food-guide summary { cursor:pointer; font-weight:600; padding:12px 0; min-height:44px; }
+.fg-card details { margin-top:auto; border-top:1px solid var(--gray-200); }
+.fg-source { display:block; margin-top:14px; overflow-wrap:anywhere; }
+.fg-section-heading { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px; margin-top:28px; }
+.fg-result { border:2px solid var(--green-600); margin-top:20px; scroll-margin-top:120px; }
+.fg-numbers { display:flex; flex-wrap:wrap; gap:24px; }
+.fg-numbers strong { display:block; font-size:var(--fs-num); }
+.fg-error { color:#991b1b; padding:16px; background:#fef2f2; }
+/* 本地没收录时的提示区：不是"查到结果"，所以不使用绿色边框 */
+.fg-offer { border-color:#b45309; }
+.fg-offer p { margin-bottom:12px; }
+.fg-offer form { margin:0 0 12px; }
+/* 点「联网找找看」之后换上来的等待界面。
+   [hidden] 要显式兜底：这两块如果哪天被加了 display，单靠 hidden 属性会失灵。 */
+.fg-net-ask[hidden], .fg-net-wait[hidden] { display:none; }
+/* 焦点是 JS 程序性移过来的（只为让读屏念出 role="status"），不是用户 Tab 过来的；
+   这一屏用户能做的只有等或按返回，再画一圈绿色描边会和橙色边框叠成双框。
+   必须带 .food-guide 前缀：下面那条 `.food-guide :focus-visible` 同样是两段，
+   写在它后面且同级，不加强就会被它盖掉。 */
+.food-guide .fg-net-wait:focus, .food-guide .fg-net-wait:focus-visible { outline:none; }
+.fg-net-lead { font-size:var(--fs-body); font-weight:600; }
+.fg-net-bar { position:relative; height:8px; margin:14px 0 12px;
+              background:#fde68a; border-radius:999px; overflow:hidden; }
+.fg-net-bar::after { content:""; position:absolute; top:0; bottom:0; width:38%;
+                     background:#b45309; border-radius:999px; left:-38%;
+                     animation:fg-net-slide 1.1s ease-in-out infinite; }
+@keyframes fg-net-slide { from { left:-38%; } to { left:100%; } }
+.fg-net-slow { color:#92400e; background:#fffbeb; border-left:4px solid #b45309;
+               padding:8px 12px; border-radius:var(--radius-sm); margin:0 0 10px; }
+html[data-contrast="high"] .fg-net-bar { background:#e5e7eb; }
+html[data-contrast="high"] .fg-net-bar::after { background:#111; }
+html[data-contrast="high"] .fg-net-slow { border:2px solid #111; border-left-width:6px; }
+/* 用户开了"减少动画"时不要留一截卡住的滑块：把整条压成静态的样子。 */
+@media (prefers-reduced-motion: reduce) {
+    .fg-net-bar::after { animation:none; left:0; width:100%; opacity:.45; }
+}
+.fg-craving { background:#fff7ed; border-left:4px solid #9a3412; padding:14px; margin:16px 0; }
+.fg-craving h4 { font-size:var(--fs-body); color:#9a3412; }
+.fg-craving a { display:inline-block; padding:8px 0; }
+.fg-empty { grid-column:1/-1; }
+.fg-label-tool { margin-top:24px; }
+.fg-label-tool .fg-fields>* { flex:1 1 210px; max-width:100%; }
+.fg-knowledge { margin:36px 0 24px; }
+.fg-knowledge article { border-top:3px solid var(--green-200); padding:12px 0; }
+.fg-footnote { background:var(--gray-50); margin-bottom:24px; }
+.food-guide :focus-visible { outline:3px solid var(--green-800); outline-offset:3px; }
+@media(max-width:600px) { .fg-search,.fg-result,.fg-card,.fg-footnote { padding:16px; } .fg-fields>* { width:100%; } .fg-search-row .btn { flex-grow:1; } }
+/* ── 升糖档位（2026-11-06）────────────────────────────────────────
+   以前 GI 藏在 <details> 第 4 行，卡片正面只有碳水，等于答非所问：
+   老人问「这个升糖怎么样」，页面答「含多少碳水」。现在把档位提到正面。
+
+   颜色 + 符号双通道（▼◆▲—），不靠红绿区分 —— 与适老化那轮的档位符号同一规矩。 */
+.fg-rise { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:6px 0 10px; line-height:1.45; }
+.fg-rise-badge { padding:4px 10px; border-radius:var(--radius-sm); font-weight:700; }
+.fg-rise-slow .fg-rise-badge { color:#166534; background:#dcfce7; }
+.fg-rise-slow .fg-rise-badge::before { content:"▼ "; }
+.fg-rise-mid .fg-rise-badge { color:#854d0e; background:#fef9c3; }
+.fg-rise-mid .fg-rise-badge::before { content:"◆ "; }
+.fg-rise-fast .fg-rise-badge { color:#991b1b; background:#fee2e2; }
+.fg-rise-fast .fg-rise-badge::before { content:"▲ "; }
+.fg-rise-none .fg-rise-badge { color:#374151; background:#f3f4f6; }
+.fg-rise-none .fg-rise-badge::before { content:"— "; }
+.fg-rise-gi { color:#374151; }
+/* GL 独占一行：和上面的 GI 档位挤在一行时，老人会把「升糖快」和「负荷低」
+   读成互相打架的两个结论（2026-11-06 用户当场指出）。分开写、各自带名字。 */
+.fg-rise-gl { color:#374151; font-weight:600; flex-basis:100%; }
+/* 括号里那句「约 8.2 克葡萄糖」：GL 本身没有单位，只给数字老人看不懂，
+   拿葡萄糖当参照物才对得上日常经验（2026-11-06 用户问「怎么没单位」）。 */
+.fg-rise-unit { font-weight:400; color:#4b5563; display:inline-block; white-space:nowrap; }
+/* 档位与负荷打架时的提示（西瓜：升糖快但一份只 GL 8）—— 这句往往最有价值 */
+.fg-hint { color:#92400e; background:#fffbeb; border-left:4px solid #b45309;
+           padding:8px 12px; border-radius:var(--radius-sm); margin:0 0 10px; }
+/* 联网定级（2026-11-06 第 2 步）：只给定性档位 + 原文依据句。
+   依据句必须看得见，否则「升糖较快」就成了另一个没有出处的结论。 */
+.fg-candidates { margin:10px 0; padding-left:20px; }
+.fg-candidates li { margin-bottom:12px; }
+.fg-quote { display:block; margin-top:4px; padding-left:10px;
+            border-left:3px solid #d1d5db; color:#4b5563; }
+html[data-contrast="high"] .fg-rise-badge { border:2px solid #111; }
+html[data-contrast="high"] .fg-hint { border:2px solid #111; border-left-width:6px; }
+
+html[data-reading="xl"] .fg-grid { grid-template-columns:1fr; }
+html[data-contrast="high"] .food-guide { color:#111; }
+html[data-contrast="high"] .fg-card,html[data-contrast="high"] .fg-search,html[data-contrast="high"] .fg-result { border-color:#111; }

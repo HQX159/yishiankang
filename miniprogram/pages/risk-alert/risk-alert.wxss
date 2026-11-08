@@ -1,0 +1,128 @@
+/* pages/risk-alert/risk-alert.wxss
+   配色沿用 app.wxss 的红色变量（--red-500 / --red-100），与网页版卡片一致。
+   只在本页生效，不动全局样式。 */
+
+.risk-head {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 40rpx 0 32rpx;
+}
+.risk-icon {
+  font-size: 72rpx;
+  line-height: 1;
+}
+.risk-title {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #b91c1c;
+}
+.risk-subtitle {
+  font-size: 26rpx;
+  color: var(--gray-500);
+  margin-top: 6rpx;
+}
+
+/* 后端给的主提示 */
+.risk-message-card {
+  background: var(--red-100);
+  border-left: 8rpx solid var(--red-500);
+  border-radius: var(--radius);
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+}
+.risk-message {
+  font-size: 28rpx;
+  line-height: 1.9;
+  color: #7f1d1d;
+}
+
+/* 命中指标 */
+.risk-section {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+}
+.risk-section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin-bottom: 20rpx;
+}
+.risk-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12rpx;
+  padding: 24rpx;
+  border-radius: 16rpx;
+  background: var(--gray-50);
+  border-left: 8rpx solid var(--red-500);
+  margin-bottom: 16rpx;
+}
+.risk-item:last-child {
+  margin-bottom: 0;
+}
+.risk-item.is-warn {
+  border-left-color: var(--yellow-500);
+}
+.risk-tag {
+  flex-shrink: 0;
+  background: var(--red-500);
+  color: var(--white);
+  font-size: 22rpx;
+  font-weight: 700;
+  border-radius: 40rpx;
+  padding: 4rpx 18rpx;
+}
+.risk-item.is-warn .risk-tag {
+  background: var(--yellow-500);
+}
+.risk-item-text {
+  flex: 1;
+  min-width: 400rpx;
+  font-size: 27rpx;
+  line-height: 1.7;
+  color: var(--gray-700);
+}
+
+/* 下一步建议 */
+.risk-steps {
+  background: #fff7ed;
+  border: 2rpx solid #fed7aa;
+}
+.risk-steps-title {
+  color: #9a3412;
+}
+.risk-step {
+  font-size: 27rpx;
+  line-height: 1.9;
+  color: #9a3412;
+  margin-bottom: 12rpx;
+  padding-left: 24rpx;
+  position: relative;
+}
+.risk-step::before {
+  content: '·';
+  position: absolute;
+  left: 6rpx;
+  font-weight: 700;
+}
+
+/* 免责声明 */
+.risk-disclaimer {
+  font-size: 22rpx;
+  color: var(--gray-400);
+  line-height: 1.8;
+  padding: 0 8rpx 24rpx;
+}
+
+/* 操作按钮 */
+.risk-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  padding-bottom: 40rpx;
+}

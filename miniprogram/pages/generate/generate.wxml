@@ -1,0 +1,34 @@
+<!-- pages/generate/generate.wxml -->
+<view class="container">
+  <view class="page-title">AI 智能生成食谱</view>
+  <view class="page-subtitle">基于您的健康数据和现有食材，量身定制个性化食谱</view>
+
+  <view class="card">
+    <view class="form-group">
+      <view class="form-label">您想吃什么？（可选）</view>
+      <textarea class="form-textarea" placeholder="例如：推荐一个适合控糖的午餐、清淡的家常菜..."
+                value="{{query}}" bindinput="onQueryInput" maxlength="500"/>
+    </view>
+
+    <view style="background:#f0fdf4;border-radius:16rpx;padding:28rpx;margin-bottom:32rpx;">
+      <view style="font-weight:600;color:#166534;margin-bottom:16rpx;">AI 将综合分析：</view>
+      <view style="color:#15803d;font-size:26rpx;line-height:2;">
+        您最新的健康报告（BMI、血糖、血脂等）
+        <br/>冰箱中现有的食材
+        <br/>内置营养学知识库
+      </view>
+    </view>
+
+    <button class="btn btn-primary btn-block btn-lg" bindtap="generate" disabled="{{generating}}">
+      {{btnText}}
+    </button>
+  </view>
+
+  <view wx:if="{{generating}}" class="loading-overlay">
+    <view class="loading-card">
+      <view class="spinner"></view>
+      <view class="loading-text">AI 正在为您生成食谱...</view>
+      <view class="loading-sub">正在分析健康数据 + 食材 + 营养知识库</view>
+    </view>
+  </view>
+</view>

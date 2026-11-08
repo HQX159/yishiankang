@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}设置 - 益食安康{% endblock %}
+
+{% block content %}
+<div class="settings-page">
+    <h1 class="page-title">⚙️ 设置</h1>
+    <p class="page-subtitle">把文字调到您看得最舒服的大小</p>
+
+    <div class="a11y-card">
+        <div class="a11y-field">
+            <label class="a11y-label" for="reading-size">阅读字号</label>
+            <input type="range" id="reading-size" name="reading_size" class="a11y-range"
+                   min="16" max="40" step="1" value="20"
+                   aria-label="阅读字号，可调范围 16 到 40 像素">
+            <div class="a11y-scale-marks" aria-hidden="true">
+                <span>16 · 小</span><span>24 · 中</span><span>32 · 大</span><span>40 · 特大</span>
+            </div>
+            <p class="a11y-readout">当前字号：<b id="reading-size-value">20</b> px</p>
+        </div>
+
+        <div class="a11y-field">
+            <p class="a11y-preview-label">效果预览（下面这段就是按您选的大小显示的）</p>
+            <div class="a11y-preview" id="reading-preview">益食安康 · 以下文字将按您选择的大小显示，方便您预览阅读效果。</div>
+        </div>
+
+        <div class="a11y-field">
+            <label class="a11y-switch" for="high-contrast">
+                <input type="checkbox" id="high-contrast" class="a11y-switch-input"
+                       aria-describedby="high-contrast-help">
+                <span class="a11y-switch-track" aria-hidden="true">
+                    <span class="a11y-switch-thumb"></span>
+                </span>
+                <span class="a11y-switch-text">
+                    <b>高对比度</b>
+                    <em id="high-contrast-help">打开后文字更黑、边框更清楚，看不清屏幕时用。</em>
+                </span>
+            </label>
+            {# 系统里已经开了「增强对比度」时，上面这个开关会被自动打开。
+               不解释一句，用户会以为自己没设过却被改动。默认隐藏，由 a11y.js 决定是否露出。 #}
+            <p class="a11y-sys-note" id="a11y-sys-note" hidden>
+                已跟随您的手机 / 电脑设置自动打开（在系统的「辅助功能 · 无障碍」里改的）。
+            </p>
+        </div>
+
+        <div class="a11y-actions">
+            <button type="button" class="btn btn-outline" id="reading-reset">恢复默认（20px）</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

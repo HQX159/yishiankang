@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}社区食谱 - 益食安康{% endblock %}
+
+{% block content %}
+<div class="community-container">
+    <div class="community-header">
+        <h1 class="page-title">🍲 社区食谱</h1>
+        <p class="community-sub">这些是大家分享过来的食谱，点开就能照着做。</p>
+    </div>
+
+    {# 筛选面板默认收起 —— 只想随便看看的用户不用先面对一堆条件 #}
+    <details class="filter-panel"{% if filters.purpose or filters.flavor or filters.meal_time %} open{% endif %}>
+        <summary>按条件筛选（目的 / 口味 / 时段）</summary>
+
+        <div class="filter-rows">
+            {% for kind, title in (('purpose', '饮食目的'), ('flavor', '口味偏好'), ('meal_time', '用餐时间')) %}
+            <div class="filter-row">
+                <span class="filter-row-name">{{ title }}</span>
+                <div class="filter-chips">
+                    {# 选项表每行是 (key, 中文标签[, 一句说明]) —— 只有「目的」带说明，所以按长度取值 #}
+                    {% for row in options[kind] %}
+                    {% set key = row[0] %}
+                    {% set newval = (None if filters[kind] == key else key) %}
+                    <a class="chip{% if filters[kind] == key %} is-on{% endif %}"
+                       href="{{ url_for('community.square', purpose=(newval if kind == 'purpose' else filters.purpose),
+                                        flavor=(newval if kind == 'flavor' else filters.flavor),
+                                        meal_time=(newval if kind == 'meal_time' else filters.meal_time),
+                                        sort=sort) }}"
+                       {% if row | length > 2 and row[2] %}title="{{ row[2] }}"{% endif %}>{{ row[1] }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if filters.purpose or filters.flavor or filters.meal_time %}
+        <div class="filter-actions">
+            <a class="btn btn-outline" href="{{ url_for('community.square', sort=sort) }}">清除全部筛选</a>
+        </div>
+        {% endif %}
+    </details>
+
+    <div class="community-bar">
+        <div class="sort-chips">
+            {% for key, label in sorts %}
+            <a class="chip chip-sort{% if sort == key %} is-on{% endif %}"
+               href="{{ url_for('community.square', purpose=filters.purpose, flavor=filters.flavor,
+                                meal_time=filters.meal_time, sort=key) }}">{{ label }}</a>
+            {% endfor %}
+        </div>
+        <div class="community-bar-right">
+            <span class="result-count">共 {{ total }} 条</span>
+            <a class="btn btn-outline" href="{{ url_for('community.mine') }}">我的分享</a>
+        </div>
+    </div>
+
+    {% if posts %}
+    <div class="post-list">
+        {% for post in posts %}
+        {% include 'community/_card.html' %}
+        {% endfor %}
+    </div>
+
+    {% if pages > 1 %}
+    <nav class="pager" aria-label="翻页">
+        {% if page > 1 %}
+        <a class="btn btn-outline" href="{{ url_for('community.square', purpose=filters.purpose, flavor=filters.flavor,
+                        meal_time=filters.meal_time, sort=sort, page=page-1) }}">← 上一页</a>
+        {% else %}
+        <span class="btn btn-outline is-disabled">← 上一页</span>
+        {% endif %}
+        <span class="pager-now">第 {{ page }} / {{ pages }} 页</span>
+        {% if page < pages %}
+        <a class="btn btn-outline" href="{{ url_for('community.square', purpose=filters.purpose, flavor=filters.flavor,
+                        meal_time=filters.meal_time, sort=sort, page=page+1) }}">下一页 →</a>
+        {% else %}
+        <span class="btn btn-outline is-disabled">下一页 →</span>
+        {% endif %}
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="empty-state">
+        {% if filters.purpose or filters.flavor or filters.meal_time %}
+        <p>这个条件下还没有人分享食谱。</p>
+        <p class="empty-hint">换个条件看看，或者把筛选清掉看看全部。</p>
+        <a class="btn btn-primary" href="{{ url_for('community.square') }}">看全部</a>
+        {% else %}
+        <p>社区里还空着，等着第一份分享。</p>
+        <p class="empty-hint">去「我的食谱」里点一下「分享到社区」，这里就有内容了。</p>
+        <a class="btn btn-primary" href="{{ url_for('recipe.get_recipes') }}">去我的食谱</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <p class="community-disclaimer">
+        社区里的食谱都是用户和 AI 一起生成的，仅供参考，不能代替医生或营养师的建议。
+        身体有不舒服，请及时就医。
+    </p>
+</div>
+{% endblock %}

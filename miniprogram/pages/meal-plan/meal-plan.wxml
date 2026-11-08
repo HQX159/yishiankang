@@ -1,0 +1,52 @@
+<!-- pages/meal-plan/meal-plan.wxml -->
+<view class="container">
+  <view class="page-title">健康膳食计划</view>
+  <view class="page-subtitle">AI 为您规划多天营养均衡的饮食方案</view>
+
+  <view class="card" style="margin-bottom:40rpx;">
+    <view class="form-group">
+      <view class="form-label">计划天数</view>
+      <picker mode="selector" range="{{dayOptions}}" value="{{dayIndex}}" bindchange="onDayChange">
+        <view class="form-input">{{dayOptions[dayIndex]}}</view>
+      </picker>
+    </view>
+    <view class="form-group">
+      <view class="form-label">饮食偏好（可选）</view>
+      <input class="form-input" placeholder="如：清淡少油、高蛋白、素食..."
+             value="{{preference}}" bindinput="onPrefInput"/>
+    </view>
+    <button class="btn btn-primary btn-block" bindtap="generate" disabled="{{generating}}">
+      {{btnText}}
+    </button>
+  </view>
+
+  <view wx:if="{{generating}}" class="loading-overlay">
+    <view class="loading-card">
+      <view class="spinner"></view>
+      <view class="loading-text">AI 正在生成膳食计划...</view>
+    </view>
+  </view>
+
+  <view wx:if="{{showResult}}">
+    <view class="meal-day" wx:for="{{planDays}}" wx:key="day" wx:for-item="dayItem">
+      <view class="meal-day-title">第 {{dayItem.day}} 天</view>
+      <view class="meal-cards">
+        <view class="meal-card" wx:for="{{dayItem.meals}}" wx:key="type" wx:for-item="meal">
+          <view class="meal-type">{{meal.type_cn}}</view>
+          <view class="meal-name">{{meal.name}}</view>
+          <view wx:if="{{meal.description}}" class="meal-desc">{{meal.description}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{hasAdvice}}" class="meal-advice">
+      <view style="font-size:32rpx;font-weight:600;color:#15803d;margin-bottom:16rpx;">总体健康建议</view>
+      <view>{{advice}}</view>
+    </view>
+  </view>
+
+  <view wx:if="{{showError}}" class="empty-state">
+    <view class="empty-icon">📋</view>
+    <view class="empty-desc">生成失败，请确保已上传健康报告和食材照片</view>
+  </view>
+</view>

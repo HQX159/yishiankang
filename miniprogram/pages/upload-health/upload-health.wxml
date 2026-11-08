@@ -1,0 +1,45 @@
+<!-- pages/upload-health/upload-health.wxml -->
+<view class="container">
+  <view class="page-title">上传健康报告</view>
+  <view class="page-subtitle">支持 PDF 和图片格式，系统将自动提取关键健康指标</view>
+
+  <view class="card">
+    <view class="upload-zone" bindtap="chooseFromAlbum">
+      <view class="upload-icon">📷</view>
+      <view>拍照或从相册选择</view>
+      <view class="upload-hint">适合手机里的体检报告截图 / 照片</view>
+    </view>
+
+    <view class="upload-zone" style="margin-top:24rpx;" bindtap="chooseFromChat">
+      <view class="upload-icon">📂</view>
+      <view>从微信聊天选择文件</view>
+      <view class="upload-hint">支持 PDF / PNG / JPG 格式</view>
+    </view>
+
+    <view wx:if="{{fileName}}" style="background:#f0fdf4;border-radius:16rpx;padding:20rpx 28rpx;margin:24rpx 0 32rpx;color:#16a34a;font-weight:500;font-size:26rpx;">
+      已选择: {{fileName}}
+    </view>
+    <view wx:else style="background:#f9fafb;border-radius:16rpx;padding:28rpx;margin-bottom:32rpx;">
+      <view style="font-weight:600;margin-bottom:12rpx;">支持的健康报告类型</view>
+      <view style="color:#6b7280;font-size:26rpx;line-height:2;">
+        · 体检报告（血常规、生化检查等）
+        · 医院诊断报告
+        · 健康筛查报告
+        · 过敏原检测报告
+      </view>
+    </view>
+
+    <button class="btn btn-primary btn-block" bindtap="upload" disabled="{{btnDisabled}}">{{btnText}}</button>
+  </view>
+
+  <!-- 指标偏高但未到危险：上传照常成功，这里只提醒一句 -->
+  <view wx:if="{{riskWarn}}" class="risk-warn-bar">
+    <text class="risk-warn-icon">⚠️</text>
+    <text class="risk-warn-text">{{riskWarn}}</text>
+  </view>
+
+  <view wx:if="{{showResult}}" class="card" style="margin-top:32rpx;">
+    <view style="font-weight:600;color:#16a34a;margin-bottom:16rpx;">解析结果</view>
+    <view class="result-text">{{resultText}}</view>
+  </view>
+</view>

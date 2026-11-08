@@ -1,0 +1,77 @@
+<view class="container food-guide">
+  <view class="intro"><view class="page-title">水果零食，怎么吃？</view><view>查食物，看份量。</view></view>
+  <view class="search-panel">
+    <label for="food-query">想吃什么？</label>
+    <input id="food-query" value="{{query}}" bindinput="onQuery" bindconfirm="search" maxlength="60" confirm-type="search" placeholder="例如：西瓜、香蕉、无糖饼干" />
+    <button class="btn btn-primary" bindtap="search" loading="{{loading}}">搜索食品</button>
+    <view class="muted">先查本地库，未找到时自动联网找资料。只需填写食品名称或做法。</view>
+    <view class="filters">
+      <picker wx:if="{{categories.length}}" range="{{categories}}" range-key="label" value="{{categoryIndex}}" bindchange="onCategory"><view class="picker">分类：{{categories[categoryIndex].label}} ▾</view></picker>
+      <picker wx:if="{{filters.length}}" range="{{filters}}" range-key="label" value="{{choiceIndex}}" bindchange="onChoice"><view class="picker">{{filters[choiceIndex].label}} ▾</view></picker>
+    </view>
+    <button class="btn btn-outline" bindtap="clear">清除条件 · 查看全部</button>
+  </view>
+  <view wx:if="{{error}}" class="error">{{error}}<button bindtap="search">重新加载</button></view>
+  <view wx:if="{{lookupLoading}}" class="empty">本地未找到，正在联网查找资料…</view>
+  <view wx:if="{{lookupResult &amp;&amp; lookupResult.status !== 'local'}}" class="food-card">
+    <view class="food-name">资料查找</view><view>{{lookupResult.message}}</view>
+    <view wx:for="{{lookupResult.sources}}" wx:key="url"><button class="source-btn" bindtap="copySource" data-url="{{item.url}}">{{item.title}} · 复制来源链接（待核对）</button></view>
+    <view wx:if="{{lookupResult.cached}}" class="muted">使用近期查询结果。</view>
+  </view>
+  <view wx:if="{{selected}}" id="portion-panel" class="portion-panel">
+    <view class="section-title">{{selected.name}} · 这份怎么吃</view>
+    <view class="badge {{selected.choice}}">{{selected.choice_label}}</view>
+    <view class="craving-panel">
+      <view class="food-name">实在想吃，吃多少合适？</view>
+      <view wx:if="{{selected.nutrition_only}}">已收录营养资料，可填写食用量换算；个人参考份量尚未整理。</view>
+      <view wx:elif="{{!result &amp;&amp; selected.craving.amount !== null}}">小份参考：{{selected.craving.amount}} {{selected.unit_label}}（{{selected.measure}}）</view>
+      <view wx:elif="{{result &amp;&amp; result.craving.amount !== null}}">小份参考：{{result.craving.amount}} {{selected.unit_label}}（{{selected.measure}}）</view>
+      <view wx:else>先看包装标签，再换算份量。</view>
+      <view>{{selected.note}}</view>
+    </view>
+    <label for="food-amount">准备吃多少（{{selected.unit_label}}）</label>
+    <input id="food-amount" type="digit" value="{{amount}}" bindinput="onAmount" placeholder="输入克数或毫升数" />
+    <view wx:if="{{showDetails || (selected.craving.amount === null &amp;&amp; !selected.nutrition_only)}}">
+      <label for="label-carb">每 100 {{selected.unit_label}}的碳水克数（选填）</label>
+      <input id="label-carb" type="digit" value="{{labelCarb}}" bindinput="onLabelCarb" placeholder="填写包装上的碳水化合物" />
+    </view>
+    <button class="btn btn-primary" bindtap="calculate" loading="{{calculating}}" disabled="{{calculating}}">查看这份</button>
+    <view wx:if="{{portionError}}" class="error">{{portionError}}</view>
+    <view wx:if="{{result}}" aria-live="polite">
+      <view wx:if="{{result.from_label}}" class="muted">按您填写的包装碳水换算。</view>
+      <view class="result-value">{{result.amount}} {{selected.unit_label}}，碳水{{result.carb !== null ? '约 ' + result.carb + ' 克' : '请查看包装标签'}}</view>
+      <view wx:if="{{result.above_reference}}">▲ 超过参考量，建议分小份吃。</view>
+    </view>
+    <view class="muted">参考量不是个人安全上限，加餐计入全天饮食。</view>
+    <button class="source-btn" bindtap="toggleDetails">{{showDetails ? '收起说明' : '更多说明 · 包装换算'}}</button>
+    <view wx:if="{{showDetails}}"><view>{{selected.gi_label}}<text wx:if="{{selected.gi !== null}}"> · {{selected.gi}} {{selected.gi_reference ? '（同类参考）' : ''}}</text></view><view class="muted">{{selected.gi_source}}</view><view wx:if="{{selected.nutrition_provenance}}" class="muted">{{selected.carbohydrate_definition}}。来源编号 {{selected.nutrition_provenance.fdc_id}}，核对日期 {{selected.verified_on}}。原始食品：{{selected.source_description}}</view><button class="source-btn" bindtap="copySource" data-url="{{selected.source.url}}">复制参考来源链接</button></view>
+  </view>
+  <view class="section-title">食物参考库 · {{foods.length}} 种</view>
+  <view class="muted">参考份量或营养资料，加餐计入全天饮食。</view>
+  <view wx:if="{{loading}}" class="empty">正在加载食品目录…</view>
+  <view wx:elif="{{!error &amp;&amp; !foods.length}}" class="empty">
+    <view>暂未找到这类食品。试试通用名称或清除筛选。</view>
+    <view>暂时没有匹配资料，不能判断适不适合您吃、能吃多少。</view>
+    <view wx:if="{{query}}" class="food-card">
+      <view class="food-name">有包装？按标签算一算</view>
+      <picker range="{{customUnits}}" value="{{customUnitIndex}}" bindchange="onCustomUnit"><view class="picker">标签单位：每 100 {{customUnits[customUnitIndex]}} ▾</view></picker>
+      <label for="custom-carb">标签碳水（克）</label><input id="custom-carb" type="digit" value="{{customCarb}}" bindinput="onCustomCarb" placeholder="填写碳水化合物，不是只看糖" />
+      <label for="custom-amount">准备吃多少（{{customUnits[customUnitIndex]}}）</label><input id="custom-amount" type="digit" value="{{customAmount}}" bindinput="onCustomAmount" />
+      <button class="btn btn-primary" bindtap="calculateCustom" loading="{{customLoading}}" disabled="{{customLoading}}">换算碳水</button>
+      <view wx:if="{{customError}}" class="error">{{customError}}</view>
+      <view wx:if="{{customResult}}" aria-live="polite"><view class="result-value">{{customResult.amount}} {{customResult.unit_label}}，碳水约 {{customResult.carb}} 克</view><view class="muted">{{customResult.notice}}</view></view>
+      <view class="muted">食用量单位须与标签一致。没有标签就不猜数值。</view>
+    </view>
+  </view>
+  <view class="food-card" wx:for="{{foods}}" wx:key="id">
+    <view class="card-top"><text>{{item.category_label}}</text><text class="badge {{item.choice}}">{{item.choice === 'recommend' ? '✓' : item.choice === 'reference' ? '' : '▲'}} {{item.choice_label}}</text></view>
+    <view class="food-name">{{item.name}}</view>
+    <view wx:if="{{item.craving.amount !== null}}"><view>{{item.choice === 'occasional' ? '想吃时，先分一小份' : '一次参考'}}：<text class="portion">{{item.craving.amount}} {{item.unit_label}}</text></view><view class="muted">{{item.measure}}<text wx:if="{{item.craving.carb !== null}}"> · 碳水约 {{item.craving.carb}} 克</text></view></view>
+    <view wx:elif="{{item.nutrition_only}}">每 100 克碳水约 {{item.carb_per_100}} 克；可填写实际食用量换算。</view>
+    <view wx:else>先看包装，再确定份量</view><view>{{item.note}}</view>
+    <button class="btn btn-outline" bindtap="selectFood" data-id="{{item.id}}">{{item.nutrition_only ? '换算这份营养' : '想吃的话，吃多少？'}}</button>
+  </view>
+  <view class="footnote">参考量不是个人安全上限。血糖偏高或有特殊饮食要求时，请按医嘱。</view>
+  <button class="source-btn" bindtap="toggleReference">{{showReference ? '收起资料' : '控糖知识与资料来源'}}</button>
+  <view wx:if="{{showReference}}"><view class="food-card" wx:for="{{tips}}" wx:key="title"><view class="food-name">{{item.title}}</view><view>{{item.text}}</view></view><view class="footnote">{{notice}}</view><view wx:for="{{sources}}" wx:key="url"><button class="source-btn" bindtap="copySource" data-url="{{item.url}}">{{item.title}} · 复制链接</button></view></view>
+</view>

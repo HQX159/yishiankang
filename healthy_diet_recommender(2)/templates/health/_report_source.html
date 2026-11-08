@@ -1,0 +1,43 @@
+{# templates/health/_report_source.html
+   「健康报告」页专用 —— 把**最近上传的那份报告里系统实际读到的文字**摆出来。
+
+   为什么要有它
+       指标卡片是"读出来的数字"，但页面上一直没有"读到的东西"。
+       于是指标区为空时，用户完全没法判断是哪一种情况：
+         ① 还没传过报告；
+         ② 传了，但这份报告里本来就没有可抽的数字（胃镜 / 影像 / 病理这类叙述型报告）；
+         ③ 传的文件根本没读到文字（扫描件、图片型 PDF、解析报错）。
+       空态文案再怎么改都说不完这三种，把原文摆出来则一眼就能分辨。
+       文案里原来那句"请以上面的报告原文为准"也是虚的 —— 页面上根本没有原文可看。
+
+   调用方需要提供
+       latest_report —— routes/upload_routes.py::latest_report_source() 的返回值：
+                        {filename, uploaded_text, text, note, text_len}
+                        为 None 表示"这个用户还没传过报告"，本片段整块不渲染。
+
+   注意
+       默认折叠（<details>）：有指标时它是"核对用"的补充，不该把页面撑长；
+       读不出指标时，点开就知道问题出在报告本身还是文件本身。
+#}
+{% set rs = latest_report if (latest_report is defined and latest_report) else None %}
+{% if rs %}
+<details class="report-source">
+    <summary class="report-source-sum">
+        <span class="report-source-title">📄 系统从《{{ rs.filename }}》读到的内容</span>
+        <span class="report-source-hint">
+            {%- if rs.uploaded_text %}{{ rs.uploaded_text }} 上传 · {% endif %}共 {{ rs.text_len }} 字
+        </span>
+    </summary>
+
+    {% if rs.text %}
+    <pre class="report-source-text">{{ rs.text }}</pre>
+    {% else %}
+    <p class="report-source-empty">{{ rs.note }}</p>
+    {% endif %}
+
+    <p class="report-source-note">
+        指标数字就是从这段文字里读出来的。<b>读不出时不猜</b> ——
+        上面没有的指标，是这份文件里确实没写。
+    </p>
+</details>
+{% endif %}

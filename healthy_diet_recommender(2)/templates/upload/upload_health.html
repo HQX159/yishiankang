@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block title %}健康报告 - 益食安康{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* 2026-10-12 全站视觉对齐：
+       .health-report-page 的宽度改用全站统一的 --page-w（原来写死 900，与其它页面各不同步）；
+       .hr-section > h2 与 .page-title/.page-subtitle 的字号间距已上移到 style.css，
+       这里只保留本页专有的几处。 */
+    .hr-section { margin-top: var(--sp-7); }
+    .hr-section > h2 .hr-section-hint {
+        font-size: var(--fs-note);
+        font-weight: 400;
+        color: var(--gray-500);
+    }
+    .upload-result-actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin: var(--sp-6) 0 0; }
+    .health-report-foot {
+        font-size: var(--fs-note);
+        color: var(--gray-500);
+        line-height: 1.7;
+        margin-top: var(--sp-6);
+        border-top: 1px solid var(--gray-200);
+        padding-top: var(--sp-3);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{# 单页结构：
+     ① 上传区（始终在）—— 这是本页的主操作
+     ② 指标区（始终在）—— 有数据就画卡片 + 趋势，没数据就说明怎么才有
+     ③ 报告原文（可折叠）—— 「系统到底读到了什么」，指标为空时用它解释原因
+   上传成功后不再跳走、也不换一套页面，只是原地多出"已上传"提示与（必要时）就医卡片。
+
+   metrics 允许不传 / 传 None：片段自身会兜成空 dict（否则 Jinja 的 Undefined 取属性会 500）。
+   latest_report 同理 —— 由视图函数 latest_report_source() 提供，None = 还没传过报告。 #}
+{% set hr_has_cards = (metrics.get('cards') | length) if (metrics is defined and metrics) else 0 %}
+{% set hr_has_report = (latest_report is defined and latest_report) or False %}
+<div class="health-report-page">
+    <h1 class="page-title">🩺 健康报告</h1>
+    <p class="page-subtitle">
+        上传体检报告，系统自动读出血糖、糖化血红蛋白等关键指标；下面就是您历次报告里读出来的指标与变化趋势。
+    </p>
+
+    {% if risk %}
+    {# 指标达危险水平：先把"为什么要就医"讲清楚，再往下给数字。
+       按钮直接锚到本页的指标区 —— 合并成一页之后，不该再把人送去另一个页面。 #}
+    {% with risk_title='报告中的指标需要尽快就医',
+            risk_actions=[
+                {'label': '📊 看下面的指标明细', 'url': '#metrics', 'style': 'primary'},
+                {'label': '🥗 生成食谱', 'url': url_for('recipe.generate_recipe'), 'style': 'outline'}
+            ] %}
+        {% include 'health/_risk_alert.html' %}
+    {% endwith %}
+    {% endif %}
+
+    {# R5 第 3 项 就诊沟通清单：偏高 / 连续多天偏高时出现。
+       上面那张红卡说的是"尽快去医院"，这张说的是"去了带什么、怎么问" ——
+       两件事，不合并。已在红卡场景时不再重复标题（visit_no_title）。 #}
+    {% if visit is defined and visit and visit.show %}
+    {% with visit_no_title = (risk is defined and risk) %}
+    {% include 'health/_visit_card.html' %}
+    {% endwith %}
+    {% endif %}
+
+    <!-- ① 上传区 -->
+    <div class="hr-section">
+        <h2>📄 上传新报告 <span class="hr-section-hint">支持 PDF / PNG / JPG，最大 16MB</span></h2>
+
+        <div class="upload-card">
+            <form method="POST" action="{{ url_for('upload.upload_health_report') }}"
+                  enctype="multipart/form-data" class="upload-form">
+                <div class="upload-zone" id="dropZone">
+                    <div class="upload-icon">📂</div>
+                    <p>拖拽文件到这里，或点击下方按钮选择</p>
+                    <p class="upload-hint">支持 PDF / PNG / JPG 格式，最大 16MB</p>
+                    <input type="file" id="fileInput" name="file"
+                           accept=".pdf,.png,.jpg,.jpeg" required hidden>
+                    <button type="button" class="btn btn-outline" id="selectBtn">选择文件</button>
+                    <p class="upload-filename" id="fileName" style="display:none;"></p>
+                </div>
+
+                <div class="upload-info">
+                    <h3>📋 支持的健康报告类型</h3>
+                    <ul>
+                        <li>体检报告（血常规、生化检查等）</li>
+                        <li>医院诊断报告</li>
+                        <li>健康筛查报告</li>
+                        <li>过敏原检测报告</li>
+                    </ul>
+                    <p class="upload-note">💡 上传后系统会自动识别并提取：BMI、血糖、血脂、血压等关键指标</p>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">📤 上传并解析</button>
+            </form>
+        </div>
+    </div>
+
+    {# R5 每日记录：放在「上传」与「看指标」之间 —— 两条数据来源，下面是合并后的结果。
+       报告一年一两次，血糖天天有，所以这张卡才是日常入口。 #}
+    {% if checkin is defined and checkin %}
+    {% include 'health/_checkin_card.html' %}
+    {% endif %}
+
+    <!-- ② 指标区：和独立页共用 templates/health/_metrics_panel.html -->
+    <div class="hr-section" id="metrics">
+        <h2>📊 我的健康指标 <span class="hr-section-hint">数字来自你上传的报告和每日记录，读不出就不猜</span></h2>
+
+        {# 空态文案分两种口径，判据是**用户有没有传过报告**（不是"这次是不是刚上传"）：
+           旧版用 just_uploaded 判，只有刚上传那一下说得出"这份读不出"，一刷新就变回
+           "还没上传过"，用户看着像上传功能坏了 —— 那是本次修掉的问题。
+
+           ⚠️ 含文件名的这句在 Python 里拼好（latest_report.empty_text），这里只引用：
+           用 Jinja 的 ~ 拼会在拼接时把 <br>/<b> 一起转义成字面量。 #}
+        {% if hr_has_report %}
+        {% set mp_empty_text = latest_report.empty_text %}
+        {# 这句带文件名、要分两三行，居中会显得散 → 左对齐 #}
+        {% set mp_empty_class = 'is-long' %}
+        {% else %}
+        {% set mp_empty_text = '还没有可展示的指标。<br>'
+            ~ '上传第一份体检报告后，这里会出现指标卡片和变化趋势。' %}
+        {% endif %}
+        {# 关键一行：切换指标的标签必须回到本页，否则一点就跳到另一个页面 —— 那正是要消掉的分裂 #}
+        {% set mp_endpoint = 'upload.upload_health_report' %}
+        {% include 'health/_metrics_panel.html' %}
+
+        {# 「系统读到了什么」：指标为空时它把原因落到实处，有指标时它是核对依据 #}
+        {% include 'health/_report_source.html' %}
+
+        {% if hr_has_cards %}
+        <div class="upload-result-actions">
+            <a href="{{ url_for('recipe.generate_recipe') }}" class="btn btn-primary">🥗 去生成食谱</a>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline">🏠 返回首页</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <p class="health-report-foot">⚠️ {{ disclaimer }}</p>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// 上传表单在页面里始终存在；仍然判空，避免以后结构调整时脚本在第一行就报错中断
+(function () {
+    var selectBtn = document.getElementById('selectBtn');
+    var fileInput = document.getElementById('fileInput');
+    if (!selectBtn || !fileInput) return;
+
+    selectBtn.addEventListener('click', function () {
+        fileInput.click();
+    });
+    fileInput.addEventListener('change', function () {
+        var name = this.files[0] ? this.files[0].name : '';
+        var el = document.getElementById('fileName');
+        if (name) {
+            el.textContent = '已选择: ' + name;
+            el.style.display = 'block';
+        } else {
+            el.style.display = 'none';
+        }
+    });
+})();
+</script>
+{% endblock %}

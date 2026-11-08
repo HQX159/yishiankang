@@ -1,0 +1,27 @@
+<!-- pages/recipes/recipes.wxml -->
+<view class="container">
+  <view class="page-title">我的食谱</view>
+  <view class="page-subtitle">AI 为您生成的所有个性化食谱</view>
+
+  <view wx:if="{{showList}}" class="recipe-list">
+    <view class="recipe-item" wx:for="{{displayRecipes}}" wx:key="id"
+          bindtap="goDetail" data-id="{{item.id}}">
+      <view class="recipe-item-title">{{item.title}}</view>
+      <view class="recipe-item-meta">{{item.meta}}</view>
+      <view class="recipe-item-ingredients">{{item.ingPreview}}</view>
+    </view>
+  </view>
+
+  <view wx:else class="empty-state">
+    <view class="empty-icon">🍳</view>
+    <view class="empty-title">还没有食谱</view>
+    <view class="empty-desc">上传健康报告和冰箱照片后，让 AI 为您生成个性化食谱吧！</view>
+    <button class="btn btn-primary" bindtap="goGenerate">立即生成</button>
+  </view>
+
+  <view wx:if="{{showLoadMore}}" style="text-align:center;padding:32rpx;">
+    <button class="btn btn-outline btn-sm" bindtap="loadMore" disabled="{{loading}}">
+      {{loadMoreText}}
+    </button>
+  </view>
+</view>

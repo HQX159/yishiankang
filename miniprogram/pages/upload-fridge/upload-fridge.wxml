@@ -1,0 +1,46 @@
+<!-- pages/upload-fridge/upload-fridge.wxml -->
+<view class="container">
+  <view class="page-title">拍照识别食材</view>
+  <view class="page-subtitle">上传冰箱照片，AI 自动识别现有食材</view>
+
+  <view class="card">
+    <view wx:if="{{imagePath}}" style="text-align:center;margin-bottom:24rpx;">
+      <image src="{{imagePath}}" mode="aspectFit"
+             style="width:100%;max-height:500rpx;border-radius:16rpx;"/>
+    </view>
+
+    <view wx:if="{{showPicker}}" class="upload-zone" bindtap="chooseImage">
+      <view class="upload-icon">🧊</view>
+      <view>点击拍照或选择照片</view>
+      <view class="upload-hint">支持 PNG / JPG 格式</view>
+    </view>
+
+    <view wx:if="{{showActions}}" style="display:flex;gap:20rpx;">
+      <button class="btn btn-outline btn-block" bindtap="chooseImage">重新选择</button>
+      <button class="btn btn-primary btn-block" bindtap="upload" disabled="{{uploading}}">
+        {{btnText}}
+      </button>
+    </view>
+  </view>
+
+  <view wx:if="{{showResult}}" class="card" style="margin-top:32rpx;">
+    <view style="font-weight:600;color:#16a34a;margin-bottom:20rpx;">
+      识别到 {{ingredientCount}} 种食材
+    </view>
+    <view class="ingredient-tags">
+      <view class="ingredient-tag" wx:for="{{ingredients}}" wx:key="id">{{item.displayName}}</view>
+    </view>
+    <button class="btn btn-primary btn-block" style="margin-top:32rpx;" bindtap="goGenerate">
+      用这些食材生成食谱
+    </button>
+  </view>
+
+  <view wx:if="{{showTips}}" class="card" style="margin-top:32rpx;">
+    <view style="font-weight:600;margin-bottom:12rpx;">拍摄建议</view>
+    <view style="color:#6b7280;font-size:26rpx;line-height:2;">
+      · 尽量拍摄冰箱内部全景，确保食材清晰可见
+      · 避免强光反射或严重遮挡
+      · 系统使用 YOLOv8 深度学习模型自动识别
+    </view>
+  </view>
+</view>

@@ -1,0 +1,56 @@
+{# templates/health/_risk_alert.html
+   「建议尽快就医」提示卡片 —— 被 recipe/generate.html、recipe/meal_plan.html、
+   upload/upload_health.html 三处共用。
+
+   什么时候出现
+       路由里 check_health_risk() 判定 blocked（报告指标达危险水平）时，
+       调用方把 risk 传进来，本片段负责把"为什么要就医"讲清楚。
+
+   可选参数（不传就用默认值，默认面向"生成食谱被拦"的场景）
+       risk_title   —— 卡片标题
+       risk_actions —— 底部按钮列表，形如 [{'label':…, 'url':…, 'style':'primary'|'outline'}]
+
+   注意
+       样式已**上移到 static/css/style.css**（2026-10-12 全站视觉对齐）的
+       「建议尽快就医」卡片一节 —— 它是三处共用的组件，样式放在共用样式表里才不会再各写一份。
+       类名不变（.risk-alert-*），调用方与自测都不用动。
+#}
+{% set alert_title = risk_title if risk_title is defined else '建议尽快就医，本次未生成食谱' %}
+{% set alert_actions = risk_actions if risk_actions is defined else [
+        {'label': '📄 上传新的健康报告', 'url': url_for('upload.upload_health_report'), 'style': 'primary'},
+        {'label': '🩺 查看我的健康指标', 'url': url_for('health.metrics_page'), 'style': 'outline'}
+    ] %}
+<div class="risk-alert" role="alert">
+    <div class="risk-alert-head">
+        <span class="risk-alert-icon">⚠️</span>
+        <h2 class="risk-alert-title">{{ alert_title }}</h2>
+    </div>
+
+    <p class="risk-alert-message">{{ risk.message }}</p>
+
+    {% if risk.findings %}
+    <p class="risk-alert-sub">报告中被判定为需要关注的指标：</p>
+    <ul class="risk-alert-list">
+        {% for f in risk.findings %}
+        <li class="risk-alert-item{% if f.level != 'critical' %} is-warn{% endif %}">
+            <span class="risk-alert-tag">{% if f.level == 'critical' %}需就医{% else %}偏高{% endif %}</span>
+            <span class="risk-alert-text">{{ f.message }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <ol class="risk-alert-steps">
+        <li>携带本次报告，尽快到<b>内分泌科</b>或<b>心血管内科</b>就诊；</li>
+        <li>正在服用的降糖药、降压药，<b>不要自行加量或停药</b>；</li>
+        <li>若出现胸闷胸痛、意识模糊、呼吸深快、恶心呕吐等情况，请<b>立即急诊</b>。</li>
+    </ol>
+
+    <p class="risk-alert-foot">{{ risk.disclaimer }}</p>
+
+    <div class="risk-alert-actions">
+        {% for a in alert_actions %}
+        <a href="{{ a.url }}" class="btn btn-{{ a.style }}">{{ a.label }}</a>
+        {% endfor %}
+    </div>
+</div>

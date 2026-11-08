@@ -1,0 +1,122 @@
+{# templates/health/_metrics_panel.html
+   健康指标面板 —— 「健康报告」页（原上传报告页）与「健康指标」独立页**共用同一份**。
+
+   为什么要做成片段
+       两处要展示的是同一批数字。各写一份的话，判档标签、日期格式、趋势文案迟早不一致。
+       视图数据由 utils/metric_view.build_metrics_context() 统一组装，模板也统一在这里。
+
+   调用方需要提供
+       metrics —— build_metrics_context() 的返回值（dict）
+
+   可选参数
+       mp_endpoint   切换指标时跳到哪个端点，默认 'health.metrics_page'。
+                     「健康报告」页要传 'upload.upload_health_report'，
+                     否则点一下标签就跳到另一个页面去了（这正是要消掉的"两个地方"）。
+       mp_empty_text 没有任何指标时显示的文案。**调用方应当传** —— 只有调用方才知道
+                     用户是"还没传过报告"还是"传了，但这份报告读不出数字"
+                     （判据见 routes/upload_routes.py::latest_report_source()）。
+                     下面给的默认值按"还没传过报告"的口径写，仅作兜底。
+       mp_empty_class 空状态额外的 class。文案长（带文件名、要分两三行）时传 'is-long'，
+                     左对齐更好读；短提示（默认"换个指标看看"那种）保持居中。
+
+   键名说明
+       里面有 cards / selected / trend / chart ... 这些键，刻意避开了 dict 自带的
+       方法名（items、keys、values、get 等）——否则 Jinja 里写 `metrics.items`
+       会拿到内置方法而不是数据。真要取用一律走 `.get()`。
+
+   注意
+       样式已**上移到 static/css/style.css**（2026-10-12 全站视觉对齐）。
+       本片段原来内联了一整份 .metric-* 样式，与 templates/nutrition/intake.html
+       里的 .nutri-* 逐行重复、数值还各不相同（圆角 12/12、卡片内边距 12-16-14 vs 12-16-14…
+       字号 25px vs 25px 但 margin 6px 0 4px vs 6px 0 4px，两处各写一份）。
+       现在合并成 style.css 里的一条分组选择器，**类名不变**，模板与自测都不用动。
+#}
+{# 对缺参数免疫：调用方漏传 metrics 时应该显示"空"而不是 500。
+   Jinja 默认的 Undefined 一旦取属性就会抛 UndefinedError，所以先兜成空 dict。 #}
+{% set mp_metrics = metrics if (metrics is defined and metrics) else {} %}
+{% set mp_cards = mp_metrics.get('cards') or [] %}
+{% set mp_selected = mp_metrics.get('selected') or '' %}
+{% set mp_trend = mp_metrics.get('trend') %}
+{% set mp_chart = mp_metrics.get('chart') or '' %}
+{% set mp_points = mp_metrics.get('point_count') or 0 %}
+{% set mp_change = mp_metrics.get('change_text') or '' %}
+{% set mp_summary = mp_metrics.get('summary') or {} %}
+{% set mp_ep = mp_endpoint if mp_endpoint is defined else 'health.metrics_page' %}
+{% set mp_empty = mp_empty_text if mp_empty_text is defined else
+   '还没有可展示的指标。<br>上传第一份体检报告后，这里会出现指标卡片和变化趋势。' %}
+{% set mp_empty_extra = mp_empty_class if mp_empty_class is defined else '' %}
+
+{% if not mp_cards %}
+<div class="chart-empty {{ mp_empty_extra }}">{{ mp_empty | safe }}</div>
+{% else %}
+
+<!-- 一眼看整体：只数数，不下新的医学结论 -->
+{% if mp_summary.get('text') %}
+<p class="metric-summary">
+    <span class="metric-summary-label">指标概览</span>
+    {{ mp_summary.get('text') }}
+</p>
+{% endif %}
+
+<!-- 指标卡片 -->
+<div class="metric-grid">
+    {% for item in mp_cards %}
+    {% set level = item.status.level if item.status else 'none' %}
+    <a class="metric-card metric-card-link is-{{ level }}" href="{{ url_for(mp_ep, key=item.key, _anchor='metric-trend') }}" aria-label="查看{{ item.label }}变化趋势">
+        <div class="metric-name">{{ item.label }}</div>
+        <div class="metric-value">{{ item.value_text }}<span class="metric-unit">{{ item.unit }}</span></div>
+        <div class="metric-meta">
+            {# 来源：记录（自己填的）/ 报告（医院读出来的）。见 utils/metric_view.py #}
+            {%- if item.source_text %}<span class="metric-source is-{{ item.source }}">{{ item.source_text }}</span>{% endif %}
+            {{ item.date_text }}
+            {%- if item.points > 1 %} · 共 {{ item.points }} 次{% endif %}
+        </div>
+        {% if item.status %}
+        <span class="metric-tag is-{{ level }}">{{ item.status.tag }}</span>
+        {% else %}
+        <span class="metric-tag is-none">未判定口径</span>
+        {% endif %}
+    </a>
+    {% endfor %}
+</div>
+
+<!-- 趋势图 -->
+<div class="section metric-trend-section" id="metric-trend">
+    <h2>📈 变化趋势</h2>
+    <div class="metric-tabs">
+        {% for item in mp_cards %}
+        <a class="metric-tab {% if item.key == mp_selected %}active{% endif %}"
+           href="{{ url_for(mp_ep, key=item.key, _anchor='metric-trend') }}" {% if item.key == mp_selected %}aria-current="true"{% endif %}>{{ item.label }}</a>
+        {% endfor %}
+    </div>
+
+    <div class="chart-card">
+        <div class="chart-head">
+            <h3 class="chart-title">{{ mp_trend.label if mp_trend else '趋势' }}</h3>
+            <span class="chart-note">
+                {% if mp_points > 1 %}
+                共 {{ mp_points }} 个数据点{% if mp_change %} · {{ mp_change }}{% endif %}
+                {% elif mp_points == 1 %}
+                当前只有 1 个数据点，再上传一份报告就能看到变化
+                {% endif %}
+            </span>
+        </div>
+
+        {% if mp_chart %}
+        {{ mp_chart | safe }}
+        {% else %}
+        <div class="chart-empty">这个指标暂时没有数据，换个指标看看</div>
+        {% endif %}
+
+        {% if mp_points > 1 %}
+        <p class="metric-hint">横轴是记录日期（每日记录或体检报告都在里面），纵轴是指标数值。点一下圆点可以看到当天数值。</p>
+        {% endif %}
+    </div>
+
+    <p class="metric-hint">
+        指标是否"正常"以医师判断为准。本页只对血糖、糖化血红蛋白、血压做了阈值标注
+        （口径来自公开指南，见 <code>utils/risk_guard.py</code> 顶部常量）；
+        血脂、尿酸、BMI 暂无判定口径，只显示数值。
+    </p>
+</div>
+{% endif %}

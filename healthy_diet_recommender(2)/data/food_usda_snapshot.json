@@ -1,0 +1,2115 @@
+{
+  "schema_version": 1,
+  "verified_on": "2026-11-03",
+  "verification_scope": "食品形态与官方数据字段核对；不是临床份量审核",
+  "download_url": "https://fdc.nal.usda.gov/fdc-datasets/FoodData_Central_sr_legacy_food_csv_2018-04.zip",
+  "archive_sha256": "b80817294b8850530aaedf2e515c02593b1824f763a0ff356e5c2081643e6fd0",
+  "carbohydrate_definition": "USDA carbohydrate by difference，包含膳食纤维；不等同于所有中文标签口径",
+  "foods": [
+    {
+      "id": "watermelon",
+      "name": "西瓜",
+      "category": "fruit",
+      "fdc_id": 167765,
+      "aliases": [
+        "西瓜果肉"
+      ],
+      "expected_description": "Watermelon, raw",
+      "operation": "enrich",
+      "nutrition": {
+        "carbohydrate_g": 7.55,
+        "fiber_g": 0.4,
+        "sugars_g": 6.2,
+        "protein_g": 0.61,
+        "fat_g": 0.15,
+        "energy_kcal": 30.0,
+        "sodium_mg": 1.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 167765,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/167765/nutrients"
+      }
+    },
+    {
+      "id": "lychee",
+      "name": "荔枝",
+      "category": "fruit",
+      "fdc_id": 169086,
+      "aliases": [
+        "鲜荔枝"
+      ],
+      "expected_description": "Litchis, raw",
+      "operation": "enrich",
+      "nutrition": {
+        "carbohydrate_g": 16.53,
+        "fiber_g": 1.3,
+        "sugars_g": 15.23,
+        "protein_g": 0.83,
+        "fat_g": 0.44,
+        "energy_kcal": 66.0,
+        "sodium_mg": 1.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 169086,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/169086/nutrients"
+      }
+    },
+    {
+      "id": "longan",
+      "name": "龙眼",
+      "category": "fruit",
+      "fdc_id": 169089,
+      "aliases": [
+        "鲜桂圆"
+      ],
+      "expected_description": "Longans, raw",
+      "operation": "enrich",
+      "nutrition": {
+        "carbohydrate_g": 15.14,
+        "fiber_g": 1.1,
+        "sugars_g": null,
+        "protein_g": 1.31,
+        "fat_g": 0.1,
+        "energy_kcal": 60.0,
+        "sodium_mg": 0.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 169089,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/169089/nutrients"
+      }
+    },
+    {
+      "id": "egg",
+      "name": "水煮蛋",
+      "category": "snack",
+      "fdc_id": 173424,
+      "aliases": [
+        "白煮蛋"
+      ],
+      "expected_description": "Egg, whole, cooked, hard-boiled",
+      "operation": "enrich",
+      "nutrition": {
+        "carbohydrate_g": 1.12,
+        "fiber_g": 0.0,
+        "sugars_g": 1.12,
+        "protein_g": 12.58,
+        "fat_g": 10.61,
+        "energy_kcal": 155.0,
+        "sodium_mg": 124.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 173424,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/173424/nutrients"
+      }
+    },
+    {
+      "id": "kiwi_green",
+      "name": "绿心猕猴桃",
+      "category": "fruit",
+      "fdc_id": 168153,
+      "aliases": [
+        "猕猴桃",
+        "奇异果"
+      ],
+      "expected_description": "Kiwifruit, green, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 14.66,
+        "fiber_g": 3.0,
+        "sugars_g": 8.99,
+        "protein_g": 1.14,
+        "fat_g": 0.52,
+        "energy_kcal": 61.0,
+        "sodium_mg": 3.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 168153,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/168153/nutrients"
+      }
+    },
+    {
+      "id": "kumquat",
+      "name": "金橘",
+      "category": "fruit",
+      "fdc_id": 168154,
+      "aliases": [
+        "金桔"
+      ],
+      "expected_description": "Kumquats, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 15.9,
+        "fiber_g": 6.5,
+        "sugars_g": 9.36,
+        "protein_g": 1.88,
+        "fat_g": 0.86,
+        "energy_kcal": 71.0,
+        "sodium_mg": 10.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 168154,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/168154/nutrients"
+      }
+    },
+    {
+      "id": "lemon_raw",
+      "name": "柠檬（去皮）",
+      "category": "fruit",
+      "fdc_id": 167746,
+      "aliases": [
+        "柠檬"
+      ],
+      "expected_description": "Lemons, raw, without peel",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 9.32,
+        "fiber_g": 2.8,
+        "sugars_g": 2.5,
+        "protein_g": 1.1,
+        "fat_g": 0.3,
+        "energy_kcal": 29.0,
+        "sodium_mg": 2.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 167746,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/167746/nutrients"
+      }
+    },
+    {
+      "id": "lime_raw",
+      "name": "青柠",
+      "category": "fruit",
+      "fdc_id": 168155,
+      "aliases": [
+        "青柠檬"
+      ],
+      "expected_description": "Limes, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 10.54,
+        "fiber_g": 2.8,
+        "sugars_g": 1.69,
+        "protein_g": 0.7,
+        "fat_g": 0.2,
+        "energy_kcal": 30.0,
+        "sodium_mg": 2.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 168155,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/168155/nutrients"
+      }
+    },
+    {
+      "id": "orange_raw",
+      "name": "橙子",
+      "category": "fruit",
+      "fdc_id": 169097,
+      "aliases": [
+        "鲜橙"
+      ],
+      "expected_description": "Oranges, raw, all commercial varieties",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 11.75,
+        "fiber_g": 2.4,
+        "sugars_g": 9.35,
+        "protein_g": 0.94,
+        "fat_g": 0.12,
+        "energy_kcal": 47.0,
+        "sodium_mg": 0.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 169097,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/169097/nutrients"
+      }
+    },
+    {
+      "id": "mandarin_raw",
+      "name": "橘子",
+      "category": "fruit",
+      "fdc_id": 169105,
+      "aliases": [
+        "桔子",
+        "蜜橘"
+      ],
+      "expected_description": "Tangerines, (mandarin oranges), raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 13.34,
+        "fiber_g": 1.8,
+        "sugars_g": 10.58,
+        "protein_g": 0.81,
+        "fat_g": 0.31,
+        "energy_kcal": 53.0,
+        "sodium_mg": 2.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 169105,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/169105/nutrients"
+      }
+    },
+    {
+      "id": "clementine_raw",
+      "name": "克莱门氏小柑橘",
+      "category": "fruit",
+      "fdc_id": 168195,
+      "aliases": [
+        "小柑橘"
+      ],
+      "expected_description": "Clementines, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 12.02,
+        "fiber_g": 1.7,
+        "sugars_g": 9.18,
+        "protein_g": 0.85,
+        "fat_g": 0.15,
+        "energy_kcal": 47.0,
+        "sodium_mg": 1.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 168195,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/168195/nutrients"
+      }
+    },
+    {
+      "id": "cantaloupe_raw",
+      "name": "橙肉甜瓜（cantaloupe）",
+      "category": "fruit",
+      "fdc_id": 169092,
+      "aliases": [
+        "网纹甜瓜"
+      ],
+      "expected_description": "Melons, cantaloupe, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 8.16,
+        "fiber_g": 0.9,
+        "sugars_g": 7.86,
+        "protein_g": 0.84,
+        "fat_g": 0.19,
+        "energy_kcal": 34.0,
+        "sodium_mg": 16.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 169092,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/169092/nutrients"
+      }
+    },
+    {
+      "id": "honeydew_raw",
+      "name": "蜜瓜",
+      "category": "fruit",
+      "fdc_id": 169911,
+      "aliases": [
+        "蜜露甜瓜"
+      ],
+      "expected_description": "Melons, honeydew, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 9.09,
+        "fiber_g": 0.8,
+        "sugars_g": 8.12,
+        "protein_g": 0.54,
+        "fat_g": 0.14,
+        "energy_kcal": 36.0,
+        "sodium_mg": 18.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 169911,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/169911/nutrients"
+      }
+    },
+    {
+      "id": "cherry_sweet",
+      "name": "甜樱桃",
+      "category": "fruit",
+      "fdc_id": 171719,
+      "aliases": [
+        "樱桃",
+        "车厘子"
+      ],
+      "expected_description": "Cherries, sweet, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 16.01,
+        "fiber_g": 2.1,
+        "sugars_g": 12.82,
+        "protein_g": 1.06,
+        "fat_g": 0.2,
+        "energy_kcal": 63.0,
+        "sodium_mg": 0.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 171719,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/171719/nutrients"
+      }
+    },
+    {
+      "id": "apricot_raw",
+      "name": "鲜杏",
+      "category": "fruit",
+      "fdc_id": 171697,
+      "aliases": [
+        "杏子"
+      ],
+      "expected_description": "Apricots, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 11.12,
+        "fiber_g": 2.0,
+        "sugars_g": 9.24,
+        "protein_g": 1.4,
+        "fat_g": 0.39,
+        "energy_kcal": 48.0,
+        "sodium_mg": 1.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 171697,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/171697/nutrients"
+      }
+    },
+    {
+      "id": "nectarine_raw",
+      "name": "油桃",
+      "category": "fruit",
+      "fdc_id": 169914,
+      "aliases": [],
+      "expected_description": "Nectarines, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 10.55,
+        "fiber_g": 1.7,
+        "sugars_g": 7.89,
+        "protein_g": 1.06,
+        "fat_g": 0.32,
+        "energy_kcal": 44.0,
+        "sodium_mg": 0.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 169914,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/169914/nutrients"
+      }
+    },
+    {
+      "id": "avocado_raw",
+      "name": "牛油果",
+      "category": "fruit",
+      "fdc_id": 171705,
+      "aliases": [
+        "鳄梨"
+      ],
+      "expected_description": "Avocados, raw, all commercial varieties",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 8.53,
+        "fiber_g": 6.7,
+        "sugars_g": 0.66,
+        "protein_g": 2.0,
+        "fat_g": 14.66,
+        "energy_kcal": 160.0,
+        "sodium_mg": 7.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 171705,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/171705/nutrients"
+      }
+    },
+    {
+      "id": "fig_raw",
+      "name": "鲜无花果",
+      "category": "fruit",
+      "fdc_id": 173021,
+      "aliases": [
+        "无花果"
+      ],
+      "expected_description": "Figs, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 19.18,
+        "fiber_g": 2.9,
+        "sugars_g": 16.26,
+        "protein_g": 0.75,
+        "fat_g": 0.3,
+        "energy_kcal": 74.0,
+        "sodium_mg": 1.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 173021,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/173021/nutrients"
+      }
+    },
+    {
+      "id": "guava_raw",
+      "name": "番石榴",
+      "category": "fruit",
+      "fdc_id": 173044,
+      "aliases": [
+        "芭乐"
+      ],
+      "expected_description": "Guavas, common, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 14.32,
+        "fiber_g": 5.4,
+        "sugars_g": 8.92,
+        "protein_g": 2.55,
+        "fat_g": 0.95,
+        "energy_kcal": 68.0,
+        "sodium_mg": 2.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 173044,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/173044/nutrients"
+      }
+    },
+    {
+      "id": "jackfruit_raw",
+      "name": "菠萝蜜",
+      "category": "fruit",
+      "fdc_id": 174687,
+      "aliases": [],
+      "expected_description": "Jackfruit, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 23.25,
+        "fiber_g": 1.5,
+        "sugars_g": 19.08,
+        "protein_g": 1.72,
+        "fat_g": 0.64,
+        "energy_kcal": 95.0,
+        "sodium_mg": 2.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 174687,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/174687/nutrients"
+      }
+    },
+    {
+      "id": "loquat_raw",
+      "name": "枇杷",
+      "category": "fruit",
+      "fdc_id": 169908,
+      "aliases": [],
+      "expected_description": "Loquats, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 12.14,
+        "fiber_g": 1.7,
+        "sugars_g": null,
+        "protein_g": 0.43,
+        "fat_g": 0.2,
+        "energy_kcal": 47.0,
+        "sodium_mg": 1.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 169908,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/169908/nutrients"
+      }
+    },
+    {
+      "id": "mulberry_raw",
+      "name": "桑葚",
+      "category": "fruit",
+      "fdc_id": 169913,
+      "aliases": [
+        "桑椹"
+      ],
+      "expected_description": "Mulberries, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 9.8,
+        "fiber_g": 1.7,
+        "sugars_g": 8.1,
+        "protein_g": 1.44,
+        "fat_g": 0.39,
+        "energy_kcal": 43.0,
+        "sodium_mg": 10.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 169913,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/169913/nutrients"
+      }
+    },
+    {
+      "id": "jujube_raw",
+      "name": "鲜枣",
+      "category": "fruit",
+      "fdc_id": 168151,
+      "aliases": [
+        "鲜枣"
+      ],
+      "expected_description": "Jujube, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 20.23,
+        "fiber_g": null,
+        "sugars_g": null,
+        "protein_g": 1.2,
+        "fat_g": 0.2,
+        "energy_kcal": 79.0,
+        "sodium_mg": 3.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 168151,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/168151/nutrients"
+      }
+    },
+    {
+      "id": "durian_raw",
+      "name": "榴莲（生鲜或冷冻）",
+      "category": "fruit",
+      "fdc_id": 168192,
+      "aliases": [
+        "榴莲"
+      ],
+      "expected_description": "Durian, raw or frozen",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 27.09,
+        "fiber_g": 3.8,
+        "sugars_g": null,
+        "protein_g": 1.47,
+        "fat_g": 5.33,
+        "energy_kcal": 147.0,
+        "sodium_mg": 2.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 168192,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/168192/nutrients"
+      }
+    },
+    {
+      "id": "blackberry_raw",
+      "name": "黑莓",
+      "category": "fruit",
+      "fdc_id": 173946,
+      "aliases": [],
+      "expected_description": "Blackberries, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 9.61,
+        "fiber_g": 5.3,
+        "sugars_g": 4.88,
+        "protein_g": 1.39,
+        "fat_g": 0.49,
+        "energy_kcal": 43.0,
+        "sodium_mg": 1.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 173946,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/173946/nutrients"
+      }
+    },
+    {
+      "id": "blackcurrant_raw",
+      "name": "黑加仑",
+      "category": "fruit",
+      "fdc_id": 173963,
+      "aliases": [
+        "黑醋栗"
+      ],
+      "expected_description": "Currants, european black, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 15.38,
+        "fiber_g": null,
+        "sugars_g": null,
+        "protein_g": 1.4,
+        "fat_g": 0.41,
+        "energy_kcal": 63.0,
+        "sodium_mg": 2.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 173963,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/173963/nutrients"
+      }
+    },
+    {
+      "id": "redcurrant_raw",
+      "name": "红白醋栗",
+      "category": "fruit",
+      "fdc_id": 173964,
+      "aliases": [
+        "红醋栗",
+        "白醋栗"
+      ],
+      "expected_description": "Currants, red and white, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 13.8,
+        "fiber_g": 4.3,
+        "sugars_g": 7.37,
+        "protein_g": 1.4,
+        "fat_g": 0.2,
+        "energy_kcal": 56.0,
+        "sodium_mg": 1.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 173964,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/173964/nutrients"
+      }
+    },
+    {
+      "id": "cranberry_raw",
+      "name": "鲜蔓越莓",
+      "category": "fruit",
+      "fdc_id": 171722,
+      "aliases": [
+        "蔓越莓"
+      ],
+      "expected_description": "Cranberries, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 11.97,
+        "fiber_g": 3.6,
+        "sugars_g": 4.27,
+        "protein_g": 0.46,
+        "fat_g": 0.13,
+        "energy_kcal": 46.0,
+        "sodium_mg": 2.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 171722,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/171722/nutrients"
+      }
+    },
+    {
+      "id": "passionfruit_raw",
+      "name": "紫色百香果",
+      "category": "fruit",
+      "fdc_id": 169108,
+      "aliases": [
+        "百香果"
+      ],
+      "expected_description": "Passion-fruit, (granadilla), purple, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 23.38,
+        "fiber_g": 10.4,
+        "sugars_g": 11.2,
+        "protein_g": 2.2,
+        "fat_g": 0.7,
+        "energy_kcal": 97.0,
+        "sodium_mg": 28.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 169108,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/169108/nutrients"
+      }
+    },
+    {
+      "id": "pomelo_raw",
+      "name": "柚子",
+      "category": "fruit",
+      "fdc_id": 167754,
+      "aliases": [
+        "文旦",
+        "蜜柚"
+      ],
+      "expected_description": "Pummelo, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 9.62,
+        "fiber_g": 1.0,
+        "sugars_g": null,
+        "protein_g": 0.76,
+        "fat_g": 0.04,
+        "energy_kcal": 38.0,
+        "sodium_mg": 1.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 167754,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/167754/nutrients"
+      }
+    },
+    {
+      "id": "asianpear_raw",
+      "name": "亚洲梨",
+      "category": "fruit",
+      "fdc_id": 168177,
+      "aliases": [
+        "沙梨"
+      ],
+      "expected_description": "Pears, asian, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 10.65,
+        "fiber_g": 3.6,
+        "sugars_g": 7.05,
+        "protein_g": 0.5,
+        "fat_g": 0.23,
+        "energy_kcal": 42.0,
+        "sodium_mg": 0.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 168177,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/168177/nutrients"
+      }
+    },
+    {
+      "id": "apple_peeled_raw",
+      "name": "苹果（去皮生食）",
+      "category": "fruit",
+      "fdc_id": 171689,
+      "aliases": [
+        "去皮苹果"
+      ],
+      "expected_description": "Apples, raw, without skin",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 12.76,
+        "fiber_g": 1.3,
+        "sugars_g": 10.1,
+        "protein_g": 0.27,
+        "fat_g": 0.13,
+        "energy_kcal": 48.0,
+        "sodium_mg": 0.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 171689,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/171689/nutrients"
+      }
+    },
+    {
+      "id": "date_medjool",
+      "name": "椰枣（Medjool 品种）",
+      "category": "snack",
+      "fdc_id": 168191,
+      "aliases": [
+        "椰枣"
+      ],
+      "expected_description": "Dates, medjool",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 74.97,
+        "fiber_g": 6.7,
+        "sugars_g": 66.47,
+        "protein_g": 1.81,
+        "fat_g": 0.15,
+        "energy_kcal": 277.0,
+        "sodium_mg": 1.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 168191,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/168191/nutrients"
+      }
+    },
+    {
+      "id": "prune_dried",
+      "name": "西梅干（未烹调）",
+      "category": "snack",
+      "fdc_id": 168162,
+      "aliases": [
+        "西梅干"
+      ],
+      "expected_description": "Plums, dried (prunes), uncooked",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 63.88,
+        "fiber_g": 7.1,
+        "sugars_g": 38.13,
+        "protein_g": 2.18,
+        "fat_g": 0.38,
+        "energy_kcal": 240.0,
+        "sodium_mg": 2.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 168162,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/168162/nutrients"
+      }
+    },
+    {
+      "id": "longan_dried",
+      "name": "干桂圆",
+      "category": "snack",
+      "fdc_id": 169907,
+      "aliases": [
+        "桂圆干",
+        "龙眼干"
+      ],
+      "expected_description": "Longans, dried",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 74.0,
+        "fiber_g": null,
+        "sugars_g": null,
+        "protein_g": 4.9,
+        "fat_g": 0.4,
+        "energy_kcal": 286.0,
+        "sodium_mg": 48.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 169907,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/169907/nutrients"
+      }
+    },
+    {
+      "id": "lychee_dried",
+      "name": "荔枝干",
+      "category": "snack",
+      "fdc_id": 169087,
+      "aliases": [],
+      "expected_description": "Litchis, dried",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 70.7,
+        "fiber_g": 4.6,
+        "sugars_g": 66.1,
+        "protein_g": 3.8,
+        "fat_g": 1.2,
+        "energy_kcal": 277.0,
+        "sodium_mg": 3.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 169087,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/169087/nutrients"
+      }
+    },
+    {
+      "id": "fig_dried",
+      "name": "无花果干",
+      "category": "snack",
+      "fdc_id": 174665,
+      "aliases": [],
+      "expected_description": "Figs, dried, uncooked",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 63.87,
+        "fiber_g": 9.8,
+        "sugars_g": 47.92,
+        "protein_g": 3.3,
+        "fat_g": 0.93,
+        "energy_kcal": 249.0,
+        "sodium_mg": 10.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 174665,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/174665/nutrients"
+      }
+    },
+    {
+      "id": "apricot_dried",
+      "name": "杏干（硫处理）",
+      "category": "snack",
+      "fdc_id": 173941,
+      "aliases": [
+        "杏干"
+      ],
+      "expected_description": "Apricots, dried, sulfured, uncooked",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 62.64,
+        "fiber_g": 7.3,
+        "sugars_g": 53.44,
+        "protein_g": 3.39,
+        "fat_g": 0.51,
+        "energy_kcal": 241.0,
+        "sodium_mg": 10.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 173941,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/173941/nutrients"
+      }
+    },
+    {
+      "id": "goji_dried",
+      "name": "枸杞干",
+      "category": "snack",
+      "fdc_id": 173032,
+      "aliases": [
+        "枸杞"
+      ],
+      "expected_description": "Goji berries, dried",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 77.06,
+        "fiber_g": 13.0,
+        "sugars_g": 45.61,
+        "protein_g": 14.26,
+        "fat_g": 0.39,
+        "energy_kcal": 349.0,
+        "sodium_mg": 298.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 173032,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/173032/nutrients"
+      }
+    },
+    {
+      "id": "persimmon_dried",
+      "name": "柿饼",
+      "category": "snack",
+      "fdc_id": 169942,
+      "aliases": [
+        "干柿子"
+      ],
+      "expected_description": "Persimmons, japanese, dried",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 73.43,
+        "fiber_g": 14.5,
+        "sugars_g": null,
+        "protein_g": 1.38,
+        "fat_g": 0.59,
+        "energy_kcal": 274.0,
+        "sodium_mg": 2.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 169942,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/169942/nutrients"
+      }
+    },
+    {
+      "id": "raisin_dark",
+      "name": "黑葡萄干（无籽）",
+      "category": "snack",
+      "fdc_id": 168165,
+      "aliases": [
+        "黑葡萄干"
+      ],
+      "expected_description": "Raisins, dark, seedless (Includes foods for USDA's Food Distribution Program)",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 79.32,
+        "fiber_g": 4.5,
+        "sugars_g": 65.18,
+        "protein_g": 3.3,
+        "fat_g": 0.25,
+        "energy_kcal": 299.0,
+        "sodium_mg": 26.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 168165,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/168165/nutrients"
+      }
+    },
+    {
+      "id": "cranberry_dried_sweet",
+      "name": "蔓越莓干（加糖）",
+      "category": "snack",
+      "fdc_id": 171723,
+      "aliases": [
+        "蔓越莓干"
+      ],
+      "expected_description": "Cranberries, dried, sweetened (Includes foods for USDA's Food Distribution Program)",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 82.8,
+        "fiber_g": 5.3,
+        "sugars_g": 72.56,
+        "protein_g": 0.17,
+        "fat_g": 1.09,
+        "energy_kcal": 308.0,
+        "sodium_mg": 5.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 171723,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/171723/nutrients"
+      }
+    },
+    {
+      "id": "blueberry_dried_sweet",
+      "name": "蓝莓干（加糖）",
+      "category": "snack",
+      "fdc_id": 168158,
+      "aliases": [
+        "蓝莓干"
+      ],
+      "expected_description": "Blueberries, dried, sweetened",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 80.0,
+        "fiber_g": 7.5,
+        "sugars_g": 67.5,
+        "protein_g": 2.5,
+        "fat_g": 2.5,
+        "energy_kcal": 317.0,
+        "sodium_mg": 3.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 168158,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/168158/nutrients"
+      }
+    },
+    {
+      "id": "mango_dried_sweet",
+      "name": "芒果干（加糖）",
+      "category": "snack",
+      "fdc_id": 169091,
+      "aliases": [
+        "芒果干"
+      ],
+      "expected_description": "Mango, dried, sweetened",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 78.58,
+        "fiber_g": 2.4,
+        "sugars_g": 66.27,
+        "protein_g": 2.45,
+        "fat_g": 1.18,
+        "energy_kcal": 319.0,
+        "sodium_mg": 162.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 169091,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/169091/nutrients"
+      }
+    },
+    {
+      "id": "walnut_raw",
+      "name": "核桃仁（原味）",
+      "category": "snack",
+      "fdc_id": 170187,
+      "aliases": [
+        "核桃",
+        "核桃仁"
+      ],
+      "expected_description": "Nuts, walnuts, english",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 13.71,
+        "fiber_g": 6.7,
+        "sugars_g": 2.61,
+        "protein_g": 15.23,
+        "fat_g": 65.21,
+        "energy_kcal": 654.0,
+        "sodium_mg": 2.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 170187,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/170187/nutrients"
+      }
+    },
+    {
+      "id": "almond_raw",
+      "name": "扁桃仁（原味）",
+      "category": "snack",
+      "fdc_id": 170567,
+      "aliases": [
+        "巴旦木",
+        "扁桃仁"
+      ],
+      "expected_description": "Nuts, almonds",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 21.55,
+        "fiber_g": 12.5,
+        "sugars_g": 4.35,
+        "protein_g": 21.15,
+        "fat_g": 49.93,
+        "energy_kcal": 579.0,
+        "sodium_mg": 1.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 170567,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/170567/nutrients"
+      }
+    },
+    {
+      "id": "peanut_raw",
+      "name": "花生仁（生）",
+      "category": "snack",
+      "fdc_id": 172430,
+      "aliases": [
+        "花生",
+        "生花生"
+      ],
+      "expected_description": "Peanuts, all types, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 16.13,
+        "fiber_g": 8.5,
+        "sugars_g": 4.72,
+        "protein_g": 25.8,
+        "fat_g": 49.24,
+        "energy_kcal": 567.0,
+        "sodium_mg": 18.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 172430,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/172430/nutrients"
+      }
+    },
+    {
+      "id": "cashew_raw",
+      "name": "腰果（生）",
+      "category": "snack",
+      "fdc_id": 170162,
+      "aliases": [
+        "腰果"
+      ],
+      "expected_description": "Nuts, cashew nuts, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 30.19,
+        "fiber_g": 3.3,
+        "sugars_g": 5.91,
+        "protein_g": 18.22,
+        "fat_g": 43.85,
+        "energy_kcal": 553.0,
+        "sodium_mg": 12.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 170162,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/170162/nutrients"
+      }
+    },
+    {
+      "id": "pistachio_raw",
+      "name": "开心果仁（生）",
+      "category": "snack",
+      "fdc_id": 170184,
+      "aliases": [
+        "开心果"
+      ],
+      "expected_description": "Nuts, pistachio nuts, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 27.17,
+        "fiber_g": 10.6,
+        "sugars_g": 7.66,
+        "protein_g": 20.16,
+        "fat_g": 45.32,
+        "energy_kcal": 560.0,
+        "sodium_mg": 1.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 170184,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/170184/nutrients"
+      }
+    },
+    {
+      "id": "macadamia_raw",
+      "name": "夏威夷果仁（生）",
+      "category": "snack",
+      "fdc_id": 170178,
+      "aliases": [
+        "夏威夷果",
+        "澳洲坚果"
+      ],
+      "expected_description": "Nuts, macadamia nuts, raw",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 13.82,
+        "fiber_g": 8.6,
+        "sugars_g": 4.57,
+        "protein_g": 7.91,
+        "fat_g": 75.77,
+        "energy_kcal": 718.0,
+        "sodium_mg": 5.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 170178,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/170178/nutrients"
+      }
+    },
+    {
+      "id": "pecan_raw",
+      "name": "碧根果仁（原味）",
+      "category": "snack",
+      "fdc_id": 170182,
+      "aliases": [
+        "碧根果"
+      ],
+      "expected_description": "Nuts, pecans",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 13.86,
+        "fiber_g": 9.6,
+        "sugars_g": 3.97,
+        "protein_g": 9.17,
+        "fat_g": 71.97,
+        "energy_kcal": 691.0,
+        "sodium_mg": 0.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 170182,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/170182/nutrients"
+      }
+    },
+    {
+      "id": "hazelnut_raw",
+      "name": "榛子仁（原味）",
+      "category": "snack",
+      "fdc_id": 170581,
+      "aliases": [
+        "榛子"
+      ],
+      "expected_description": "Nuts, hazelnuts or filberts",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 16.7,
+        "fiber_g": 9.7,
+        "sugars_g": 4.34,
+        "protein_g": 14.95,
+        "fat_g": 60.75,
+        "energy_kcal": 628.0,
+        "sodium_mg": 0.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 170581,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/170581/nutrients"
+      }
+    },
+    {
+      "id": "pumpkin_seed_dried",
+      "name": "南瓜子仁（干）",
+      "category": "snack",
+      "fdc_id": 170556,
+      "aliases": [
+        "南瓜子"
+      ],
+      "expected_description": "Seeds, pumpkin and squash seed kernels, dried",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 10.71,
+        "fiber_g": 6.0,
+        "sugars_g": 1.4,
+        "protein_g": 30.23,
+        "fat_g": 49.05,
+        "energy_kcal": 559.0,
+        "sodium_mg": 7.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 170556,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/170556/nutrients"
+      }
+    },
+    {
+      "id": "sunflower_seed_dried",
+      "name": "葵花子仁（干）",
+      "category": "snack",
+      "fdc_id": 170562,
+      "aliases": [
+        "葵花子",
+        "瓜子"
+      ],
+      "expected_description": "Seeds, sunflower seed kernels, dried",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 20.0,
+        "fiber_g": 8.6,
+        "sugars_g": 2.62,
+        "protein_g": 20.78,
+        "fat_g": 51.46,
+        "energy_kcal": 584.0,
+        "sodium_mg": 9.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 170562,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/170562/nutrients"
+      }
+    },
+    {
+      "id": "chia_dried",
+      "name": "奇亚籽（干）",
+      "category": "snack",
+      "fdc_id": 170554,
+      "aliases": [
+        "奇亚籽"
+      ],
+      "expected_description": "Seeds, chia seeds, dried",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 42.12,
+        "fiber_g": 34.4,
+        "sugars_g": null,
+        "protein_g": 16.54,
+        "fat_g": 30.74,
+        "energy_kcal": 486.0,
+        "sodium_mg": 16.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 170554,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/170554/nutrients"
+      }
+    },
+    {
+      "id": "flaxseed",
+      "name": "亚麻籽",
+      "category": "snack",
+      "fdc_id": 169414,
+      "aliases": [],
+      "expected_description": "Seeds, flaxseed",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 28.88,
+        "fiber_g": 27.3,
+        "sugars_g": 1.55,
+        "protein_g": 18.29,
+        "fat_g": 42.16,
+        "energy_kcal": 534.0,
+        "sodium_mg": 30.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 169414,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/169414/nutrients"
+      }
+    },
+    {
+      "id": "brown_rice_cooked",
+      "name": "糙米饭（长粒，熟）",
+      "category": "staple",
+      "fdc_id": 169704,
+      "aliases": [
+        "糙米饭"
+      ],
+      "expected_description": "Rice, brown, long-grain, cooked (Includes foods for USDA's Food Distribution Program)",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 25.58,
+        "fiber_g": 1.6,
+        "sugars_g": 0.24,
+        "protein_g": 2.74,
+        "fat_g": 0.97,
+        "energy_kcal": 123.0,
+        "sodium_mg": 4.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 169704,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/169704/nutrients"
+      }
+    },
+    {
+      "id": "millet_cooked",
+      "name": "小米饭（熟）",
+      "category": "staple",
+      "fdc_id": 168871,
+      "aliases": [
+        "小米饭"
+      ],
+      "expected_description": "Millet, cooked",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 23.67,
+        "fiber_g": 1.3,
+        "sugars_g": 0.13,
+        "protein_g": 3.51,
+        "fat_g": 1.0,
+        "energy_kcal": 119.0,
+        "sodium_mg": 2.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 168871,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/168871/nutrients"
+      }
+    },
+    {
+      "id": "quinoa_cooked",
+      "name": "藜麦（熟）",
+      "category": "staple",
+      "fdc_id": 168917,
+      "aliases": [
+        "藜麦饭"
+      ],
+      "expected_description": "Quinoa, cooked",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 21.3,
+        "fiber_g": 2.8,
+        "sugars_g": 0.87,
+        "protein_g": 4.4,
+        "fat_g": 1.92,
+        "energy_kcal": 120.0,
+        "sodium_mg": 7.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 168917,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/168917/nutrients"
+      }
+    },
+    {
+      "id": "rice_noodle_cooked",
+      "name": "米粉（熟）",
+      "category": "staple",
+      "fdc_id": 168914,
+      "aliases": [
+        "熟米粉"
+      ],
+      "expected_description": "Rice noodles, cooked",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 24.01,
+        "fiber_g": 1.0,
+        "sugars_g": 0.03,
+        "protein_g": 1.79,
+        "fat_g": 0.2,
+        "energy_kcal": 108.0,
+        "sodium_mg": 19.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 168914,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/168914/nutrients"
+      }
+    },
+    {
+      "id": "soba_cooked",
+      "name": "日式荞麦面（熟）",
+      "category": "staple",
+      "fdc_id": 168907,
+      "aliases": [
+        "荞麦面"
+      ],
+      "expected_description": "Noodles, japanese, soba, cooked",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 21.44,
+        "fiber_g": null,
+        "sugars_g": null,
+        "protein_g": 5.06,
+        "fat_g": 0.1,
+        "energy_kcal": 99.0,
+        "sodium_mg": 60.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 168907,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/168907/nutrients"
+      }
+    },
+    {
+      "id": "somen_cooked",
+      "name": "日式素面（熟）",
+      "category": "staple",
+      "fdc_id": 168909,
+      "aliases": [
+        "日式素面"
+      ],
+      "expected_description": "Noodles, japanese, somen, cooked",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 27.54,
+        "fiber_g": null,
+        "sugars_g": null,
+        "protein_g": 4.0,
+        "fat_g": 0.18,
+        "energy_kcal": 131.0,
+        "sodium_mg": 161.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 168909,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/168909/nutrients"
+      }
+    },
+    {
+      "id": "wholewheat_pasta_cooked",
+      "name": "全麦意面（熟）",
+      "category": "staple",
+      "fdc_id": 168910,
+      "aliases": [
+        "全麦意大利面"
+      ],
+      "expected_description": "Pasta, whole-wheat, cooked (Includes foods for USDA's Food Distribution Program)",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 30.07,
+        "fiber_g": 3.9,
+        "sugars_g": 0.75,
+        "protein_g": 5.99,
+        "fat_g": 1.71,
+        "energy_kcal": 149.0,
+        "sodium_mg": 4.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 168910,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/168910/nutrients"
+      }
+    },
+    {
+      "id": "pasta_cooked",
+      "name": "意面（熟，未强化，无额外加盐）",
+      "category": "staple",
+      "fdc_id": 168928,
+      "aliases": [
+        "意大利面"
+      ],
+      "expected_description": "Pasta, cooked, unenriched, without added salt",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 30.86,
+        "fiber_g": 1.8,
+        "sugars_g": 0.56,
+        "protein_g": 5.8,
+        "fat_g": 0.93,
+        "energy_kcal": 158.0,
+        "sodium_mg": 1.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 168928,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/168928/nutrients"
+      }
+    },
+    {
+      "id": "sticky_rice_cooked",
+      "name": "糯米饭（熟）",
+      "category": "staple",
+      "fdc_id": 169711,
+      "aliases": [
+        "糯米饭"
+      ],
+      "expected_description": "Rice, white, glutinous, unenriched, cooked",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 21.09,
+        "fiber_g": 1.0,
+        "sugars_g": 0.05,
+        "protein_g": 2.02,
+        "fat_g": 0.19,
+        "energy_kcal": 97.0,
+        "sodium_mg": 5.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 169711,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/169711/nutrients"
+      }
+    },
+    {
+      "id": "barley_cooked",
+      "name": "珍珠大麦（熟）",
+      "category": "staple",
+      "fdc_id": 170285,
+      "aliases": [
+        "大麦饭"
+      ],
+      "expected_description": "Barley, pearled, cooked",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 28.22,
+        "fiber_g": 3.8,
+        "sugars_g": 0.28,
+        "protein_g": 2.26,
+        "fat_g": 0.44,
+        "energy_kcal": 123.0,
+        "sodium_mg": 3.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 170285,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/170285/nutrients"
+      }
+    },
+    {
+      "id": "bulgur_cooked",
+      "name": "布格麦（熟）",
+      "category": "staple",
+      "fdc_id": 170287,
+      "aliases": [
+        "布格麦"
+      ],
+      "expected_description": "Bulgur, cooked",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 18.58,
+        "fiber_g": 4.5,
+        "sugars_g": 0.1,
+        "protein_g": 3.08,
+        "fat_g": 0.24,
+        "energy_kcal": 83.0,
+        "sodium_mg": 5.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 170287,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/170287/nutrients"
+      }
+    },
+    {
+      "id": "couscous_cooked",
+      "name": "库斯库斯（熟）",
+      "category": "staple",
+      "fdc_id": 169700,
+      "aliases": [
+        "库斯库斯"
+      ],
+      "expected_description": "Couscous, cooked",
+      "operation": "append",
+      "nutrition": {
+        "carbohydrate_g": 23.22,
+        "fiber_g": 1.4,
+        "sugars_g": 0.1,
+        "protein_g": 3.79,
+        "fat_g": 0.16,
+        "energy_kcal": 112.0,
+        "sodium_mg": 5.0
+      },
+      "basis_amount": 100,
+      "basis_unit": "g",
+      "source": {
+        "provider": "USDA FoodData Central",
+        "data_type": "SR Legacy",
+        "release": "2018-04",
+        "publication_date": "2019-04-01",
+        "fdc_id": 169700,
+        "license": "CC0-1.0",
+        "url": "https://fdc.nal.usda.gov/food-details/169700/nutrients"
+      }
+    }
+  ]
+}

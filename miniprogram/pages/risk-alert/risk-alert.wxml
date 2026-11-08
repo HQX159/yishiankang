@@ -1,0 +1,39 @@
+<!-- pages/risk-alert/risk-alert.wxml -->
+<view class="container">
+
+  <view class="risk-head">
+    <text class="risk-icon">⚠️</text>
+    <view class="risk-head-text">
+      <view class="risk-title">建议尽快就医</view>
+      <view class="risk-subtitle">本次未生成食谱</view>
+    </view>
+  </view>
+
+  <view class="risk-message-card">
+    <text class="risk-message">{{message}}</text>
+  </view>
+
+  <view class="risk-section" wx:if="{{hasFindings}}">
+    <view class="risk-section-title">需要关注的指标</view>
+    <view wx:for="{{findings}}" wx:key="index"
+          class="risk-item {{item.level === 'critical' ? 'is-critical' : 'is-warn'}}">
+      <text class="risk-tag">{{item.tag}}</text>
+      <text class="risk-item-text">{{item.message}}</text>
+    </view>
+  </view>
+
+  <view class="risk-section risk-steps">
+    <view class="risk-section-title risk-steps-title">接下来建议这样做</view>
+    <view class="risk-step">携带本次报告，尽快到内分泌科或心血管内科就诊；</view>
+    <view class="risk-step">正在服用的降糖药、降压药，不要自行加量或停药；</view>
+    <view class="risk-step">若出现胸闷胸痛、意识模糊、呼吸深快、恶心呕吐，请立即急诊。</view>
+  </view>
+
+  <view class="risk-disclaimer" wx:if="{{disclaimer}}">{{disclaimer}}</view>
+
+  <view class="risk-actions">
+    <button class="btn btn-primary btn-block" bindtap="goUploadHealth">上传新的健康报告</button>
+    <button class="btn btn-outline btn-block" bindtap="goBack">返回</button>
+  </view>
+
+</view>

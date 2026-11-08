@@ -1,0 +1,109 @@
+{# templates/health/_checkin_card.html
+   每日血糖记录卡片 —— 仪表盘与「健康报告」页共用同一份。
+
+   调用方需要提供
+       checkin —— utils.checkin.build_card_context() 的返回值（dict）
+       里面已经算好了：每一项的 label/unit/step/value（今天已填就回填）/
+       last_text（"上次 7.2 · 10-18"；这条值来自上传的报告时，
+       前缀会写成"报告 7.2 · 06-15"，由 Python 层判断，模板不做区分）以及 done（今天填过没有）。
+       模板只负责画，不做任何计算 —— 回填值、范围提示全部来自 Python 层，
+       免得 JInja 里再写一遍数字格式，两处不一致。
+
+   三个时点 + 体重
+       空腹 / 餐后 1 小时 / 餐后 2 小时，由 utils.checkin.FIELDS 决定，模板不写死；
+       体重由 WEIGHT_FIELD 决定，**单独一行**（不进血糖那三格的网格，
+       否则手机上四个框换成 2+2，最常用的两项被挤到第二行）。
+       以后再加时点仍然只改 Python 层。
+
+   为什么不用 fetch 局部刷新
+       见 routes/checkin_routes.py 顶部注释：普通表单提交在任何浏览器、
+       JS 挂掉的情况下都能用。中老年用户不该为"页面不闪一下"付出"点了没反应"的风险。
+
+   可选参数
+       ck_compact —— 传 true 时隐含"在侧栏/窄容器里"，标题行不显示那句口号。
+#}
+{% set ck = checkin if (checkin is defined and checkin) else {} %}
+{% set ck_fields = ck.get('fields') or [] %}
+{% set ck_weight = ck.get('weight') or {} %}
+{% set ck_height = ck.get('height') or {} %}
+
+{% if ck_fields %}
+<section class="checkin-card">
+    <div class="checkin-head">
+        <h2 class="checkin-title">今日血糖记录</h2>
+        {% if ck.get('done') %}
+        <span class="checkin-state is-done">今天已记录，可修改</span>
+        {% elif not (ck_compact is defined and ck_compact) %}
+        <span class="checkin-state">每天 1 分钟，比一年一份报告更有用</span>
+        {% endif %}
+    </div>
+
+    <form class="checkin-form" method="post" action="{{ ck.get('action_url') }}">
+        {# 保存后跳回当前页；服务端会校验只允许站内相对路径 #}
+        <input type="hidden" name="next" value="{{ ck.get('next_url') }}">
+
+        <div class="checkin-fields">
+            {% for f in ck_fields %}
+            <div class="checkin-field">
+                <label class="checkin-label" for="ck-{{ f.key }}">
+                    {{ f.ui_label or f.label }}<span class="checkin-unit">{{ f.unit }}</span>
+                </label>
+                {# 用 text + inputmode 而不是 type=number：
+                   number 在桌面上滚一下滚轮就把数值改了，中老年用户极易误操作。
+                   合法性由服务端 utils.checkin.parse_checkin 兜底。 #}
+                <input class="checkin-input" id="ck-{{ f.key }}" name="{{ f.key }}"
+                       type="text" inputmode="decimal" autocomplete="off"
+                       value="{{ f.value }}" placeholder="{{ f.placeholder }}"
+                       aria-describedby="ck-hint-{{ f.key }}">
+                {# 只留"上次多少"，不再塞"什么时候测"（见卡片底部一句话）——
+                   两行小字并排会挤成折行，反而看不清 #}
+                <div class="checkin-sub" id="ck-hint-{{ f.key }}">
+                    {% if f.last_text %}<span class="checkin-last">{{ f.last_text }}</span>{% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if ck_weight %}
+        {# 体重：单独一行，**不占**上面血糖三项的网格。
+           2026-10-22 白天曾把它整块拿掉，当晚加回来 —— 理由是报告一年才传一两次，
+           而减重本身就是糖尿病管理手段，一周称一次太正常，靠报告攒不出趋势。
+           为什么不放回上面的网格：四个框在手机上会换成 2+2 两行，
+           最常用的空腹血糖和餐后 1 小时就被挤到第二行了。 #}
+        <div class="checkin-weight-row">
+            <label class="checkin-label" for="ck-weight">
+                {{ ck_weight.ui_label or ck_weight.label }}<span class="checkin-unit">{{ ck_weight.unit }}</span>
+            </label>
+            <input class="checkin-input checkin-input-weight" id="ck-weight" name="weight"
+                   type="text" inputmode="decimal" autocomplete="off"
+                   value="{{ ck_weight.value }}" placeholder="{{ ck_weight.placeholder }}"
+                   aria-describedby="ck-hint-weight">
+            <div class="checkin-sub checkin-sub-weight" id="ck-hint-weight">
+                {% if ck_weight.last_text %}<span class="checkin-last">{{ ck_weight.last_text }}</span>{% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if ck_height %}
+        <div class="checkin-weight-row">
+            <label class="checkin-label" for="ck-height">身高<span class="checkin-unit">cm</span></label>
+            <input class="checkin-input checkin-input-weight" id="ck-height" name="height"
+                   type="text" inputmode="decimal" autocomplete="off"
+                   value="{{ ck_height.value }}" placeholder="如 170" aria-describedby="ck-hint-height">
+            <div class="checkin-sub checkin-sub-weight" id="ck-hint-height">单位：厘米，如 170{% if ck_height.last_text %} · {{ ck_height.last_text }}{% endif %}</div>
+        </div>
+        <p class="checkin-note checkin-bmi" aria-live="polite">
+            {% if ck.get('bmi') %}<strong>BMI {{ ck.bmi.value_text }}</strong> · {{ ck.bmi.date }}<br>{% endif %}
+            保存后自动计算 BMI，之后只填体重也能沿用已记录的身高。
+        </p>
+        {% endif %}
+
+        <div class="checkin-actions">
+            <button type="submit" class="btn btn-primary checkin-submit">保存</button>
+            <span class="checkin-note">只填一个也能存</span>
+        </div>
+    </form>
+
+    <p class="checkin-foot">空腹 = 早上没吃东西时测；餐后 1 小时 / 2 小时 = 从吃第一口开始算。记下的数字会自动进下面的趋势图，和体检报告的数据画在一起。</p>
+</section>
+{% endif %}

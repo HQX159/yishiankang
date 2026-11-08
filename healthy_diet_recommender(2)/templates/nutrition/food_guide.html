@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block title %}食品科普 · 加餐查询 - 益食安康{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/food-guide.css') }}?v=20261106-netwait">{% endblock %}
+{% block content %}
+<div class="food-guide">
+    <header class="fg-intro">
+        <h1 class="page-title">水果零食，怎么吃？</h1>
+        <p>查食物，先看升糖快慢，再算这一份的负担。</p>
+    </header>
+    <section class="fg-search" aria-labelledby="search-title">
+        <h2 id="search-title">查查我想吃的食物</h2>
+        <form method="post" action="{{ url_for('nutrition.food_guide_page') }}">
+            <input type="hidden" name="lookup_token" value="{{ lookup_token }}">
+            <label for="food-query">想吃什么？</label>
+            <div class="fg-search-row"><input id="food-query" type="search" name="q" value="{{ q }}" maxlength="60" placeholder="例如：苹果、香蕉、薯片、无糖饼干"><button class="btn btn-primary" type="submit">搜索食品</button></div>
+            <div class="fg-fields">
+                <label>食品分类<select name="category">{% for key, label in categories.items() %}<option value="{{ key }}" {% if category == key %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+                <label>想了解什么<select name="choice">{% for key, label in filters.items() %}<option value="{{ key }}" {% if choice == key %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+                <button class="btn btn-outline" type="submit">应用筛选</button><a href="{{ url_for('nutrition.food_guide_page') }}">查看全部</a>
+            </div>
+        </form>
+        <p class="fg-muted">先查本地库；本地没收录时，再点「联网找找看」。请只填食品名称或做法。</p>
+        <p class="fg-hot">常见查询：{% for term in ['西瓜', '香蕉', '无糖饼干', '奶茶'] %}<a href="{{ url_for('nutrition.food_guide_page', q=term) }}">{{ term }}</a>{% endfor %}</p>
+    </section>
+    {% if error %}<p class="fg-error" role="alert">{{ error }}</p>{% endif %}
+    {% if net_offer %}
+    <section class="fg-result fg-offer">
+        <div class="fg-net-ask" id="fg-net-ask">
+            <h2>本地暂未收录「{{ net_offer }}」</h2>
+            <p>本地收录的是常见水果、零食、饮品和主食，这个词不在里面。暂时没有这个食物的资料，不能判断适不适合您吃、能吃多少。</p>
+            <p>可以联网找找公开的官方资料，或者先换一个更通用的名字再搜一次。</p>
+            <form method="post" action="{{ url_for('nutrition.food_guide_page') }}" class="fg-net-form" id="fg-net-form">
+                <input type="hidden" name="lookup_token" value="{{ lookup_token }}">
+                <input type="hidden" name="q" value="{{ net_offer }}">
+                <input type="hidden" name="net" value="1">
+                <button class="btn btn-primary" type="submit">联网找找看</button>
+            </form>
+            <p class="fg-muted">联网只找公开的官方资料（营养与疾控网站），找不到就说找不到，不会编数字。</p>
+        </div>
+        <div class="fg-net-wait" id="fg-net-wait" role="status" tabindex="-1" hidden>
+            <h2>正在查「{{ net_offer }}」的资料…</h2>
+            <p class="fg-net-lead">大概几秒就好，稍等一下，不用再点。关掉页面就要重新来一次。</p>
+            <div class="fg-net-bar" aria-hidden="true"></div>
+            <p class="fg-net-slow" id="fg-net-slow" hidden>比平时久了一点，还在查，别着急。</p>
+            <p class="fg-muted">只查官方营养和疾控网站；查不到就直说，不会编数字。</p>
+        </div>
+    </section>
+    {% endif %}
+    {% if lookup_result and lookup_result.status != 'local' %}
+    <section class="fg-result" aria-live="polite" aria-labelledby="lookup-title">
+        <h2 id="lookup-title">{{ lookup_result.query }} · 资料查找</h2>
+        <p>{{ lookup_result.message }}</p>
+        {% if lookup_result.candidates %}
+        <ul class="fg-candidates">
+            {% for c in lookup_result.candidates %}
+            <li><strong>{{ c.name }}</strong> · {{ c.rise_text }}<span class="fg-muted">（资料原文的说法，待核对；不是我们的判断，也不参与份量计算）</span>{% if c.rise_quote %}<span class="fg-quote">“{{ c.rise_quote }}”</span>{% endif %}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% if lookup_result.sources %}
+        <details><summary>查看资料来源（待核对）</summary>
+            <ul>{% for source in lookup_result.sources %}<li><a href="{{ source.url }}" target="_blank" rel="noopener noreferrer">{{ source.title }}</a></li>{% endfor %}</ul>
+        </details>
+        {% endif %}
+        {% if lookup_result.cached %}<p class="fg-muted">使用近期查询结果。</p>{% endif %}
+    </section>
+    {% endif %}
+    {% if custom_result %}
+    <section id="label-result" class="fg-result" aria-live="polite">
+        <h2>{{ custom_result.name }} · 标签换算</h2>
+        <p>{{ '%g'|format(custom_result.amount) }} {{ custom_result.unit_label }}，碳水约 <strong>{{ custom_result.carb }} 克</strong>。</p>
+        <p class="fg-muted">{{ custom_result.notice }}</p>
+    </section>
+    {% endif %}
+    {% if result %}
+    <section id="portion-result" class="fg-result" aria-labelledby="result-title" tabindex="-1">
+        <h2 id="result-title">{{ result.food.name }} · 这份怎么吃</h2>
+        <p><strong>{{ result.food.choice_label }}</strong></p>
+        <div class="fg-craving">
+            <h3>实在想吃，吃多少合适？</h3>
+            {% if result.food.nutrition_only %}<p>已收录营养资料，可按您准备吃的量换算；个人参考份量尚未整理。</p>{% elif result.craving.amount is not none %}<p><strong>偶尔解馋小份示例：{{ result.craving.amount }} {{ result.food.unit_label }}</strong>（{{ result.craving.measure }}）</p>{% else %}<p>先看包装标签，再换算份量。</p>{% endif %}
+            <p>{{ result.food.note }}</p>
+        </div>
+        {% if result.from_label %}<p class="fg-muted">按您填写的包装碳水换算。</p>{% endif %}
+        <div class="fg-numbers"><p>您准备吃<strong>{{ '%g'|format(result.amount) }} {{ result.food.unit_label }}</strong></p><p>这份碳水<strong>{% if result.carb is not none %}约 {{ result.carb }} 克{% else %}请查看包装标签{% endif %}</strong></p>{% if result.gl is not none %}<p>这一份升糖负荷 GL<strong>约 {{ '%g'|format(result.gl) }}（{{ result.gl_label }}）</strong></p>{% endif %}</div>
+        {% if result.gl is not none %}<p class="fg-muted">升糖负荷不标单位：1 个 GL 约等于 1 克葡萄糖的升糖效果，所以这一份差不多等于吃 {{ '%g'|format(result.gl) }} 克葡萄糖。它和 GI 是两个数 —— GI 说这个食物升得快不快，GL 说这一份实际升多少。</p>{% endif %}
+        {% if result.gl is none %}<p class="fg-muted">这个食物暂无可靠的升糖数据，只能先按碳水算；下面说明里写了原因。</p>{% endif %}
+        {% if result.rise_hint %}<p class="fg-hint">{{ result.rise_hint }}</p>{% endif %}
+        {% if result.above_reference %}<p>▲ 这份超过页面参考示例，建议分小份吃。</p>{% endif %}
+        <p class="fg-muted">参考量不是个人安全上限，加餐也要计入全天饮食。</p>
+    </section>
+    {% endif %}
+    {% if not net_offer %}
+    <div class="fg-section-heading"><h2>食物参考库</h2><span>{{ foods|length }} 种食品</span></div>
+    <p class="fg-muted">参考份量或营养资料，加餐计入全天饮食，具体按个人饮食计划调整。</p>
+    <div class="fg-grid">
+    {% for food in foods %}
+        <article class="fg-card">
+            <div class="fg-card-top"><span>{{ food.category_label }}</span><span class="fg-badge fg-{{ food.choice }}">{% if food.choice == 'recommend' %}✓{% elif food.choice != 'reference' %}▲{% endif %} {{ food.choice_label }}</span></div>
+            <h3>{{ food.name }}</h3>
+            <p class="fg-rise fg-rise-{{ food.rise_key }}"><span class="fg-rise-badge">{{ food.rise_label }}</span>{% if food.gi is not none %}<span class="fg-rise-gi">GI {{ '%g'|format(food.gi) }}{% if food.gi_reference %}（同类参考）{% endif %}</span>{% elif food.rise_basis == 'level' %}<span class="fg-rise-gi">同类普遍档位</span>{% endif %}{% if food.gl_ref is not none %}<span class="fg-rise-gl">这份升糖负荷 GL {{ '%g'|format(food.gl_ref) }} · {{ food.gl_label }}<span class="fg-rise-unit">（相当于吃 {{ '%g'|format(food.gl_ref) }} 克葡萄糖）</span></span>{% endif %}</p>
+            {% if food.rise_hint %}<p class="fg-hint">{{ food.rise_hint }}</p>{% endif %}
+            {% if food.craving.amount is not none %}
+            <p class="fg-portion">{% if food.choice == 'occasional' %}想吃时，先分一小份{% else %}一次参考{% endif %} <strong>{{ food.craving.amount }} {{ food.unit_label }}</strong></p>
+            <p class="fg-muted">{{ food.measure }}{% if food.craving.carb is not none %} · 碳水约 {{ food.craving.carb }} 克{% endif %}</p>
+            {% elif food.nutrition_only %}<p class="fg-portion">每 100 克碳水约 <strong>{{ food.carb_per_100 }} 克</strong></p><p class="fg-muted">营养参考，可填写实际食用量换算。</p>{% else %}<p class="fg-portion">先看包装，再确定份量</p>{% endif %}
+            <p>{{ food.note }}</p>
+            <a href="{{ url_for('nutrition.food_guide_page', q=q, category=category, choice=choice, food_id=food.id) }}#portion-result">{% if food.nutrition_only %}换算这份营养{% else %}想吃的话，吃多少？{% endif %} →</a>
+            <details {% if result and result.food.id == food.id %}open{% endif %}>
+                <summary>换算份量 · 更多说明</summary>
+                <p>{% if food.gi is not none %}{{ food.gi_label }} · {{ '%g'|format(food.gi) }}{% if food.gi_reference %}（同类参考）{% endif %}<br>{{ food.gi_source }}；{{ gi_boundary }}。品种、成熟度、做法会影响 GI。{% elif food.rise_basis == 'level' %}这张表对这个食物只给了「{{ food.rise_label }}」的档位，没有具体 GI 数值，所以不给数字、也不算负荷。来源同上。{% else %}升糖快慢暂无可靠数值：既查不到 GI，也没有权威档位。只能先按碳水算。{% endif %}</p>
+                {% if food.gl_ref is not none %}<p class="fg-muted">「升糖负荷 GL」和上面那个 GI 是两个数，别混：GI 说这个食物本身升得快不快，GL 说这一份实际会让血糖升多少（GL = GI × 这一份的碳水 ÷ 100）。GL 不标单位，1 个 GL 约等于 1 克葡萄糖的升糖效果。</p>{% endif %}
+                <p class="fg-muted">碳水参考：{% if food.carb_per_100 is not none %}每 100 {{ food.unit_label }}约 {{ food.carb_per_100 }} 克。{% else %}尚无可靠定量数据。{% endif %}包装食品以实际标签为准。</p>
+                {% if food.nutrition_provenance %}<p class="fg-muted">{{ food.carbohydrate_definition }}。可食部数据，核对日期 {{ food.verified_on }}。<br>原始食品：{{ food.source_description }}<br>来源编号：{{ food.nutrition_provenance.fdc_id }}；授权 CC0。</p>{% endif %}
+                <form method="get" action="{{ url_for('nutrition.food_guide_page') }}#portion-result">
+                    <input type="hidden" name="food_id" value="{{ food.id }}"><input type="hidden" name="q" value="{{ q }}"><input type="hidden" name="category" value="{{ category }}"><input type="hidden" name="choice" value="{{ choice }}">
+                    <label for="label-{{ food.id }}">每 100 {{ food.unit_label }}的碳水克数（选填）</label>
+                    <input id="label-{{ food.id }}" type="number" name="label_carb" min="0" max="100" step="any" placeholder="看“碳水化合物”，不是只看糖" {% if result and result.food.id == food.id and result.from_label %}value="{{ result.label_carb }}"{% endif %}>
+                    <label for="amount-{{ food.id }}">准备吃多少（{{ food.unit_label }}）</label>
+                    <div class="fg-search-row"><input id="amount-{{ food.id }}" type="number" name="amount" min="0.1" max="5000" step="0.1" required value="{{ food.portion }}"><button class="btn btn-primary" type="submit">查看这份</button></div>
+                </form>
+                <a class="fg-source" href="{{ food.source.url }}" target="_blank" rel="noopener noreferrer">参考：{{ food.source.title }}</a>
+            </details>
+        </article>
+    {% else %}
+        <div class="fg-empty">
+            <h3>暂未找到这类食品</h3>
+            <p>试试通用名称或清除筛选。暂时没有匹配资料，不能判断适不适合您吃、能吃多少。</p>
+            <p>有包装？可按营养标签换算这份碳水；没有标签的食材，先核对具体名称和做法。</p>
+            <a href="{{ url_for('nutrition.food_guide_page') }}">清除筛选，查看全部</a>
+        </div>
+    {% endfor %}
+    </div>
+    {% endif %}
+    <details class="fg-search fg-label-tool" {% if not foods or custom_result %}open{% endif %}>
+        <summary>没收录的包装食品，按标签算一算</summary>
+        <form method="get" action="{{ url_for('nutrition.food_guide_page') }}#label-result">
+            <input type="hidden" name="q" value="{{ q }}"><input type="hidden" name="category" value="{{ category }}"><input type="hidden" name="choice" value="{{ choice }}">
+            <div class="fg-fields">
+                <label>食品名称<input name="custom_food" required maxlength="60" value="{{ custom_result.name if custom_result else q }}" placeholder="例如：某品牌饼干"></label>
+                <label>标签单位<select name="custom_unit"><option value="g" {% if not custom_result or custom_result.unit == 'g' %}selected{% endif %}>每 100 克</option><option value="ml" {% if custom_result and custom_result.unit == 'ml' %}selected{% endif %}>每 100 毫升</option></select></label>
+                <label>标签碳水（克）<input name="custom_carb" type="number" min="0" max="100" step="any" required value="{{ custom_result.label_carb if custom_result else '' }}" placeholder="看碳水化合物，不是只看糖"></label>
+                <label>准备吃多少（对应克或毫升）<input name="custom_amount" type="number" min="0.1" max="5000" step="any" required value="{{ custom_result.amount if custom_result else '' }}"></label>
+                <button class="btn btn-primary" type="submit">换算碳水</button>
+            </div>
+            <p class="fg-muted">食用量单位须与标签一致。没有对应标签就不猜数值；低碳水也不等于适合多吃。</p>
+        </form>
+    </details>
+    <aside class="fg-footnote"><p>参考量不是个人安全上限。血糖偏高或有特殊饮食要求时，请按医嘱。</p><details><summary>控糖知识与资料来源</summary><p>{{ notice }}</p>{% for tip in tips %}<h3>{{ tip.title }}</h3><p>{{ tip.text }}</p>{% endfor %}<ul>{% for source in sources %}<li><a href="{{ source.url }}" target="_blank" rel="noopener noreferrer">{{ source.title }}</a></li>{% endfor %}</ul><p>内容核对日期：2026-11-03。</p></details></aside>
+</div>
+{% endblock %}
+{% block extra_scripts %}<script src="{{ url_for('static', filename='js/food-guide.js') }}?v=20261106-netwait"></script>{% endblock %}

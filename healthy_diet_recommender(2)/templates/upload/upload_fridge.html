@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}上传冰箱照片 - 益食安康{% endblock %}
+
+{% block content %}
+<div class="upload-container">
+    <h1 class="page-title">📸 拍照识别食材</h1>
+    <p class="page-subtitle">上传冰箱照片，AI 自动识别现有食材</p>
+
+    <div class="upload-card">
+        <form method="POST" action="{{ url_for('upload.upload_fridge_image') }}"
+              enctype="multipart/form-data" class="upload-form">
+            <div class="upload-zone" id="dropZone">
+                <div class="upload-icon">🧊</div>
+                <p>拖拽冰箱照片到这里，或点击下方按钮选择</p>
+                <p class="upload-hint">支持 PNG / JPG 格式，建议拍摄清晰光线充足的照片</p>
+                <input type="file" id="fileInput" name="file"
+                       accept=".png,.jpg,.jpeg" required hidden>
+                <button type="button" class="btn btn-outline" id="selectBtn">选择照片</button>
+                <p class="upload-filename" id="fileName" style="display:none;"></p>
+            </div>
+
+            <div class="upload-info">
+                <h3>💡 拍摄建议</h3>
+                <ul>
+                    <li>尽量拍摄冰箱内部全景，确保食材清晰可见</li>
+                    <li>避免强光反射或严重遮挡</li>
+                    {# 2026-10-23：原文写"上传后可在识别结果中手动修正食材名称" ——
+                       项目里没有这个功能（食材只能靠识别产生，没有新增/编辑入口）。
+                       改成如实说明"重传以最新一张为准"。 #}
+                    <li>一次没认全没关系，重新上传一张，以最新那张照片的识别结果为准</li>
+                </ul>
+                {# 2026-10-23：原文案写死"系统使用 YOLOv8 深度学习模型" —— 已经不成立：
+                   主力是视觉大模型（GLM-4V），YOLO 只是它失败时的兜底，且线上没装 torch，
+                   兜底实际不可用。模型会换，页面别写死名字，同时如实交代识别有局限。 #}
+                <p class="upload-note">🤖 由 AI 识别照片里的食材。光线暗、摆得太密或只拍到一角时可能认不全，换个角度重拍通常更好认。</p>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">📤 上传并识别</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.getElementById('selectBtn').addEventListener('click', function() {
+    document.getElementById('fileInput').click();
+});
+document.getElementById('fileInput').addEventListener('change', function() {
+    var name = this.files[0] ? this.files[0].name : '';
+    var el = document.getElementById('fileName');
+    if (name) {
+        el.textContent = '已选择: ' + name;
+        el.style.display = 'block';
+    } else {
+        el.style.display = 'none';
+    }
+});
+</script>
+{% endblock %}

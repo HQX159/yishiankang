@@ -1,0 +1,53 @@
+<!-- pages/recipe-detail/recipe-detail.wxml -->
+<view class="container">
+  <view class="recipe-detail-header">
+    <view class="recipe-detail-title">{{recipe.title}}</view>
+    <view class="recipe-detail-meta">
+      <text>{{cookingTime}}</text>
+      <text>{{servings}}</text>
+      <text>{{createdAt}}</text>
+    </view>
+  </view>
+
+  <view class="recipe-section">
+    <view class="recipe-section-title">所需食材</view>
+    <view class="ingredient-list">
+      <view class="ingredient-item" wx:for="{{ingredientLines}}" wx:key="*this">{{item}}</view>
+    </view>
+  </view>
+
+  <view class="recipe-section">
+    <view class="recipe-section-title">烹饪步骤</view>
+    <view class="step-list">
+      <view class="step-item" wx:for="{{stepLines}}" wx:key="*this">
+        <view class="step-num">{{item.num}}</view>
+        <view class="step-text">{{item.text}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{hasNutrition}}" class="recipe-section recipe-nutrition">
+    <view class="recipe-section-title">营养信息</view>
+    <view class="nutrition-content">{{recipe.nutrition_info}}</view>
+  </view>
+
+  <view class="tts-player">
+    <view class="tts-controls">
+      <button class="btn {{ttsBtnClass}}" bindtap="toggleTTS" disabled="{{ttsLoading}}">
+        {{ttsBtnText}}
+      </button>
+      <view wx:if="{{audioDuration > 0}}" style="flex:1;">
+        <slider value="{{audioProgress}}" bindchange="onSliderChange"
+                activeColor="#16a34a" block-size="{{16}}" style="width:100%;"/>
+        <view class="tts-time">{{audioCurrentStr}} / {{audioDurationStr}}</view>
+      </view>
+    </view>
+    <view wx:if="{{ttsStatus}}" class="tts-status" style="background:{{ttsStatusBg}};color:{{ttsStatusColor}};">
+      {{ttsStatus}}
+    </view>
+  </view>
+
+  <view style="display:flex;gap:20rpx;margin-top:24rpx;">
+    <button class="btn btn-block {{favBtnClass}}" style="{{favBtnStyle}}" bindtap="toggleFavorite">{{favBtnText}}</button>
+  </view>
+</view>

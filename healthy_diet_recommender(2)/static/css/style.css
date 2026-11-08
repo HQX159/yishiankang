@@ -1,0 +1,2342 @@
+/* ============================================================
+   益食安康 — 糖尿病饮食管理系统 样式表
+   主色调：绿色系（健康、自然、新鲜）
+   ============================================================ */
+
+/* ---- 变量 ---- */
+:root {
+    --green-50: #f0fdf4;
+    --green-100: #dcfce7;
+    --green-200: #bbf7d0;
+    --green-300: #86efac;
+    --green-400: #4ade80;
+    --green-500: #22c55e;
+    --green-600: #16a34a;
+    --green-700: #15803d;
+    --green-800: #166534;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --white: #ffffff;
+    --red-500: #ef4444;
+    --red-100: #fee2e2;
+    --yellow-500: #eab308;
+    --yellow-100: #fef9c3;
+    --blue-500: #3b82f6;
+    --blue-100: #dbeafe;
+    --radius: 12px;              /* 卡片 */
+    --radius-sm: 8px;            /* 控件：按钮 / 输入框 / 小面板 */
+    --radius-pill: 999px;        /* 胶囊标签 */
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+    --transition: 0.2s ease;
+
+    /* ============================================================
+       全站视觉规范（2026-10-12 统一）
+       ------------------------------------------------------------
+       起因：各页面各自写了容器宽度 / 标题字号 / 圆角 / 内边距，
+             导致一翻页标题左边缘就跳（曾同时存在 7 种内容宽度）。
+       规矩：下面这几个 token 是**唯一**来源，新页面直接引用，不要再写死数字。
+       ============================================================ */
+
+    /* 页面内容栏：全站只有一个宽度，且**左对齐**（与导航栏同一左边缘）。
+       原来 1200/900/800/760/640 五种宽度各自居中，标题位置每页都不同。
+       例外：登录 / 注册 / 改密码 是居中的独立卡片（没有 .page-title），保持居中。 */
+    --page-w: 1000px;
+
+    /* ============================================================
+       适老化阅读字号（R1，2026-10-16）
+       ------------------------------------------------------------
+       起因：项目主要面向糖尿病患者（多为中老年），固定 14px 正文字号偏小。
+       做法：用户在「设置」页拖一个滑块，全站文字同比放大 / 缩小。
+
+       --reading-size : 用户选的**阅读字号**（16~40px，默认 20），仅用于
+                        设置页那段「实时预览」文字，所见即所得。
+       --reading-scale: 相对基准 18px 的**倍率**（= reading-size ÷ 18）。
+                        JS 在设置页松手时同时写入这两个变量。
+                        ⚠️ 这里的分母 18 是**倍率锚点，不是默认值**：default
+                        20px 时倍率是 1.111，全站字号 14→15.6px。两者不能混用，
+                        否则出现「改了默认值页面却纹丝不动」（2026-11-01 踩过）。
+
+       为什么要「倍率」而不是直接把 --fs-body 设成 --reading-size：
+         原来的基线是 正文 14px / 大标题 28px。若直接把正文改成用户选的
+         18px，全站版式会整体跑偏。改成倍率后，默认 18px → 倍率 1 →
+         **视觉与改造前完全一致（零回归）**；调大后所有字号同比放大，
+         既有的层级关系（大标题 > 区块标题 > 正文 > 说明）也保持不变。
+
+       覆盖范围：6 档 token（下面）+ 页面里写死的 rem 字号（靠 html 的
+         font-size 一起乘倍率）→ 全站文字统一缩放。
+       ============================================================ */
+    /* 这里是**兜底值**（JS 没跑起来 / 被禁用时用），故意写成默认档 20px
+       而不是锚点 18px —— 否则 JS 一挂，全站字号退回 14px、间距还被
+       --sp-grow 缩小 4%，看起来像"页面变小了"而不是"脚本坏了"。 */
+    --reading-size: 20px;
+    --reading-scale: 1.1111111;
+
+    /* ============================================================
+       适老化：触控基线 + 统一描边（R1，2026-10-16）
+       ------------------------------------------------------------
+       触控：面向中老年用户，可点元素不能比手指触点小。
+             --tap-min  = 按钮 / 菜单项 / 输入框的**最小高度**
+             --tap-gap  = 相邻可点元素之间的**最小间距**（防误触，点错邻项）
+       描边：全站卡片 / 输入框的边框统一走下面三个 token，
+             高对比模式只改这三行就能整体加粗加深（不必逐条规则改）。
+             --border-hc 是**高对比专用色**，故意不跟随灰阶覆盖，
+             否则「加深文字」会把描边一起推到近黑，反而糊成一片。
+       ============================================================ */
+    --tap-min: 56px;
+    --tap-gap: 12px;
+    --border-w: 1px;
+    --border: var(--gray-200);
+    --border-strong: var(--gray-300);
+    --border-hc: #9ca3af;
+
+    /* 字号阶梯：全站只用这 6 档（统一乘 --reading-scale）
+       ------------------------------------------------------------
+       大标题与大数字**封顶**（min），正文与说明不封：
+         · 正文（--fs-body）是糖友真正要读的东西，用户调多大就给多大；
+         · 标题封顶是因为 40px 档下 28px×2.22 = 62px，一个 9 字标题会占两行、
+           把下面的正文整个顶出首屏 —— 大字模式的目的是"看得清正文"，
+           不是"看得清更大的标题"。44px 仍比正文(31px)大 1.4 倍，层级清楚。
+         · 数字封顶同理（53px 的指标值会把卡片撑成正方形，一屏只剩一个）。
+       默认档（scale=1.111）下 6 档全部未触顶，**视觉零变化**。 */
+    --fs-h1: min(calc(28px * var(--reading-scale)), 44px);    /* 页面大标题 .page-title */
+    --fs-h2: calc(18px * var(--reading-scale));               /* 区块标题（.section > h2，带下分隔线） */
+    --fs-h3: calc(16px * var(--reading-scale));               /* 卡片标题（.info-card h2 / .recipe-section h2 / .chart-title） */
+    --fs-body: calc(14px * var(--reading-scale));             /* 正文 */
+    --fs-note: calc(12px * var(--reading-scale));             /* 说明 / 元信息 */
+    --fs-num: min(calc(24px * var(--reading-scale)), 40px);   /* 卡片里的大数字（指标值 / 营养值） */
+
+    /* 间距阶梯：只用这几档（原来 14/18/22/26/28/30 混用）
+       ------------------------------------------------------------
+       间距**随字号亚线性放大**（不是等比例）：
+         倍率 1.111（默认 20px）→ ×1.000（与改造前逐像素一致，零回归）
+         倍率 2.222（最大 40px）→ ×1.278（--sp-4 16px→20px，--sp-6 24px→31px）
+         倍率 0.889（最小 16px）→ ×0.944
+       为什么亚线性：line-height 是**无单位倍数**，40px 档下早已自动从 28px 长到
+       57px，行距本身不缺。缺的是"字块之间"的留白 —— 但那部分若也等比翻倍，
+       页面会从 3300px 变成 6600px，老人得多滑三倍，反而更难用。
+       亚线性只补该补的呼吸感，页面总长约涨 5%。
+       系数 0.25 是**实测定的**：再高（0.39）时 390 宽两列的统计卡片会把
+       「生成食谱」挤成两行；0.25 下内宽仍有约 137px，四个字一行放得下。
+
+       ⚠️ 那个 1.1111 是**默认档的倍率**（DEFAULT_PX 20 ÷ 锚点 18），不是 1。
+          若照抄 `0.65 + 0.35 * scale`，默认档会得到 1.039 —— 用户什么都没调，
+          全站间距却涨了 4%。改 a11y.js 的 DEFAULT_PX / SCALE_BASE 时这里要同步。
+       注：--reading-scale 必须是纯数字（不带单位），否则 calc 不合法。 */
+    --sp-grow: calc(1 + 0.25 * (var(--reading-scale) - 1.1111));
+    --sp-1: calc(4px * var(--sp-grow));
+    --sp-2: calc(8px * var(--sp-grow));
+    --sp-3: calc(12px * var(--sp-grow));
+    --sp-4: calc(16px * var(--sp-grow));
+    --sp-5: calc(20px * var(--sp-grow));
+    --sp-6: calc(24px * var(--sp-grow));
+    --sp-7: calc(32px * var(--sp-grow));
+
+    /* 卡片内边距**故意不跟随字号**（保持 24px 常数）。
+       原因：网格卡片的宽度是"容器宽 − 间距"再除以列数，内边距一涨，内宽就被
+       两头挤。390 宽两列时每格内宽约 137px，而「生成食谱」四个字在 40px 档
+       要 124px —— padding 从 24 加到 34 就只剩 107px，四个字直接折成两行
+       （2026-11-01 实测踩过）。大字模式真正该改的是把两列降成一列，
+       那是第 6 步布局的活，不能靠压缩留白硬塞。 */
+    --card-pad: 24px;
+}
+
+/* ---- Reset ---- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* 根字号跟着「阅读字号」倍率走 —— 页面里写死的 rem 字号（0.9rem / 0.85rem…）
+   都以此为基准，所以它们会和 6 档 token 一起同比放大。
+   默认 scale=1 → 16px，与浏览器默认一致，不改设置时视觉零变化。 */
+html { font-size: calc(16px * var(--reading-scale)); }
+
+/* ============================================================
+   高对比度模式（R1，2026-10-16）
+   ------------------------------------------------------------
+   用户在「设置」页打开开关 → JS 给 <html> 写 data-contrast="high"。
+   **默认关闭，关闭时不产生任何样式变化**（零回归）。
+
+   只做三件事，都是「把边界和文字拉清楚」，不换配色体系：
+     1) 灰阶文字加深：gray-400~700 经全表核查**只用于文字颜色**，
+        加深不会波及任何背景色，所以可以安全地整档覆盖。
+        对比度：正文 #1f2937 on #fff ≈ 14.7:1；辅助文字 #4b5563 ≈ 7.6:1。
+     2) 主色按钮底色加深：green-600(#22c55e) 白底上只有 2.2:1，不达标；
+        green-800(#166534) ≈ 6.4:1，达到 WCAG AA。
+     3) 描边加粗加深：改 --border-w / --border 两个 token 即可全站生效。
+
+   ⚠️ 红 / 黄两档（风险拦截、控糖档位）**一律不动** ——
+      它们是语义色，必须保持原来的醒目程度，不能被"高对比"调暗或调亮。
+   ============================================================ */
+html[data-contrast="high"] {
+    --gray-400: #4b5563;
+    --gray-500: #374151;
+    --gray-600: #1f2937;
+    --gray-700: #111827;
+    --green-400: #15803d;
+    --green-600: #166534;
+    --green-700: #14532d;
+    --border-w: 2px;
+    --border: var(--border-hc);
+    --border-strong: #6b7280;
+}
+/* 输入框聚焦时的描边也跟着加粗，否则 2px 边框 + 1px 聚焦色会看着"缺一块" */
+html[data-contrast="high"] .form-group input:focus,
+html[data-contrast="high"] .form-group textarea:focus,
+html[data-contrast="high"] .form-group select:focus { border-width: 2px; }
+
+/* 给「原本只有阴影、没有描边」的卡片补一条实线 ——
+   白卡片落在浅灰底上，只靠阴影在高对比模式下边界仍然含糊。
+   .stat-card 原本是 1px transparent（防 hover 抖动），这里给成实色即可。 */
+html[data-contrast="high"] .a11y-card,
+html[data-contrast="high"] .auth-card,
+html[data-contrast="high"] .info-card,
+html[data-contrast="high"] .recipe-list-item,
+html[data-contrast="high"] .stat-card { border: var(--border-w) solid var(--border); }
+
+/* 「粗体文本」（2026-11-01，A 方案：只在高对比模式下加粗）
+   ------------------------------------------------------------
+   老花眼对**笔画粗细**比对颜色敏感，iOS 里叫「粗体文本」。
+   为什么不做成独立开关、也不改全站默认字重：
+     · 中文的 苹方 / 微软雅黑 大多没有 500 这种中间字重，写 `font-weight: 500`
+       在多数机器上是**空操作**（看着一点没变，等于白改）；
+     · 真写到 600 才变粗（浏览器合成），但全站默认加粗会让版面显得拥挤，
+       行长、按钮宽度都得重新验一遍。
+   所以只挂在高对比模式下：用户主动选了"看不清"，加粗才有意义。
+   写在 body 上只影响**没显式设字重**的元素；标题 / 按钮 / 标签本来就有
+   600~700，不会叠成更粗。 */
+html[data-contrast="high"] body { font-weight: 600; }
+
+/* ============================================================
+   触控基线（R1，2026-10-16）
+   ------------------------------------------------------------
+   .btn / 导航项 / 表单控件统一最小高度 --tap-min(56px)；
+   相邻项间距 --tap-gap(12px)，降低误触概率。
+   唯一例外见文件末尾 768px 媒体查询里的顶部导航（屏幕太窄，折中 48px）。
+   ============================================================ */
+.nav-brand,
+.nav-menu a,
+.nav-dd-menu a,
+.form-group input,
+.form-group select { min-height: var(--tap-min); }
+
+/* 输入框的高度靠 padding + min-height 撑起来即可（text 类控件文字本来就垂直居中） */
+.nav-brand,
+.nav-menu a,
+.nav-dd-menu a { display: inline-flex; align-items: center; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+a { color: var(--green-600); text-decoration: none; }
+a:hover { color: var(--green-700); text-decoration: underline; }
+
+/* ---- 导航栏 ---- */
+.navbar {
+    background: var(--white);
+    border-bottom: var(--border-w) solid var(--border);
+    box-shadow: var(--shadow);
+    position: sticky; top: 0; z-index: 100;
+}
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* 高度用 min-height：字号调大后导航栏文字变高，固定 height 会挤压 / 溢出 */
+    height: auto;
+    min-height: 60px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+.nav-brand {
+    /* 上限 26px：字号调到 40px 时 1.3rem 会变成 46px，品牌名一个人占满整行、
+       把导航挤成两行。导航是"路标"不是正文，封顶即可，正文该多大还是多大。
+       默认 20px 时 1.3rem=23px，未触到上限，观感与原来一致。 */
+    font-size: min(1.3rem, 26px);
+    font-weight: 700;
+    color: var(--green-700) !important;
+    text-decoration: none !important;
+    /* 手机窄屏下 flex 会把这格压窄，把「益食安康」折成两行（2026-10-17 实测 390px 被切）。
+       品牌不参与收缩，让右边的 .nav-menu 自己去换行。 */
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+/* 品牌名后的定位小字（2026-10-16：项目定位收敛为糖尿病）。
+   窄屏隐藏，避免挤掉右侧的导航项。 */
+.nav-brand-sub {
+    margin-left: 8px;
+    padding-left: 8px;
+    border-left: var(--border-w) solid var(--border-strong);
+    font-size: min(0.72rem, 14px);
+    font-weight: 500;
+    color: var(--gray-600);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+@media (max-width: 900px) {
+    .nav-brand-sub { display: none; }
+}
+.nav-menu { display: flex; list-style: none; gap: var(--tap-gap); flex-wrap: wrap; }
+.nav-menu a {
+    display: block;
+    padding: 8px 14px;
+    border-radius: 8px;
+    color: var(--gray-600);
+    /* 同 .nav-brand：导航项封顶 20px，否则 40px 档下 5 个导航项会各占一行 */
+    font-size: min(0.9rem, 20px);
+    text-decoration: none !important;
+    transition: var(--transition);
+}
+.nav-menu a:hover { background: var(--green-50); color: var(--green-700); }
+.nav-logout { color: var(--gray-400) !important; }
+.nav-logout:hover { color: var(--red-500) !important; background: var(--red-100) !important; }
+
+/* ---- 适老化：导航栏字号快捷调节（2026-11-01） ----
+   放在导航栏而不是「设置」页：70 岁用户不会去设置里找滑块。
+   margin-left:auto 把它顶到右侧、紧贴 .nav-menu；未登录时（没有 .nav-menu）
+   同样落在右边，登录页也能直接调字号。
+   高度 48px：导航区允许比正文按钮（--tap-min 56px）略矮，但仍远高于 WCAG 的 44px。 */
+.a11y-quick {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    margin-right: var(--tap-gap);
+    flex-shrink: 0;
+}
+.a11y-quick-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    height: 48px;
+    padding: 0 8px;
+    border: var(--border-w) solid var(--border-strong);
+    border-radius: 8px;
+    background: var(--white);
+    color: var(--green-700);
+    /* 固定 px，不用 rem：rem 会乘 --reading-scale，按到 40px 时这一格自己会胀到
+       35px 以上，把导航栏顶高一大截。这组按钮是"工具"，尺寸必须恒定。 */
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.a11y-quick-btn:hover:not(:disabled) { background: var(--green-50); }
+.a11y-quick-btn:active:not(:disabled) { transform: scale(0.96); }
+/* 到 16px / 40px 两端时禁用对应方向，避免"按了没反应"被当成坏了 */
+.a11y-quick-btn:disabled {
+    color: var(--gray-400);
+    border-color: var(--border);
+    cursor: not-allowed;
+}
+.a11y-quick-now {
+    min-width: 2.2em;
+    text-align: center;
+    /* 同样用 px：数字只做反馈，不跟着全站字号放大 */
+    font-size: 13px;
+    color: var(--gray-600);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+}
+html[data-contrast="high"] .a11y-quick-btn { border-width: 2px; }
+
+/* ---- 下拉菜单 ---- */
+.nav-dropdown { position: relative; }
+.nav-dd-toggle { cursor: pointer; }
+.nav-dd-menu {
+    display: none; position: absolute; top: 100%; left: 0; min-width: 200px;
+    list-style: none; background: var(--white); border: var(--border-w) solid var(--border);
+    border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); padding: 6px; z-index: 200;
+    /* 竖向排列 + 12px 间距（同 --tap-gap），5 项以内不会超出屏幕 */
+    flex-direction: column; gap: var(--tap-gap);
+}
+.nav-dd-menu a {
+    display: flex; align-items: center; padding: 8px var(--sp-3); border-radius: 6px;
+    color: var(--gray-600); font-size: 0.9rem; text-decoration: none !important;
+    transition: var(--transition);
+}
+.nav-dd-menu a:hover { background: var(--green-50); color: var(--green-700); }
+.nav-dropdown.open .nav-dd-menu { display: flex; }
+.nav-dropdown.open .nav-dd-toggle { color: var(--green-700); }
+
+/* ---- Flash 消息 ---- */
+.flash-container {
+    max-width: 1200px; margin: 12px auto 0; padding: 0 20px;
+}
+.flash-message {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; border-radius: 8px;
+    margin-bottom: 8px; font-size: 0.9rem;
+    animation: slideDown 0.3s ease;
+}
+.flash-success { background: var(--green-100); color: var(--green-800); border: 1px solid var(--green-200); }
+.flash-error   { background: var(--red-100);   color: var(--red-500);   border: 1px solid #fecaca; }
+.flash-warning { background: var(--yellow-100); color: #92400e;         border: 1px solid #fde68a; }
+.flash-info    { background: var(--blue-100);  color: #1e40af;          border: 1px solid #bfdbfe; }
+.flash-close {
+    background: none; border: none; font-size: 1.2rem;
+    cursor: pointer; color: inherit; opacity: 0.6;
+}
+.flash-close:hover { opacity: 1; }
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- 主内容 ---- */
+.main-content { flex: 1; max-width: 1200px; margin: 0 auto; padding: var(--sp-7) var(--sp-5); width: 100%; }
+
+/* ---- 页面容器（全站统一宽度 + 左对齐） ----
+   导航栏 .nav-container 与这里都是 max-width:1200px 居中，所以页面内容的左边缘
+   与左上角 logo 的左边缘天然对齐。下面这些容器一律只把宽度收到 --page-w，
+   **不再各自 margin:0 auto 居中** —— 那一句就是"每翻一页标题就跳"的根源。 */
+.upload-container,
+.generate-container,
+.meal-plan-container,
+.recipe-detail-container,
+.recipe-list-container,
+.health-report-page,
+.dashboard {
+    max-width: var(--page-w);
+    margin: 0;
+}
+
+/* 表单类卡片保持紧凑：容器已经左对齐，卡片再窄也不会再让标题跑偏 */
+.upload-card,
+.generate-card { max-width: 640px; }
+.meal-plan-form-card { max-width: 100%; }
+
+/* ---- 页面标题 ---- */
+.page-title { font-size: var(--fs-h1); font-weight: 700; color: var(--gray-900); margin-bottom: var(--sp-1); }
+.page-subtitle { font-size: var(--fs-body); color: var(--gray-500); margin-bottom: var(--sp-6); }
+.page-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--sp-3); margin-bottom: var(--sp-6); }
+
+/* ---- 按钮 ---- */
+.btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 10px 20px; border-radius: 8px; font-size: 0.95rem; font-weight: 500;
+    cursor: pointer; border: none; text-decoration: none !important;
+    transition: var(--transition); white-space: nowrap;
+    /* 适老化触控基线：按钮不矮于 56px（见 :root 的 --tap-min 说明） */
+    min-height: var(--tap-min);
+}
+.btn-primary { background: var(--green-600); color: var(--white) !important; }
+.btn-primary:hover { background: var(--green-700); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.btn-outline { background: var(--white); color: var(--gray-700) !important; border: var(--border-w) solid var(--border-strong); }
+.btn-outline:hover { border-color: var(--green-400); color: var(--green-700) !important; background: var(--green-50); }
+.btn-block { display: flex; width: 100%; }
+.btn-lg { padding: 14px 28px; font-size: 1.05rem; }
+.btn-sm { padding: 6px 12px; font-size: 0.85rem; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+
+/* ---- 认证页 ---- */
+.auth-container {
+    display: flex; align-items: center; justify-content: center;
+    min-height: calc(100vh - 180px);
+}
+.auth-card {
+    background: var(--white); border-radius: var(--radius);
+    box-shadow: var(--shadow-lg); padding: var(--sp-7); width: 100%; max-width: 420px;
+}
+.auth-card h1 { font-size: 1.6rem; text-align: center; color: var(--gray-900); margin-bottom: 4px; }
+.auth-subtitle { text-align: center; color: var(--gray-500); margin-bottom: 28px; }
+.auth-form { display: flex; flex-direction: column; gap: 16px; }
+.auth-form .form-group:last-of-type { margin-bottom: 8px; }
+.auth-switch { text-align: center; margin-top: 20px; color: var(--gray-500); font-size: 0.9rem; }
+
+/* ---- 表单 ---- */
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-weight: 500; margin-bottom: 6px; color: var(--gray-700); font-size: 0.9rem; }
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%; padding: 10px 14px;
+    border: var(--border-w) solid var(--border-strong); border-radius: 8px;
+    font-size: 0.95rem; font-family: inherit;
+    transition: var(--transition); background: var(--white);
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none; border-color: var(--green-400);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* ---- 仪表盘 ---- */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-4); margin-bottom: var(--sp-6); }
+.stat-card {
+    /* 预留一条透明边框：原来 hover 时才加边框，会让内容区被挤掉 2px 产生抖动 */
+    border: 1px solid transparent;
+    background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: var(--card-pad); text-align: center; transition: var(--transition);
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.stat-card-link { display: block; text-decoration: none !important; color: inherit; cursor: pointer; }
+.stat-card-link:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--green-300); }
+.stat-icon { font-size: 2rem; margin-bottom: var(--sp-2); }
+.stat-value { font-size: var(--fs-h1); font-weight: 700; color: var(--green-700); }
+.stat-label { color: var(--gray-500); font-size: var(--fs-note); margin-top: var(--sp-1); }
+
+.quick-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
+/* 大字档下快捷按钮必须能折行：
+   「🩺 健康报告（上传 / 看指标）」单行在 40px 档要 500px，而手机只有 390px，
+   再加上 .btn 的 white-space: nowrap，整块会冲出屏幕右侧
+   （2026-11-01 实测 390 宽下越界到 527px，页面出现横向滚动条）。
+   默认字号下这些按钮本来就一行放得下，这条对日常观感零影响。 */
+.quick-actions .btn { white-space: normal; max-width: 100%; }
+
+/* ---- 信息卡片 ---- */
+.info-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
+.info-card {
+    background: var(--white); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: var(--card-pad);
+}
+.info-card h2 { font-size: var(--fs-h3); font-weight: 600; margin-bottom: var(--sp-3); color: var(--gray-800); }
+.info-filename { font-weight: 600; color: var(--gray-700); }
+.info-date { color: var(--gray-400); font-size: 0.85rem; margin-bottom: 8px; }
+.info-preview { background: var(--gray-50); padding: var(--sp-3); border-radius: var(--radius-sm); font-size: var(--fs-body); color: var(--gray-600); max-height: 150px; overflow-y: auto; }
+.info-empty { color: var(--gray-400); font-style: italic; }
+
+/* 食材标签 */
+.ingredient-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.ingredient-tag {
+    display: inline-flex; align-items: center; gap: var(--sp-1);
+    background: var(--green-100); color: var(--green-800);
+    padding: 6px var(--sp-3); border-radius: var(--radius-pill); font-size: var(--fs-note); font-weight: 500;
+}
+.ingredient-tag small { color: var(--green-600); font-weight: 400; }
+
+/* ---- 上传页 ---- */
+/* .upload-container 的宽度/对齐已由上面的「页面容器」统一规则给出，这里不再写死 */
+.upload-card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: var(--card-pad); }
+.upload-zone {
+    border: 2px dashed var(--gray-300); border-radius: var(--radius);
+    padding: 40px 20px; text-align: center; margin-bottom: 20px;
+    transition: var(--transition); cursor: pointer;
+}
+.upload-zone:hover { border-color: var(--green-400); background: var(--green-50); }
+.upload-icon { font-size: 3rem; margin-bottom: 12px; }
+.upload-hint { color: var(--gray-400); font-size: 0.85rem; margin-top: 6px; }
+.upload-filename { color: var(--green-700); font-weight: 500; margin-top: 8px; }
+.upload-info { background: var(--gray-50); border-radius: 8px; padding: 16px 20px; margin-bottom: 20px; }
+.upload-info h3 { font-size: 0.95rem; margin-bottom: 8px; }
+.upload-info ul { padding-left: 20px; font-size: 0.9rem; color: var(--gray-600); }
+.upload-info li { margin-bottom: 4px; }
+.upload-note { font-size: 0.85rem; color: var(--gray-500); margin-top: 10px; }
+
+/* ---- 食谱生成 ---- */
+.generate-card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: var(--card-pad); }
+.generate-info { background: var(--green-50); border-radius: 8px; padding: 16px 20px; margin-bottom: 20px; }
+.generate-info h3 { font-size: 0.95rem; margin-bottom: 8px; color: var(--green-800); }
+.generate-info ul { padding-left: 20px; font-size: 0.9rem; color: var(--green-700); }
+.generate-info li { margin-bottom: 4px; }
+
+/* ── R4 三维度单选（目的 / 口味 / 用餐时间）─────────────────────
+   做成「整块可点的卡片」而不是小圆点：
+   老年用户不必精准点中那个 radio，点文字哪一处都算；
+   每块最小高度走 --tap-min（56px），间距走 --tap-gap。
+   真 radio 藏起来但保留 —— 键盘 Tab / 方向键仍然可用。 */
+.choice-row { display: flex; flex-wrap: wrap; gap: var(--tap-gap); }
+/* 「饮食目的」只有 4 项且各块文案长短不一，靠内容自适应会排成 3+1（最后一块单独掉行）。
+   改用等宽栅格：宽屏 4 列一行，窄屏自动折成 2×2，不必写死断点。 */
+.choice-row--even {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+}
+.choice { position: relative; display: flex; }
+.choice input {
+    position: absolute; width: 1px; height: 1px;
+    opacity: 0; pointer-events: none;
+}
+.choice-body {
+    display: flex; flex-direction: column; justify-content: center;
+    min-height: var(--tap-min); padding: 6px 16px;
+    background: var(--white); cursor: pointer;
+    border: var(--border-w) solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+}
+.choice-body b { font-size: var(--fs-body); font-weight: 600; color: var(--gray-800); }
+.choice-body em { font-style: normal; margin-top: 2px; font-size: var(--fs-note); color: var(--gray-500); }
+.choice:hover .choice-body { border-color: var(--green-400); }
+.choice input:checked + .choice-body {
+    border-color: var(--green-600); background: var(--green-50);
+    /* inset 阴影补足粗细：--border-w 是 1 还是 2，选中态看起来都够明显 */
+    box-shadow: inset 0 0 0 1px var(--green-600);
+}
+.choice input:checked + .choice-body b { color: var(--green-700); }
+.choice input:focus-visible + .choice-body { box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.35); }
+.choice-note {
+    margin-top: var(--sp-2); font-size: var(--fs-note); color: var(--green-700);
+}
+
+/* ── R4 标签展示（详情 / 列表 / 收藏 / 仪表盘共用 templates/recipe/_tags.html） */
+.tag-row { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin-top: var(--sp-2); }
+.tag-chip {
+    display: inline-flex; align-items: center;
+    padding: 2px 10px; border-radius: var(--radius-pill);
+    font-size: var(--fs-note); line-height: 1.6;
+    background: var(--gray-100); color: var(--gray-700);
+    border: var(--border-w) solid var(--border);
+}
+.tag-chip-purpose {
+    background: var(--green-50); color: var(--green-700);
+    border-color: var(--green-200);
+}
+
+/* ---- 食谱列表 ---- */
+.recipe-list { display: flex; flex-direction: column; gap: 12px; }
+.recipe-list-item {
+    background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: var(--sp-5) var(--card-pad); display: flex; align-items: center; justify-content: space-between;
+    transition: var(--transition);
+}
+.recipe-list-item:hover { box-shadow: var(--shadow-md); }
+.recipe-list-info h3 { font-size: var(--fs-h3); font-weight: 600; margin-bottom: var(--sp-1); }
+.recipe-list-info h3 a { color: var(--gray-800); }
+.recipe-list-info h3 a:hover { color: var(--green-600); }
+.recipe-list-meta { color: var(--gray-400); font-size: 0.85rem; margin-bottom: 4px; }
+.recipe-list-ingredients { color: var(--gray-500); font-size: 0.85rem; }
+.recipe-list-actions { display: flex; gap: 8px; flex-shrink: 0; margin-left: 16px; }
+
+/* 最近食谱卡片 */
+/* 区块标题 = 全站第 2 级：18px / 600 / 一条 1px 下分隔线。
+   .hr-section > h2（健康报告页）与 .meal-day-title（膳食计划）都归到这一档，
+   原来分别是 18px/600 带下划线、19.2px/700 无下划线、1.15rem 绿色粗下划线三种。 */
+.section { margin-top: var(--sp-7); }
+.section h2,
+.hr-section > h2,
+.meal-day-title {
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin: 0 0 var(--sp-4);
+    padding-bottom: var(--sp-2);
+    border-bottom: var(--border-w) solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--sp-2);
+}
+.recipe-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+.recipe-card-mini {
+    background: var(--white); border-radius: var(--radius); padding: var(--sp-4);
+    box-shadow: var(--shadow); transition: var(--transition);
+}
+.recipe-card-mini:hover { box-shadow: var(--shadow-md); }
+.recipe-card-mini h3 { font-size: var(--fs-h3); font-weight: 600; margin-bottom: var(--sp-1); }
+.recipe-date { color: var(--gray-400); font-size: 0.8rem; }
+
+/* ---- 食谱详情 ---- */
+.recipe-detail-header { margin-bottom: var(--sp-7); }
+.back-link { font-size: 0.9rem; color: var(--gray-500); display: inline-block; margin-bottom: 12px; }
+.back-link:hover { color: var(--gray-700); }
+.recipe-detail-title { font-size: var(--fs-h1); font-weight: 700; color: var(--gray-900); }
+.recipe-detail-meta { display: flex; gap: 16px; color: var(--gray-500); font-size: 0.9rem; margin-top: 8px; }
+.recipe-detail-body { display: flex; flex-direction: column; gap: 20px; margin-bottom: 28px; }
+.recipe-section { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: var(--card-pad); }
+.recipe-section h2 { font-size: var(--fs-h3); font-weight: 600; margin-bottom: var(--sp-4); color: var(--gray-800); }
+.recipe-text { color: var(--gray-700); line-height: 1.8; font-size: 0.95rem; }
+.recipe-detail-actions { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+/* 分享表单独占一整行：加了「换一道」之后，三个元素挤一行会把输入框压到第二行、
+   按钮挤到第三行。让它换行后仍是一个完整块，读起来才不散。 */
+.recipe-detail-actions .share-form { flex: 1 1 100%; }
+
+/* 食材清单 — 彩色标签网格 */
+.ingredient-list { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; padding: 0; }
+.ingredient-item {
+    background: var(--green-50); color: var(--green-800);
+    padding: 8px 16px; border-radius: 8px; font-size: 0.95rem;
+    font-weight: 500; border-left: 3px solid var(--green-400);
+    transition: var(--transition);
+}
+.ingredient-item:hover { background: var(--green-100); transform: translateY(-1px); }
+
+/* 烹饪步骤 — 编号卡片 */
+.step-list { display: flex; flex-direction: column; gap: 14px; list-style: none; padding: 0; counter-reset: step; }
+.step-item {
+    counter-increment: step; padding: var(--sp-4) var(--sp-4) var(--sp-4) 56px;
+    background: var(--gray-50); border-radius: var(--radius-sm);
+    font-size: 0.95rem; line-height: 1.7; color: var(--gray-700);
+    position: relative;
+}
+.step-item::before {
+    content: counter(step);
+    position: absolute; left: 12px; top: 12px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--green-500); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.9rem;
+}
+
+/* 营养信息 — 高亮数据卡（2026-10-18 重构：四个数字 + 一句话 + 折叠细节）
+   ------------------------------------------------------------
+   改造前这里是把 `nutrition_info` 整段 replace('\n','<br>') 全铺出来，
+   模型写的六段七八百字全在屏幕上，手机上要滑三屏 —— 使用者直接放弃。
+   现在分三层：能扫的数字 / 一句话结论 / 想深究才展开的细节。
+   ⚠️「⚠️ 血糖偏高」那一条**不在折叠区里**，是风险提示，必须一眼看到。 */
+.recipe-nutrition { border: 2px solid var(--green-200); background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%); }
+
+/* 第一层：四个数字（复用控糖提示的 .gi-metric 外观，只改列数） */
+/* ⚠️ 必须写成 .gi-metrics.nut-metrics（两个类）：.gi-metrics 在文件后半段，
+   同特异度下后出现的胜出 —— 写单个类名会被它覆盖，四个数字变回 150px 自适应 */
+.gi-metrics.nut-metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: var(--sp-3); }
+.nut-source { margin: var(--sp-2) 0 0; font-size: var(--fs-note); color: var(--gray-500); }
+
+/* 第二层：一句话结论。糖友真正需要的就是这一句 */
+.nut-lead {
+    display: flex; align-items: flex-start; gap: var(--sp-3); flex-wrap: wrap;
+    margin-top: var(--sp-4); padding: var(--sp-3) var(--sp-4);
+    background: var(--white); border-left: 4px solid var(--green-500);
+    border-radius: var(--radius-sm); box-shadow: var(--shadow);
+}
+.nut-lead-tag {
+    flex-shrink: 0; padding: 2px 12px; border-radius: var(--radius-pill);
+    background: var(--green-100); color: var(--green-800);
+    font-size: var(--fs-note); font-weight: 600; white-space: nowrap;
+}
+.nut-lead-text {
+    margin: 0; flex: 1; min-width: 200px;
+    font-size: var(--fs-body); line-height: 1.75; color: var(--gray-800);
+}
+
+/* 血糖偏高提醒：红黄语义色，不参与折叠 */
+.nut-notice {
+    margin: var(--sp-3) 0 0; padding: var(--sp-3) var(--sp-4);
+    background: #fffbeb; border-left: 4px solid var(--yellow-500);
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-body); line-height: 1.7; color: #92400e;
+}
+
+/* 第三层：细节，默认收起 */
+.nut-more { margin-top: var(--sp-3); border-top: var(--border-w) dashed var(--border-strong); }
+.nut-more > summary {
+    display: flex; align-items: center; gap: var(--sp-2);
+    min-height: var(--tap-min); cursor: pointer; list-style: none;
+    font-size: var(--fs-body); font-weight: 600; color: var(--green-700);
+}
+.nut-more > summary::-webkit-details-marker { display: none; }
+.nut-more > summary::after {
+    content: '▾'; margin-left: auto; transition: var(--transition);
+}
+.nut-more[open] > summary::after { transform: rotate(180deg); }
+.nut-points {
+    margin: 0 0 var(--sp-2); padding: 0; list-style: none;
+    display: flex; flex-direction: column; gap: var(--sp-2);
+}
+.nut-points li {
+    padding-bottom: var(--sp-2); border-bottom: var(--border-w) solid var(--border);
+    font-size: var(--fs-body); line-height: 1.8; color: var(--gray-700);
+}
+.nut-points li:last-child { padding-bottom: 0; border-bottom: none; }
+.nut-point-tag {
+    display: inline-block; margin-right: var(--sp-2); padding: 1px 10px;
+    border-radius: var(--radius-pill); background: var(--green-50);
+    border: var(--border-w) solid var(--green-200);
+    font-size: var(--fs-note); font-weight: 600; color: var(--green-700);
+}
+.nut-disclaimer { margin: var(--sp-4) 0 0; font-size: var(--fs-note); line-height: 1.7; color: var(--gray-500); }
+
+/* 手机上四个数字排 2×2 —— 4 列在 360px 下每格只剩 70px，读不成句 */
+@media (max-width: 640px) {
+    .gi-metrics.nut-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ---- TTS 播放器 ---- */
+.tts-player {
+    background: var(--white); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: var(--sp-5) var(--card-pad); margin-bottom: var(--sp-4);
+}
+.tts-controls { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.tts-progress-container {
+    display: flex; align-items: center; gap: 10px; flex: 1; min-width: 180px;
+}
+.tts-progress-bar {
+    flex: 1; height: 6px; -webkit-appearance: none; appearance: none;
+    background: var(--gray-200); border-radius: 3px; outline: none; cursor: pointer;
+}
+.tts-progress-bar::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 16px; height: 16px;
+    border-radius: 50%; background: var(--green-500); cursor: pointer;
+}
+.tts-progress-bar::-moz-range-thumb {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--green-500); cursor: pointer; border: none;
+}
+.tts-time { font-size: 0.85rem; color: var(--gray-500); white-space: nowrap; min-width: 80px; }
+
+/* TTS 状态 */
+.tts-status { padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; text-align: center; margin-top: 12px; }
+.tts-loading { background: var(--blue-100); color: #1e40af; }
+.tts-playing { background: var(--green-100); color: var(--green-800); }
+.tts-paused { background: var(--yellow-100); color: #92400e; }
+.tts-error { background: var(--red-100); color: var(--red-500); }
+
+/* ---- TTS 语速 / 停止 / 句数进度（2026-10-20 改浏览器原生朗读时新增） ----
+   原来的进度条是可拖动的音频进度（有总时长才能拖）。
+   现在是一句一句念，没有"总时长"这个概念，改成"第几句 / 共几句"的纯进度条，
+   所以不能拖 —— 拖到一个没念过的位置没有意义。 */
+.tts-rate { display: inline-flex; align-items: center; gap: 8px; }
+.tts-rate-label { font-size: 0.9rem; color: var(--gray-600); white-space: nowrap; }
+/* 播放器里的按钮统一到适老化最小点击高度（56px）。
+   只加在这里，不动全局 .btn —— 全站按钮高度改了会把所有页面撑开。 */
+.tts-controls .btn { min-height: var(--tap-min); }
+.tts-rate-select {
+    min-height: var(--tap-min); padding: 0 12px;
+    font-size: 1rem; line-height: 1.2;
+    color: var(--gray-800); background: var(--white);
+    border: var(--border-w) solid var(--border); border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+.tts-rate-select:focus { outline: 2px solid var(--green-500); outline-offset: 2px; }
+.tts-stop { margin-left: auto; }
+/* ⚠️ 必须显式写：浏览器给 [hidden] 的 display:none 是 UA 样式，
+   优先级低于 .btn 上的 display:inline-flex —— 不写这条，"停止"按钮一开始就露出来了。 */
+.tts-stop[hidden] { display: none !important; }
+.tts-track {
+    flex: 1; height: 8px; min-width: 120px;
+    background: var(--gray-200); border-radius: var(--radius-pill); overflow: hidden;
+}
+.tts-track-fill {
+    height: 100%; width: 0;
+    background: var(--green-500); border-radius: var(--radius-pill);
+    transition: width var(--transition);
+}
+
+/* 手机上按钮要够大、且不挤成一行 —— 适老化要求相邻可点元素间距 ≥ --tap-gap。
+   注意"停止"必须 flex:0 0 auto：跟着 .btn 一起 flex:1 会独占一整行，
+   把本来一行放得下的三个控件挤成两行。 */
+@media (max-width: 640px) {
+    .tts-controls { gap: var(--tap-gap); }
+    .tts-controls .btn:not(.tts-stop) { flex: 1 1 auto; }
+    .tts-controls .tts-stop { flex: 0 0 auto; margin-left: 0; }
+    .tts-progress-container { width: 100%; }
+}
+
+.favorited { background: var(--yellow-100) !important; color: #92400e !important; border-color: var(--yellow-500) !important; }
+
+/* ---- 膳食计划 ---- */
+.meal-plan-form-card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: var(--card-pad); margin-bottom: var(--sp-7); }
+.meal-plan-form .form-row { margin-bottom: 16px; }
+.meal-day { margin-bottom: var(--sp-7); }
+/* .meal-day-title 已升到「区块标题」那一档，见上面 .section h2 的分组规则 */
+/* 五餐制：桌面一行五张卡（早 / 上午加餐 / 午 / 下午加餐 / 晚）。
+   minmax(180px,1fr) 而不是写死 5 列：页面宽 1000 时正好五列，
+   窄一点自动掉成 2~3 列，不会把卡片挤成竖条。 */
+.meal-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--sp-3); }
+.meal-card { background: var(--white); border-radius: var(--radius); padding: var(--sp-4); box-shadow: var(--shadow); border-left: 4px solid var(--green-400); }
+/* 加餐弱化一档：它不是正餐，视觉上不能和早/午/晚一样重，
+   否则用户会以为一天要吃五顿正餐。灰边 + 浅底，字号不变（适老化，不为美观牺牲可读性）。 */
+.meal-card-snack { background: var(--gray-50); border-left-color: var(--gray-300); box-shadow: none; border: var(--border-w) solid var(--border); border-left: 4px solid var(--gray-300); }
+.meal-type { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--sp-1); font-size: var(--fs-note); font-weight: 600; color: var(--green-600); margin-bottom: var(--sp-1); }
+.meal-card-snack .meal-type { color: var(--gray-600); }
+/* 每餐碳水徽章 —— 糖友看计划第一眼要看的数字 */
+.meal-carb { font-size: var(--fs-note); font-weight: 600; color: var(--gray-700); background: var(--white); border: var(--border-w) solid var(--border); border-radius: var(--radius-pill); padding: 2px var(--sp-2); white-space: nowrap; }
+.meal-card-snack .meal-carb { background: var(--white); }
+/* 每天标题右侧的全天碳水合计 */
+.meal-day-carb { font-size: var(--fs-note); font-weight: 600; color: var(--green-700); background: var(--green-50); border-radius: var(--radius-pill); padding: 2px var(--sp-3); margin-left: var(--sp-2); white-space: nowrap; }
+/* 五餐制说明条 */
+.meal-plan-note { background: var(--green-50); border-radius: var(--radius); padding: var(--sp-4); margin-bottom: var(--sp-5); color: var(--gray-700); font-size: var(--fs-note); line-height: 1.8; }
+.meal-disclaimer { margin-top: var(--sp-5); padding-top: var(--sp-3); border-top: var(--border-w) solid var(--border); color: var(--gray-500); font-size: var(--fs-note); line-height: 1.7; }
+.meal-name { font-weight: 600; color: var(--gray-800); margin-bottom: var(--sp-1); }
+.meal-desc { font-size: var(--fs-note); color: var(--gray-500); }
+.meal-advice { background: var(--green-50); border-radius: var(--radius); padding: var(--card-pad); margin-top: var(--sp-7); }
+.meal-advice h2 { font-size: var(--fs-h3); font-weight: 600; color: var(--gray-800); margin-bottom: var(--sp-3); }
+.meal-advice-text { color: var(--gray-700); line-height: 1.8; }
+
+/* ---- 空状态 ---- */
+.empty-state { text-align: center; padding: 60px 20px; }
+.empty-icon { font-size: 4rem; margin-bottom: 16px; }
+.empty-state h2 { color: var(--gray-600); margin-bottom: 8px; }
+.empty-state p { color: var(--gray-400); margin-bottom: 20px; }
+
+/* ---- 页脚 ---- */
+.footer { text-align: center; padding: var(--sp-5); color: var(--gray-400); font-size: var(--fs-note); border-top: var(--border-w) solid var(--border); margin-top: auto; }
+
+/* ---- 加载遮罩 ---- */
+#loadingOverlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5); z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+}
+.loading-card {
+    background: var(--white); border-radius: var(--radius);
+    padding: 40px 48px; text-align: center;
+    box-shadow: var(--shadow-lg); max-width: 400px;
+}
+.loading-card h2 { margin-bottom: 8px; color: var(--gray-800); }
+.loading-card p { color: var(--gray-500); font-size: 0.9rem; }
+.loading-spinner {
+    width: 48px; height: 48px; margin: 0 auto 20px;
+    border: 4px solid var(--gray-200);
+    border-top-color: var(--green-500);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============================================================
+   指标卡 / 营养卡 —— 同一套组件的两种前缀
+   ------------------------------------------------------------
+   metric-* 与 nutri-* 原本分散在
+   templates/health/_metrics_panel.html 与 templates/nutrition/intake.html
+   两个内联 <style> 里，逐行几乎一模一样（两套圆角/字号/间距还各不相同）。
+   这里合并成一份，**类名保持不变**（模板与 12 套自测都不用动），
+   只把重复的声明收成一条、数值统一到上面的 token。
+   ============================================================ */
+.metric-grid,
+.nutri-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: var(--sp-3);
+    margin: var(--sp-5) 0 var(--sp-6);
+}
+.metric-card,
+.nutri-card {
+    background: var(--white);
+    border: var(--border-w) solid var(--border);
+    border-left: 4px solid var(--gray-300);
+    border-radius: var(--radius);
+    padding: var(--sp-3) var(--sp-4) var(--sp-4);
+    box-shadow: var(--shadow);
+}
+.metric-card.is-ok,
+.nutri-card.is-ok { border-left-color: var(--green-500); }
+.metric-card.is-warn,
+.nutri-card.is-warn { border-left-color: var(--yellow-500); background: #fffdf2; }
+.metric-card.is-critical,
+.nutri-card.is-critical { border-left-color: var(--red-500); background: #fffaf9; }
+.nutri-card.is-plain { border-left-color: var(--gray-300); }
+
+.metric-name,
+.nutri-name { font-size: var(--fs-note); color: var(--gray-600); }
+.metric-value,
+.nutri-value {
+    font-size: var(--fs-num);
+    font-weight: 700;
+    color: var(--gray-900);
+    line-height: 1.25;
+    margin: var(--sp-1) 0;
+}
+.metric-value .metric-unit,
+.nutri-value .nutri-unit {
+    font-size: var(--fs-note);
+    font-weight: 400;
+    color: var(--gray-500);
+    margin-left: 3px;
+}
+.metric-meta,
+.nutri-meta { font-size: var(--fs-note); color: var(--gray-500); }
+
+.metric-tag {
+    display: inline-block;
+    font-size: var(--fs-note);
+    line-height: 1.6;
+    padding: 0 var(--sp-2);
+    border-radius: var(--radius-pill);
+    margin-top: var(--sp-2);
+}
+.metric-tag.is-ok { background: var(--green-100); color: var(--green-800); }
+.metric-tag.is-warn { background: var(--yellow-100); color: #92400e; }
+.metric-tag.is-critical { background: var(--red-100); color: #991b1b; }
+.metric-tag.is-none { background: var(--gray-100); color: var(--gray-600); }
+
+/* ============================================================
+   档位的「第二重编码」：形状（2026-11-01，适老化第 4 步）
+   ------------------------------------------------------------
+   为什么不能只靠颜色
+       色弱 / 白内障 / 黑白打印 / 强光反光，都会让「红 vs 黄 vs 绿」退化成
+       同一团深浅。而"这项到底偏高没有"是这套界面最关键的信息 ——
+       丢了就等于没做。所以每个档位除颜色外，**再给一个形状不同的符号**。
+
+   为什么用字符而不是图标字体 / SVG
+       零资源、零请求、随字号一起缩放（老人把字调到 40px 时符号也跟着大）。
+       这些符号只是**冗余**，语义仍然靠旁边的中文（「偏高」「需就医」），
+       所以读屏念不念符号都不影响理解。
+
+   符号表
+       ✓  未见偏高 / 正常     —— 对勾，最直观的"没事"
+       ▲  偏高               —— 三角警告，指向"需要留意"
+       ！  需就医             —— 感叹号，比三角更紧急，一眼能分开
+       —  未判定口径          —— 破折号，表示"没有结论"（不是"正常"！）
+   ============================================================ */
+.metric-tag::before,
+.risk-alert-tag::before,
+.visit-tag::before,
+.visit-finding-flag::before,
+.visit-record-flag::before {
+    font-weight: 700;
+    margin-right: 0.28em;
+}
+
+/* 指标卡档位 */
+.metric-tag.is-ok::before       { content: "✓"; }
+.metric-tag.is-warn::before     { content: "▲"; }
+.metric-tag.is-critical::before { content: "！"; }
+.metric-tag.is-none::before     { content: "—"; }
+
+/* 风险提示卡 / 就诊沟通清单：同一个"偏高 vs 需就医"的两档 */
+.risk-alert-tag::before                                  { content: "！"; }
+.risk-alert-item.is-warn .risk-alert-tag::before          { content: "▲"; }
+.visit-tag::before                                       { content: "▲"; }
+.visit-card.is-critical .visit-tag::before                { content: "！"; }
+.visit-finding-flag::before,
+.visit-record-flag::before                               { content: "▲"; }
+
+/* 指标来源小标：打卡（自己填的）/ 报告（医院读出来的）—— R5 */
+.metric-source {
+    display: inline-block;
+    font-size: var(--fs-note);
+    line-height: 1.5;
+    padding: 0 6px;
+    margin-right: 4px;
+    border-radius: var(--radius-pill);
+    background: var(--gray-100);
+    color: var(--gray-600);
+}
+.metric-source.is-checkin { background: var(--green-100); color: var(--green-800); }
+
+/* ============================================================
+   R5 每日血糖打卡卡片（templates/health/_checkin_card.html）
+   取舍说明：
+     - 输入框高度走 --tap-min，手指点得准，也不用担心字号小于 iOS 的缩放阈值；
+     - 不用 type=number，避免桌面滚轮误改数值（合法性由服务端校验）；
+     - 三列 → 手机一列，靠 auto-fill 自动退，不写死断点。
+   ============================================================ */
+.checkin-card {
+    background: var(--white);
+    border: var(--border-w) solid var(--border);
+    border-left: 4px solid var(--green-500);
+    border-radius: var(--radius);
+    padding: var(--sp-4);
+    box-shadow: var(--shadow);
+    margin: 0 0 var(--sp-6);
+}
+.checkin-head {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--sp-1) var(--sp-3);
+    margin-bottom: var(--sp-3);
+}
+.checkin-title {
+    font-size: var(--fs-h3);
+    color: var(--gray-900);
+    margin: 0;
+}
+.checkin-state { font-size: var(--fs-note); color: var(--gray-500); }
+.checkin-state.is-done {
+    background: var(--green-100);
+    color: var(--green-800);
+    padding: 2px 8px;
+    border-radius: var(--radius-pill);
+}
+
+.checkin-fields {
+    display: grid;
+    /* 三个时点（空腹 / 餐后1小时 / 餐后2小时）**固定三等分**，一行齐。
+       原来用 auto-fill minmax(180,240)：容器只有 ~740px 时只排得下 2 列，
+       第三个被挤到第二行，看着像漏了一项（2026-10-22 改版时实测）。 */
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--sp-3);
+}
+.checkin-label {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    font-size: var(--fs-body);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--sp-2);
+}
+.checkin-unit { font-size: var(--fs-note); font-weight: 400; color: var(--gray-500); }
+.checkin-input {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: var(--tap-min);
+    padding: 0.35em var(--sp-3);
+    font-size: calc(22px * var(--reading-scale));
+    font-weight: 700;
+    color: var(--gray-900);
+    background: var(--white);
+    border: var(--border-w) solid var(--border);
+    border-radius: var(--radius);
+    line-height: 1.4;
+    min-width: 0;
+}
+.checkin-input::placeholder { color: var(--gray-400); font-weight: 400; }
+.checkin-input:focus {
+    outline: 2px solid var(--green-500);
+    outline-offset: 1px;
+    border-color: var(--green-500);
+}
+.checkin-sub {
+    display: block;
+    margin-top: var(--sp-1);
+    min-height: 1em;
+    font-size: var(--fs-note);
+    color: var(--gray-500);
+}
+.checkin-last { color: var(--gray-500); }
+
+/* 体重：单独一行，与上面血糖三项用虚线分隔（2026-10-22 晚加回）。
+   横排、小输入框，不跟血糖那三格抢视觉重量 —— 它是顺手记一下，
+   不是每天必填。手机上 flex-wrap 会自然折行，不需要额外断点。 */
+.checkin-weight-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--sp-2) var(--sp-3);
+    margin-top: var(--sp-4);
+    padding-top: var(--sp-3);
+    border-top: var(--border-w) dashed var(--border);
+}
+.checkin-weight-row .checkin-label {
+    margin-bottom: 0;
+    white-space: nowrap;
+}
+.checkin-input-weight {
+    /* 随输入字号预留字符宽度，兼容「如 170」及 300.0 等值。 */
+    width: min(100%, calc(8ch + var(--sp-3) + var(--sp-3)));
+    max-width: 100%;
+    flex: 0 1 auto;
+}
+.checkin-sub-weight {
+    flex: 1 1 120px;
+    margin-top: 0;
+}
+.checkin-bmi { margin-top:var(--sp-3); line-height:1.7; }
+html[data-reading="xl"] .checkin-weight-row { align-items:flex-start; }
+html[data-reading="xl"] .checkin-sub-weight { flex-basis:100%; }
+html[data-reading="xl"] .checkin-fields { grid-template-columns:1fr; }
+@media(max-width:480px) {
+    .checkin-weight-row .checkin-label,.checkin-sub-weight { flex-basis:100%; }
+    .checkin-input-weight { width:100%; }
+}
+.metric-card-link { display:block; color:inherit; text-decoration:none; }
+.metric-card-link:hover,.metric-card-link:focus-visible { outline:2px solid var(--green-700); outline-offset:2px; }
+.metric-trend-section { scroll-margin-top:140px; }
+
+.checkin-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    margin-top: var(--sp-4);
+}
+.checkin-submit { min-width: 132px; }
+.checkin-note { font-size: var(--fs-note); color: var(--gray-500); }
+.checkin-foot {
+    font-size: var(--fs-note);
+    color: var(--gray-500);
+    margin: var(--sp-3) 0 0;
+}
+
+@media (max-width: 720px) {
+    .checkin-fields { grid-template-columns: 1fr; }
+    .checkin-actions .checkin-submit { flex: 1 1 auto; }
+}
+
+.metric-tabs { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin: 0 0 var(--sp-3); }
+.metric-tab {
+    font-size: var(--fs-note);
+    padding: 5px 13px;
+    border-radius: var(--radius-pill);
+    border: var(--border-w) solid var(--border);
+    background: var(--white);
+    color: var(--gray-700);
+    text-decoration: none;
+    transition: var(--transition);
+}
+.metric-tab:hover { border-color: var(--green-400); color: var(--green-700); }
+.metric-tab.active { background: var(--green-600); border-color: var(--green-600); color: #fff; }
+
+/* 图表卡 */
+.chart-card,
+.nutri-chart-card {
+    background: var(--white);
+    border: var(--border-w) solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--sp-4) var(--sp-5) var(--sp-3);
+    box-shadow: var(--shadow);
+}
+.chart-head,
+.nutri-chart-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+    margin-bottom: var(--sp-1);
+}
+.chart-title,
+.nutri-chart-title { font-size: var(--fs-h3); font-weight: 600; color: var(--gray-800); margin: 0; }
+.chart-note,
+.nutri-chart-note { font-size: var(--fs-note); color: var(--gray-500); }
+.chart-empty,
+.nutri-empty {
+    padding: var(--sp-6) 0;
+    text-align: center;
+    color: var(--gray-500);
+    font-size: var(--fs-body);
+}
+
+.metric-hint,
+.nutri-hint { font-size: var(--fs-note); color: var(--gray-500); margin-top: var(--sp-4); line-height: 1.8; }
+.metric-summary {
+    font-size: var(--fs-note);
+    color: var(--gray-700);
+    background: var(--gray-50);
+    border: var(--border-w) solid var(--border);
+    border-radius: var(--radius);
+    padding: 9px var(--sp-4);
+    margin: var(--sp-4) 0 0;
+    line-height: 1.7;
+}
+.metric-summary .metric-summary-label { color: var(--gray-500); }
+
+/* ============================================================
+   「系统读到了什么」—— 健康报告页的报告原文（templates/health/_report_source.html）
+   为什么单独列一块：指标区为空时，用户只能从这段原文判断
+   "是报告里本来没写数字"还是"文件根本没读到字"。
+   默认折叠（<details>），展开前不占高度。
+   ============================================================ */
+.report-source {
+    margin-top: var(--sp-5);
+    background: var(--white);
+    border: var(--border-w) solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 0 var(--sp-5);
+}
+.report-source-sum {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--sp-3);
+    padding: var(--sp-4) 0;
+    cursor: pointer;
+    font-size: var(--fs-h3); font-weight: 600; color: var(--gray-800);
+}
+.report-source-sum:hover .report-source-title { color: var(--green-700); }
+.report-source-sum::-webkit-details-marker { display: none; }
+/* 折叠标记自己画一个，免得各浏览器默认箭头位置不齐 */
+.report-source-sum .report-source-title::after {
+    content: " ▾";
+    font-size: var(--fs-note); color: var(--gray-400); font-weight: 400;
+}
+.report-source[open] .report-source-title::after { content: " ▴"; }
+.report-source-hint { font-size: var(--fs-note); font-weight: 400; color: var(--gray-500); }
+.report-source-text {
+    margin: 0 0 var(--sp-4);
+    max-height: 320px; overflow: auto;
+    background: var(--gray-50);
+    border: var(--border-w) solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: var(--sp-4);
+    font-family: inherit;                 /* 正文而非等宽：报告原文里中文为主 */
+    font-size: var(--fs-note); line-height: 1.9; color: var(--gray-700);
+    white-space: pre-wrap; word-break: break-word;
+}
+.report-source-empty { margin: 0 0 var(--sp-4); font-size: var(--fs-note); line-height: 1.8; color: var(--gray-500); }
+.report-source-note { margin: 0; padding: 0 0 var(--sp-4); font-size: var(--fs-note); line-height: 1.8; color: var(--gray-500); }
+
+/* 空状态里的**长文案**（如"最近上传的《…》里没有读出指标"，带文件名、要分两三行）左对齐更好读；
+   短提示（"这个指标暂时没有数据，换个指标看看"）保持居中。 */
+.chart-empty.is-long { text-align: left; color: var(--gray-600); }
+
+/* ---- 营养摄入页专有 ---- */
+.nutri-note {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: var(--radius);
+    padding: var(--sp-4) var(--sp-5);
+    margin: 0 0 var(--sp-6);
+    font-size: 0.8125rem;
+    line-height: 1.9;
+    color: #92400e;
+}
+.nutri-note b { color: #78350f; }
+
+.ratio-row { display: grid; grid-template-columns: 64px 1fr 62px; align-items: center; gap: var(--sp-3); padding: var(--sp-3) 0; }
+.ratio-row + .ratio-row { border-top: 1px dashed var(--gray-200); }
+.ratio-label { font-size: 0.8125rem; color: var(--gray-700); }
+.ratio-track { position: relative; height: 16px; background: var(--gray-100); border-radius: var(--radius-pill); overflow: hidden; }
+.ratio-band {
+    position: absolute; top: 0; bottom: 0;
+    background: rgba(22, 163, 74, .16);
+    border-left: 1px dashed var(--green-500);
+    border-right: 1px dashed var(--green-500);
+}
+.ratio-mark { position: absolute; top: -1px; bottom: -1px; width: 3px; border-radius: 2px; transform: translateX(-1.5px); }
+.ratio-value { font-size: var(--fs-body); font-weight: 700; color: var(--gray-800); text-align: right; }
+.ratio-guide { grid-column: 2 / 4; font-size: var(--fs-note); color: var(--gray-500); margin-top: -6px; }
+
+.nutri-day { margin-bottom: var(--sp-6); }
+.nutri-day-head {
+    display: flex; align-items: baseline; gap: var(--sp-3); flex-wrap: wrap;
+    font-size: var(--fs-body); font-weight: 600; color: var(--gray-800); margin-bottom: var(--sp-2);
+}
+.nutri-day-head span { font-weight: 400; font-size: var(--fs-note); color: var(--gray-500); }
+.nutri-item {
+    display: flex; align-items: center; gap: var(--sp-4);
+    background: var(--white); border: var(--border-w) solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px var(--sp-4); margin-bottom: var(--sp-2);
+}
+.nutri-item-main { flex: 1; min-width: 0; }
+.nutri-item-title {
+    font-size: var(--fs-body); color: var(--gray-800); text-decoration: none; display: block;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.nutri-item-title:hover { color: var(--green-700); }
+.nutri-item-time { font-size: var(--fs-note); color: var(--gray-500); margin-top: 3px; }
+.nutri-macros { flex-shrink: 0; display: flex; gap: var(--sp-3); font-size: var(--fs-note); color: var(--gray-600); white-space: nowrap; }
+.nutri-macros b { color: var(--gray-800); font-weight: 600; }
+.nutri-kcal { flex-shrink: 0; min-width: 84px; text-align: right; font-size: 1rem; font-weight: 700; color: var(--green-700); }
+.nutri-kcal small { font-size: 0.6875rem; font-weight: 400; color: var(--gray-500); margin-left: 2px; }
+.nutri-kcal.is-none { color: var(--gray-400); font-size: 0.8125rem; font-weight: 400; }
+.nutri-range { font-size: 0.6875rem; color: var(--gray-500); font-weight: 400; display: block; }
+
+/* ============================================================
+   「建议尽快就医」卡片 —— recipe/generate.html、recipe/meal_plan.html、
+   upload/upload_health.html 三处共用（原样式写在内联片段里）
+   ============================================================ */
+.risk-alert {
+    width: 100%;
+    margin: 0 0 var(--sp-6);
+    background: #fef2f2;
+    border: 1px solid #fca5a5;
+    border-radius: var(--radius);
+    padding: var(--card-pad);
+    box-shadow: var(--shadow);
+}
+.risk-alert-head { display: flex; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-4); }
+.risk-alert-icon { font-size: 2.125rem; line-height: 1; }
+.risk-alert-title { margin: 0; font-size: var(--fs-h2); font-weight: 700; color: #b91c1c; }
+.risk-alert-message { margin: 0 0 var(--sp-5); color: #7f1d1d; font-size: var(--fs-body); line-height: 1.9; }
+.risk-alert-sub { margin: 0 0 10px; font-size: var(--fs-body); font-weight: 600; color: #b91c1c; }
+.risk-alert-list { list-style: none; margin: 0 0 var(--sp-5); padding: 0; }
+.risk-alert-item {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px;
+    background: var(--white); border: 1px solid #fecaca; border-left: 4px solid #dc2626;
+    border-radius: var(--radius-sm); padding: var(--sp-3) var(--sp-4); margin-bottom: var(--sp-2);
+}
+.risk-alert-item.is-warn { border-color: #fde68a; border-left-color: #f59e0b; }
+/* 2026-11-01 对比度修正：原来 .is-warn 用 #f59e0b 橙底 + 白字，实测对比度只有 2.15:1
+   （WCAG AA 正文要 4.5，大字也要 3.0）—— 老人白内障看橙底白字基本是一团糊。
+   换成同色系深一档的 #b45309，白字对比度 5.02:1，视觉上仍是"橙色警示"，不改变语义。 */
+.risk-alert-tag { flex-shrink: 0; background: #dc2626; color: #fff; font-size: var(--fs-note); font-weight: 700; border-radius: var(--radius-pill); padding: 2px 10px; }
+.risk-alert-item.is-warn .risk-alert-tag { background: #b45309; }
+.risk-alert-text { color: var(--gray-800); font-size: var(--fs-body); line-height: 1.7; }
+.risk-alert-steps { background: #fff7ed; border: 1px solid #fed7aa; border-radius: var(--radius-sm); padding: var(--sp-4) var(--sp-4) var(--sp-4) 34px; margin: 0 0 var(--sp-4); }
+.risk-alert-steps li { color: #9a3412; font-size: var(--fs-body); line-height: 2; }
+.risk-alert-foot { margin: 0 0 var(--sp-5); color: var(--gray-400); font-size: var(--fs-note); line-height: 1.8; }
+.risk-alert-actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); }
+
+/* ============================================================
+   就诊沟通清单（R5 第 3 项，2026-10-20）
+   ------------------------------------------------------------
+   出现时机：指标判档 warn / critical，或近 3 天连续偏高
+   （utils/visit_advice.build_visit_advice 返回 show=True 时才渲染）。
+
+   与上面那张 .risk-alert 的分工：
+     .risk-alert  说「尽快去医院」（红底，只讲紧急程度）
+     .visit-card  说「去了带什么、怎么问」（白底 + 琥珀/红左边线，讲沟通）
+   两张卡会同时出现，所以底色必须不同，否则看起来像同一件事说了两遍。
+
+   ⚠️ 免责声明在卡片最后、`.visit-disclaimer`，**不允许**挪进 `.visit-classes`
+      （那个是 <details>）。红/黄是语义色，高对比模式也不调。
+   ============================================================ */
+.visit-card {
+    width: 100%;
+    margin: 0 0 var(--sp-6);
+    background: var(--white);
+    border: var(--border-w) solid var(--border);
+    border-left: 6px solid #f59e0b;
+    border-radius: var(--radius);
+    padding: var(--card-pad);
+    box-shadow: var(--shadow);
+}
+.visit-card.is-critical { border-left-color: #dc2626; }
+
+.visit-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-3); }
+.visit-icon { font-size: 1.75rem; line-height: 1; }
+.visit-title { margin: 0; font-size: var(--fs-h2); font-weight: 700; color: #92400e; }
+.visit-card.is-critical .visit-title { color: #b91c1c; }
+.visit-tag {
+    flex-shrink: 0; background: #b45309; color: #fff;
+    font-size: var(--fs-note); font-weight: 700;
+    border-radius: var(--radius-pill); padding: 2px 10px;
+}
+.visit-card.is-critical .visit-tag { background: #dc2626; }
+
+.visit-lead { margin: 0 0 var(--sp-4); color: var(--gray-800); font-size: var(--fs-body); line-height: 1.9; }
+.visit-lead b { color: #92400e; }
+.visit-card.is-critical .visit-lead b { color: #b91c1c; }
+
+/* 偏高指标：胶囊一行一个，名字 + 数值 + 旗标都对齐基线 */
+.visit-findings { list-style: none; margin: 0 0 var(--sp-4); padding: 0; display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.visit-finding {
+    display: inline-flex; align-items: baseline; gap: 8px;
+    background: #fffbeb; border: 1px solid #fde68a;
+    border-radius: var(--radius-pill); padding: 4px 12px;
+}
+.visit-finding.is-warn { background: #fffbeb; }
+.visit-card.is-critical .visit-finding:not(.is-warn) { background: #fef2f2; border-color: #fecaca; }
+.visit-finding-label { font-size: var(--fs-note); color: var(--gray-600); }
+.visit-finding-value { font-size: var(--fs-body); font-weight: 700; color: var(--gray-900); font-variant-numeric: tabular-nums; }
+.visit-finding-flag { font-size: var(--fs-note); font-weight: 700; color: #b45309; }
+.visit-card.is-critical .visit-finding:not(.is-warn) .visit-finding-flag { color: #b91c1c; }
+
+.visit-block { border-top: 1px dashed var(--gray-200); padding-top: var(--sp-4); margin-top: var(--sp-4); }
+.visit-block:first-of-type { border-top: 0; padding-top: 0; margin-top: 0; }
+.visit-h3 {
+    display: flex; align-items: center; gap: 8px;
+    margin: 0 0 var(--sp-3); font-size: var(--fs-body); font-weight: 700; color: var(--gray-900);
+}
+.visit-step {
+    flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--gray-100); color: var(--gray-600); font-size: var(--fs-note); font-weight: 700;
+}
+
+.visit-prep { list-style: none; margin: 0; padding: 0; }
+.visit-prep-item {
+    display: flex; flex-direction: column; gap: 3px;
+    padding: 0 0 var(--sp-3); margin: 0;
+}
+.visit-prep-item:last-child { padding-bottom: 0; }
+.visit-prep-title { font-size: var(--fs-body); font-weight: 600; color: var(--gray-900); }
+.visit-prep-detail { font-size: var(--fs-note); color: var(--gray-600); line-height: 1.8; }
+
+/* 逐条记录（<details>）：默认收起，需要递手机给医生时再展开 */
+.visit-records { margin-top: var(--sp-3); }
+.visit-records > summary,
+.visit-classes > summary {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    min-height: var(--tap-min);
+    padding: 6px 12px;
+    background: var(--gray-50); border: var(--border-w) solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer; list-style: none;
+    font-size: var(--fs-body); font-weight: 600; color: var(--gray-700);
+}
+.visit-records > summary::-webkit-details-marker,
+.visit-classes > summary::-webkit-details-marker { display: none; }
+.visit-records > summary::before,
+.visit-classes > summary::before { content: "▸"; color: var(--gray-400); transition: transform var(--transition); }
+.visit-records[open] > summary::before,
+.visit-classes[open] > summary::before { transform: rotate(90deg); }
+.visit-records > summary:focus-visible,
+.visit-classes > summary:focus-visible { outline: 2px solid var(--green-500); outline-offset: 2px; }
+
+.visit-record-list { list-style: none; margin: var(--sp-2) 0 0; padding: 0; }
+.visit-record {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px;
+    padding: 8px 10px; border-bottom: 1px solid var(--gray-100);
+    font-size: var(--fs-note);
+}
+.visit-record:last-child { border-bottom: 0; }
+.visit-record-date { color: var(--gray-500); font-variant-numeric: tabular-nums; min-width: 42px; }
+.visit-record-label { color: var(--gray-700); min-width: 72px; }
+.visit-record-value { color: var(--gray-900); font-weight: 600; font-variant-numeric: tabular-nums; }
+.visit-record-source {
+    color: var(--gray-500); background: var(--gray-100);
+    border-radius: var(--radius-pill); padding: 1px 8px; font-size: 0.75rem;
+}
+.visit-record-flag { color: #b45309; font-weight: 700; }
+.visit-record.is-above .visit-record-value { color: #b45309; }
+.visit-records-hint { margin: var(--sp-2) 0 0; font-size: var(--fs-note); color: var(--gray-500); }
+
+.visit-questions { margin: 0; padding-left: 1.6em; }
+.visit-question { font-size: var(--fs-body); color: var(--gray-800); line-height: 2; padding-left: 2px; }
+
+/* 药物类别科普：<details> 收起，避免一上来就是一大段术语 */
+.visit-classes { margin-top: var(--sp-4); }
+.visit-classes-body { padding: var(--sp-3) 0 0; }
+.visit-classes-lead { margin: 0 0 var(--sp-3); font-size: var(--fs-note); color: var(--gray-600); line-height: 1.8; }
+.visit-class-list { margin: 0; padding: 0; }
+.visit-class {
+    padding: var(--sp-3) 0; border-bottom: 1px solid var(--gray-100);
+}
+.visit-class:last-child { border-bottom: 0; }
+.visit-class-name { margin: 0 0 3px; font-size: var(--fs-body); font-weight: 700; color: var(--gray-900); }
+.visit-class-desc { margin: 0; font-size: var(--fs-note); color: var(--gray-700); line-height: 1.8; }
+.visit-class-note { display: block; color: var(--gray-500); margin-top: 2px; }
+
+.visit-disclaimer {
+    margin: var(--sp-4) 0 0; padding-top: var(--sp-3);
+    border-top: var(--border-w) solid var(--border);
+    font-size: var(--fs-note); color: var(--gray-500); line-height: 1.8;
+}
+
+/* 高对比：只补描边，不动红/黄语义色 */
+html[data-contrast="high"] .visit-card { border-color: var(--border); }
+
+@media (max-width: 480px) {
+    /* 手机上"名字+数值+旗标"挤成一行会折成三段，改成名字独占一行 */
+    .visit-finding { flex-wrap: wrap; }
+    .visit-finding-label { flex-basis: 100%; }
+    .visit-record-label { min-width: 0; }
+}
+
+/* ============================================================
+   3D 倾斜光影卡片（全站统一 · 毛玻璃质感）
+   ------------------------------------------------------------
+   2026-10-12 拆成两层，起因是一个真实的 bug：
+     原来 .tilt-card 用 `background: rgba(255,255,255,.55) !important` 铺底，
+     把**所有**卡片自己的底色都盖掉了 —— `.metric-card.is-warn`（浅黄）、
+     `.metric-card.is-critical`（浅红）、`.risk-alert-item`（白）全变成同一个半透明白。
+     指标判档的颜色是这套界面最要紧的信息，不该被装饰效果吃掉。
+   现在：
+     .tilt-card —— 只负责「按下去跟着指针倾斜 + 松手弹簧回正」这个动效；
+     .glass     —— 只负责毛玻璃外观，由 main.js **只打给没有语义底色的卡片**。
+   ============================================================ */
+.tilt-card {
+    position: relative; transform-style: preserve-3d;
+    transition: transform 0.15s ease-out, box-shadow 0.25s ease, background 0.3s ease;
+    will-change: transform;
+    -webkit-tap-highlight-color: transparent;
+}
+.tilt-card > * { position: relative; z-index: 3; }
+.tilt-card.tilt-active { cursor: grabbing; }
+
+/* 毛玻璃外观（opt-in） */
+.glass {
+    position: relative;
+    background: rgba(255, 255, 255, 0.62) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    backdrop-filter: blur(16px) saturate(1.4);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8),
+                inset 0 -1px 2px rgba(0, 0, 0, 0.03),
+                0 4px 16px rgba(0, 0, 0, 0.06);
+}
+/* 玻璃边缘高光 */
+.glass::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit;
+    background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.6) 0%,
+                rgba(255, 255, 255, 0) 40%,
+                rgba(255, 255, 255, 0) 60%,
+                rgba(255, 255, 255, 0.2) 100%);
+    pointer-events: none; z-index: 1;
+}
+/* 径向反射流光（跟随指针位置） */
+.glass::after {
+    content: ""; position: absolute; inset: 0; border-radius: inherit;
+    background: radial-gradient(circle at var(--mx, 50%) var(--my, 0%),
+                rgba(255, 255, 255, 0.9) 0%,
+                rgba(255, 255, 255, 0.4) 20%,
+                rgba(255, 255, 255, 0) 55%);
+    opacity: 0; transition: opacity 0.4s ease; pointer-events: none;
+    z-index: 2; mix-blend-mode: screen;
+}
+.glass.tilt-active {
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9),
+                0 12px 40px rgba(0, 0, 0, 0.12);
+}
+.glass.tilt-active::after { opacity: 1; }
+
+/* ============================================================
+   设置页 · 阅读字号（R1 适老化，2026-10-16）
+   ------------------------------------------------------------
+   滑块 + 实时预览。字号本身由 --reading-size / --reading-scale 驱动
+   （见文件顶部 :root 注释），这里只管外观与触控尺寸。
+   ============================================================ */
+.settings-page { max-width: var(--page-w); margin: 0; }
+
+.a11y-card {
+    background: var(--white); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: var(--card-pad); max-width: 760px;
+}
+.a11y-field { margin-bottom: var(--sp-6); }
+.a11y-field:last-of-type { margin-bottom: 0; }
+.a11y-label { display: block; font-weight: 600; color: var(--gray-800); font-size: var(--fs-h3); margin-bottom: var(--sp-2); }
+
+/* 滑块：轨道加粗 + 滑块放大，方便老年用户看准、拖稳。
+   外层给 56px 行高（R1 触控规范：可点区域 ≥ 56px）。 */
+.a11y-range {
+    -webkit-appearance: none; appearance: none;
+    display: block; width: 100%; height: 56px;
+    background: transparent; margin: 0; cursor: pointer;
+}
+.a11y-range::-webkit-slider-runnable-track {
+    height: 14px; border-radius: var(--radius-pill);
+    background: var(--gray-200); border: var(--border-w) solid var(--border-strong);
+}
+.a11y-range::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 36px; height: 36px; margin-top: -12px;
+    border-radius: 50%; background: var(--green-600);
+    border: 3px solid var(--white); box-shadow: var(--shadow-md);
+}
+.a11y-range:focus { outline: none; }
+.a11y-range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.35); }
+.a11y-range::-moz-range-track {
+    height: 14px; border-radius: var(--radius-pill);
+    background: var(--gray-200); border: var(--border-w) solid var(--border-strong);
+}
+.a11y-range::-moz-range-thumb {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--green-600); border: 3px solid var(--white); box-shadow: var(--shadow-md);
+}
+.a11y-range:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.35); }
+
+.a11y-scale-marks { display: flex; justify-content: space-between; color: var(--gray-400); font-size: var(--fs-note); }
+.a11y-readout { margin-top: var(--sp-2); font-size: var(--fs-h3); color: var(--gray-700); }
+.a11y-readout b { font-size: var(--fs-num); font-weight: 700; color: var(--green-700); }
+
+/* 实时预览：字号直接绑 --reading-size，拖动时即时变化（不写死 px） */
+.a11y-preview-label { font-size: var(--fs-note); color: var(--gray-500); margin-bottom: var(--sp-2); }
+.a11y-preview {
+    font-size: var(--reading-size);
+    line-height: 1.7;
+    color: var(--gray-800);
+    background: var(--gray-50);
+    border: 1px dashed var(--gray-300);
+    border-radius: var(--radius-sm);
+    padding: var(--sp-4) var(--sp-5);
+    word-break: break-word;
+}
+.a11y-actions { display: flex; gap: var(--sp-3); flex-wrap: wrap; margin-top: var(--sp-6); }
+
+/* 高对比度开关：整行都是一个 <label>，点哪儿都能切换
+   （老年用户不必精准点中那个小方块），行高 ≥ 56px 满足触控基线。 */
+.a11y-switch {
+    display: flex; align-items: center; gap: var(--sp-4);
+    min-height: var(--tap-min); cursor: pointer;
+    -webkit-user-select: none; user-select: none;
+    padding: var(--sp-1) 0;
+}
+/* 真 checkbox 藏起来但保留：键盘 Tab 仍能聚焦、空格仍能切换 */
+.a11y-switch-input {
+    position: absolute; width: 1px; height: 1px;
+    opacity: 0; pointer-events: none;
+}
+.a11y-switch-track {
+    position: relative; flex-shrink: 0;
+    width: 68px; height: 40px; border-radius: var(--radius-pill);
+    background: var(--gray-200); border: var(--border-w) solid var(--border-strong);
+    transition: var(--transition);
+}
+.a11y-switch-thumb {
+    position: absolute; top: 3px; left: 3px;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--white); box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+.a11y-switch-input:checked + .a11y-switch-track {
+    background: var(--green-600); border-color: var(--green-700);
+}
+.a11y-switch-input:checked + .a11y-switch-track .a11y-switch-thumb {
+    left: calc(100% - 33px);   /* 30px 圆点 + 3px 右边距，两种边框宽度下都对 */
+}
+.a11y-switch-input:focus-visible + .a11y-switch-track {
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.35);
+}
+.a11y-switch-text b { display: block; font-size: var(--fs-h3); color: var(--gray-800); }
+.a11y-switch-text em {
+    display: block; font-style: normal; margin-top: 2px;
+    font-size: var(--fs-note); color: var(--gray-500); line-height: 1.7;
+}
+
+/* ============================================================
+   控糖提示（R1 糖尿病专项，2026-10-16）
+   ------------------------------------------------------------
+   数据来自 `utils/diabetes_advice.py`（低/中/高三档 + 碳水糖粗估区间）。
+   判档颜色沿用全站语义色：绿=低升糖 / 黄=中 / 红=高 / 灰=未收录。
+   ⚠️ 这几档是**健康信息**，不许被 .glass / .tilt-card 的装饰底色盖掉。
+   ============================================================ */
+.gi-badge {
+    display: inline-block; vertical-align: middle;
+    margin-left: var(--sp-2); padding: 1px 10px;
+    border-radius: var(--radius-pill); border: 1px solid transparent;
+    font-size: var(--fs-note); font-weight: 600; white-space: nowrap;
+}
+.gi-badge-low     { background: var(--green-100);  color: var(--green-800); border-color: var(--green-300); }
+.gi-badge-mid     { background: var(--yellow-100); color: #92400e;          border-color: #fde68a; }
+.gi-badge-high    { background: var(--red-100);    color: #b91c1c;          border-color: #fca5a5; }
+.gi-badge-unknown { background: var(--gray-100);   color: var(--gray-600);   border-color: var(--gray-300); }
+
+.gi-head { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; }
+.gi-head .gi-badge { margin-left: 0; font-size: var(--fs-h3); padding: 4px 18px; }
+.gi-head-note { color: var(--gray-500); font-size: var(--fs-note); }
+
+.gi-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--sp-3); margin-top: var(--sp-4); }
+.gi-metric {
+    background: var(--gray-50); border: var(--border-w) solid var(--border);
+    border-radius: var(--radius-sm); padding: var(--sp-3) var(--sp-4); text-align: center;
+}
+.gi-metric-value { font-size: var(--fs-h2); font-weight: 700; color: var(--gray-800); }
+.gi-metric-label { font-size: var(--fs-note); color: var(--gray-500); margin-top: 2px; }
+
+.gi-tags { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin-top: var(--sp-4); }
+.gi-tag {
+    padding: 4px 12px; border-radius: var(--radius-pill);
+    border: 1px solid transparent; font-size: var(--fs-note); font-weight: 500;
+}
+.gi-tag-low     { background: var(--green-50);  color: var(--green-800); border-color: var(--green-200); }
+.gi-tag-mid     { background: var(--yellow-100); color: #92400e;         border-color: #fde68a; }
+.gi-tag-high    { background: var(--red-100);    color: #b91c1c;         border-color: #fca5a5; }
+.gi-tag-more    { background: var(--gray-100);   color: var(--gray-500); border-color: var(--gray-200); }
+
+.gi-warn {
+    margin-top: var(--sp-4); padding: var(--sp-3) var(--sp-4);
+    background: #fffbeb; border-left: 4px solid var(--yellow-500);
+    border-radius: var(--radius-sm); color: #92400e;
+    font-size: var(--fs-body); line-height: 1.8;
+}
+.gi-portion { margin-top: var(--sp-4); color: var(--gray-700); font-size: var(--fs-body); line-height: 1.8; }
+.gi-portion b { color: var(--gray-900); }
+
+/* 「档位之外」的提醒（R5 第 4 项收口 · 2026-10-20）
+   ------------------------------------------------------------
+   分工：
+     .gi-warn     这菜里有高升糖食材 → 黄底，讲「换成什么」
+     .gi-caution  档位低但油多     → 白底 + 橙色左边线，讲「为什么还是要少」
+   两张可能同时出现（红烧五花肉配土豆），底色必须不同，
+   否则用户会当成同一句话说了两遍。
+   ⚠️ 橙色是语义色（提示、非错误），高对比模式下也不调；深色主题下靠 --white / --border 自动适配。 */
+.gi-caution {
+    margin-top: var(--sp-4);
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--white);
+    border: var(--border-w) solid var(--border);
+    border-left: 4px solid #f59e0b;
+    border-radius: var(--radius-sm);
+    color: var(--gray-700);
+    font-size: var(--fs-body);
+    line-height: 1.8;
+}
+.gi-caution-head { color: #92400e; font-weight: 700; }
+.gi-caution-list { margin: var(--sp-2) 0 0 var(--sp-5); padding: 0; list-style: disc; }
+.gi-caution-list li { margin: 4px 0; }
+.gi-caution-tag {
+    display: inline-block; margin-left: 6px; padding: 0 8px;
+    border-radius: 999px; background: #fef3c7; color: #92400e;
+    font-size: var(--fs-note); font-weight: 600;
+}
+.gi-caution-body { margin-top: var(--sp-2); }
+.gi-consult {
+    margin-top: var(--sp-4); padding: var(--sp-3) var(--sp-4);
+    background: var(--blue-100); border-radius: var(--radius-sm);
+    color: #1e40af; font-size: var(--fs-body); line-height: 1.8;
+}
+.gi-muted { margin-top: var(--sp-3); color: var(--gray-500); font-size: var(--fs-note); line-height: 1.8; }
+.gi-note {
+    margin-top: var(--sp-4); padding-top: var(--sp-3);
+    border-top: 1px dashed var(--gray-200);
+    color: var(--gray-500); font-size: var(--fs-note); line-height: 1.8;
+}
+
+/* 「凭什么这么判」依据展开（R5 · 2026-10-20；2026-10-29 改为按钮 + 下拉）
+   ------------------------------------------------------------
+   原来 <details> 整行是点击区、又嵌在控糖提示卡片里，难点准也容易误触。
+   现在触发是一个独立的胶囊按钮 —— 只有按钮本身可点，展开后依据面板出现在它下面。
+   状态靠 [hidden] 控制：.gi-why-body 自己不许设 display（否则 [hidden] 失效）。 */
+.gi-why {
+    margin-top: var(--sp-4);
+}
+.gi-why-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    min-height: var(--tap-min);
+    padding: 0 var(--sp-4);
+    border: var(--border-w) solid var(--border-strong);
+    border-radius: var(--radius-pill);
+    background: #fff;
+    font-size: var(--fs-body);
+    font-weight: 500;
+    color: var(--gray-700);
+    cursor: pointer;
+}
+.gi-why-toggle:hover { background: var(--gray-50); }
+.gi-why-toggle:active { background: var(--gray-100); }
+.gi-why-toggle::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 0; height: 0;
+    border-left: 6px solid var(--gray-500);
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    transition: transform 0.15s ease;
+}
+.gi-why-toggle.is-open::before { transform: rotate(90deg); }
+.gi-why-toggle:focus-visible { outline: 2px solid var(--green-500); outline-offset: 2px; }
+
+.gi-why-body {
+    margin-top: var(--sp-2);
+    padding: var(--sp-3);
+    border: var(--border-w) solid var(--border);
+    border-radius: var(--radius);
+    background: var(--gray-50);
+}
+.gi-why-line {
+    margin: 0 0 var(--sp-2);
+    font-size: var(--fs-note);
+    color: var(--gray-600);
+    line-height: 1.9;
+}
+.gi-why-line b { color: var(--gray-800); }
+.gi-why-list { margin: var(--sp-2) 0 var(--sp-3); padding: 0; list-style: none; }
+.gi-why-list li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px var(--sp-2);
+    padding: 7px 0;
+    border-bottom: 1px dashed var(--gray-200);
+    font-size: var(--fs-note);
+    color: var(--gray-700);
+}
+.gi-why-list li:last-child { border-bottom: 0; }
+.gi-why-name { font-weight: 500; color: var(--gray-900); }
+.gi-why-val { font-variant-numeric: tabular-nums; color: var(--gray-800); }
+.gi-why-rel { color: var(--gray-400); }
+/* 与国标不一致、按家常做法修正过的那几味，单独一行说明，别混在数字后面 */
+.gi-why-adj { flex-basis: 100%; color: #92400e; }
+.gi-why-miss { color: var(--gray-500); }
+.gi-why-rule { color: var(--gray-500); }
+.gi-why-more { color: var(--gray-400); }
+
+@media (max-width: 640px) {
+    .gi-why-body { padding: var(--sp-2); }
+}
+
+/* ============================================================
+   「升糖标签是怎么来的」整页（R5 第 4 项 E，2026-10-20）
+   ------------------------------------------------------------
+   与 .gi-why 的分工：
+     .gi-why      详情页的展开层 —— 只说"这道菜这几味"凭什么
+     本块          整张表的交代 —— 出处、界线、与国标不一致的每一条
+   语汇沿用绿/灰，不引入新颜色；唯一例外是「我们取的那一档」用琥珀色，
+   因为它和国标档不一致，这里恰恰要点出分歧，不能混成同一种颜色。
+   ============================================================ */
+/* 这一页是"给人从头读到尾"的长文，不是仪表盘：
+   单栏、限宽、居中，行宽控制在 30 来个汉字，中老年用户不容易串行。 */
+.gi-method-page { max-width: 780px; margin: 0 auto; }
+.gi-method-title {
+    font-size: var(--fs-h1); font-weight: 700; color: var(--gray-900);
+    margin: var(--sp-3) 0 var(--sp-3);
+}
+.gi-method-lead {
+    font-size: var(--fs-body); color: var(--gray-700); line-height: 1.9;
+    margin-bottom: var(--sp-6);
+}
+.gi-method-lead b { color: var(--gray-900); }
+
+.gi-method-card {
+    background: var(--white);
+    border: var(--border-w) solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: var(--sp-5);
+    margin-bottom: var(--sp-4);
+}
+.gi-method-h2 {
+    font-size: var(--fs-h2); font-weight: 700; color: var(--gray-900);
+    margin-bottom: var(--sp-3);
+}
+.gi-method-p {
+    font-size: var(--fs-body); color: var(--gray-700); line-height: 1.9;
+    margin-bottom: var(--sp-2);
+}
+.gi-method-p b { color: var(--gray-900); }
+
+/* 三个数字：桌面三栏，手机竖排（数字大、说明小，先看到数） */
+.gi-method-stats {
+    list-style: none; margin: 0 0 var(--sp-3); padding: 0;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-3);
+}
+.gi-method-stats li {
+    background: var(--green-50);
+    border: var(--border-w) solid var(--green-200);
+    border-radius: var(--radius-sm);
+    padding: var(--sp-3);
+    text-align: center;
+}
+.gi-method-num {
+    display: block; font-size: var(--fs-num); font-weight: 700;
+    color: var(--green-800); line-height: 1.2;
+}
+.gi-method-unit {
+    display: block; margin-top: var(--sp-1);
+    font-size: var(--fs-note); color: var(--gray-600); line-height: 1.6;
+}
+.gi-method-note {
+    font-size: var(--fs-note); color: var(--gray-600); line-height: 1.9;
+    margin-top: var(--sp-3); padding-left: var(--sp-3);
+    border-left: 3px solid var(--gray-200);
+}
+
+/* 与国标不一致的条目：编号 + 名字 + 国标值 + 两个档位 + 理由 */
+.gi-method-conflicts { list-style: none; margin: var(--sp-3) 0 0; padding: 0; counter-reset: gic; }
+.gi-method-conflict {
+    position: relative;
+    padding: var(--sp-3) 0 var(--sp-3) var(--sp-6);
+    border-top: var(--border-w) dashed var(--border);
+}
+.gi-method-conflict:first-child { border-top: none; padding-top: 0; }
+.gi-method-conflict:first-child::before { top: 0; }
+.gi-method-conflict::before {
+    counter-increment: gic; content: counter(gic);
+    position: absolute; left: 0; top: var(--sp-3);
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--gray-100); color: var(--gray-600);
+    font-size: var(--fs-note); font-weight: 700;
+    text-align: center; line-height: 22px;
+}
+.gi-method-row-head {
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2);
+}
+.gi-method-food { font-size: var(--fs-h3); font-weight: 700; color: var(--gray-900); }
+.gi-method-gi {
+    font-size: var(--fs-note); color: var(--gray-600);
+    background: var(--gray-100); border-radius: var(--radius-pill); padding: 2px 10px;
+}
+.gi-method-tag {
+    font-size: var(--fs-note); color: #92400e;
+    background: #fef3c7; border-radius: var(--radius-pill); padding: 2px 10px;
+}
+.gi-method-verdict {
+    font-size: var(--fs-body); color: var(--gray-700);
+    margin: var(--sp-2) 0 var(--sp-1);
+}
+.gi-method-verdict b { color: var(--gray-900); }
+/* 选择器比 .gi-method-verdict b 多一个类，否则被上面那条盖掉 */
+.gi-method-verdict b.gi-method-ours { color: #b45309; }
+.gi-method-why { font-size: var(--fs-body); color: var(--gray-700); line-height: 1.9; }
+
+.gi-method-rules { margin: 0; padding-left: var(--sp-6); }
+.gi-method-rules li {
+    font-size: var(--fs-body); color: var(--gray-700); line-height: 1.9;
+    margin-bottom: var(--sp-2);
+}
+
+.gi-method-final {
+    background: var(--green-50);
+    border: var(--border-w) solid var(--green-200);
+    border-radius: var(--radius);
+    padding: var(--sp-4) var(--sp-5);
+}
+.gi-method-final p { font-size: var(--fs-body); color: var(--green-800); line-height: 1.9; }
+
+/* 详情页展开层底部：往下一层（整页说明）的入口 */
+.gi-why-more-link { margin-top: var(--sp-3); }
+.gi-why-more-link a {
+    color: var(--green-700); font-weight: 600;
+    text-decoration: underline; text-underline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+    .gi-method-stats { grid-template-columns: 1fr; }
+    .gi-method-card { padding: var(--sp-4); }
+    .gi-method-conflict { padding-left: var(--sp-5); }
+}
+
+/* ============================================================
+   社区食谱分享（R3，2026-10-16）
+   ------------------------------------------------------------
+   页面：广场 / 帖子详情 / 我的分享（templates/community/）
+   交互：点赞、收藏走 static/js/community.js（fetch，不刷新页面）
+   适老化：筛选用「整块可点的标签」而不是下拉框（老年人不好操作 select）；
+           筛选面板默认收起，只想随便看看的人不必先面对一堆条件；
+           点赞 / 收藏按钮 56px 起步，用色 + 粗体双重表达"已选中"。
+   ============================================================ */
+.community-container { max-width: var(--page-w); margin: 0; }
+.community-header { margin-bottom: var(--sp-5); }
+.community-sub { font-size: var(--fs-body); color: var(--gray-500); }
+
+/* ---- 筛选面板 ---- */
+.filter-panel {
+    background: var(--white); border: var(--border-w) solid var(--border);
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: var(--sp-3) var(--sp-4); margin-bottom: var(--sp-4);
+}
+.filter-panel summary {
+    cursor: pointer; font-size: var(--fs-h3); font-weight: 600; color: var(--gray-700);
+    min-height: var(--tap-min); display: flex; align-items: center;
+}
+.filter-panel summary::marker { color: var(--green-600); }
+.filter-rows { padding-top: var(--sp-3); }
+.filter-row { display: flex; gap: var(--sp-3); align-items: flex-start; margin-bottom: var(--sp-3); }
+.filter-row-name {
+    flex: 0 0 auto; width: 5.2em; padding-top: 12px;
+    font-size: var(--fs-body); color: var(--gray-600); font-weight: 600;
+}
+.filter-chips { display: flex; flex-wrap: wrap; gap: var(--tap-gap); }
+.filter-actions { padding-top: var(--sp-2); }
+
+/* 整块可点的筛选标签（不是小圆点，不用精准戳） */
+.chip {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: var(--tap-min); padding: 6px 18px;
+    border-radius: var(--radius-pill);
+    border: var(--border-w) solid var(--border-strong); background: var(--white);
+    color: var(--gray-700); font-size: var(--fs-body); font-weight: 500;
+    text-decoration: none !important; transition: var(--transition);
+}
+.chip:hover { border-color: var(--green-500); color: var(--green-700); background: var(--green-50); }
+.chip.is-on {
+    background: var(--green-700); border-color: var(--green-700);
+    color: var(--white); font-weight: 700;
+}
+.chip-sort { min-width: 6em; }
+
+/* ---- 排序 / 计数那条 ---- */
+.community-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: var(--tap-gap); margin-bottom: var(--sp-5);
+}
+.sort-chips { display: flex; gap: var(--tap-gap); }
+.community-bar-right { display: flex; align-items: center; gap: var(--tap-gap); }
+.result-count { font-size: var(--fs-body); color: var(--gray-500); }
+
+/* ---- 帖子卡片 ---- */
+.post-list { display: flex; flex-direction: column; gap: var(--sp-4); margin-bottom: var(--sp-5); }
+.post-card {
+    background: var(--white); border: var(--border-w) solid var(--border);
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: var(--card-pad); transition: var(--transition);
+}
+.post-card:hover { box-shadow: var(--shadow-md); }
+.post-card-title { font-size: var(--fs-h3); font-weight: 600; margin-bottom: var(--sp-2); }
+.post-card-title a { color: var(--gray-900); text-decoration: none !important; }
+.post-card-title a:hover { color: var(--green-700); }
+
+.post-tags { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin-bottom: var(--sp-2); }
+.post-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--green-50); border: 1px solid var(--green-200);
+    color: var(--green-800); border-radius: var(--radius-pill);
+    padding: 4px 14px; font-size: var(--fs-note); font-weight: 600;
+}
+.post-tag i { font-style: normal; color: var(--green-600); font-weight: 500; }
+
+.post-note { color: var(--gray-600); font-size: var(--fs-body); line-height: 1.8; margin-bottom: var(--sp-2); }
+.post-note-detail { margin-top: var(--sp-3); }
+.post-card-meta {
+    display: flex; flex-wrap: wrap; gap: var(--sp-4);
+    color: var(--gray-500); font-size: var(--fs-note); margin-bottom: var(--sp-3);
+}
+.post-mine {
+    background: var(--gray-100); color: var(--gray-600);
+    border-radius: var(--radius-pill); padding: 1px 10px;
+}
+.post-byline { display: flex; flex-wrap: wrap; gap: var(--sp-4); color: var(--gray-500); font-size: var(--fs-body); margin-top: var(--sp-2); }
+
+/* ---- 点赞 / 收藏按钮 ---- */
+.post-actions { display: flex; flex-wrap: wrap; gap: var(--tap-gap); align-items: center; }
+.post-actions-detail { margin-bottom: var(--sp-5); }
+.btn-action {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: var(--tap-min); padding: 8px 20px;
+    border-radius: var(--radius-sm); cursor: pointer;
+    border: var(--border-w) solid var(--border-strong); background: var(--white);
+    color: var(--gray-700); font-size: var(--fs-body); font-weight: 500;
+    font-family: inherit; transition: var(--transition);
+}
+.btn-action:hover { border-color: var(--green-500); color: var(--green-700); background: var(--green-50); }
+/* 已选中：底色 + 加粗 + 边框，三重表达（不只靠颜色，色弱用户也看得出来） */
+.btn-action.is-on {
+    background: var(--green-700); border-color: var(--green-700);
+    color: var(--white); font-weight: 700;
+}
+.btn-action.is-on .action-count { background: rgba(255, 255, 255, 0.25); color: var(--white); }
+.btn-action:disabled { opacity: 0.6; cursor: progress; }
+.action-icon { font-size: 1.15em; line-height: 1; }
+.action-count {
+    min-width: 2em; padding: 1px 8px; border-radius: var(--radius-pill);
+    background: var(--gray-100); color: var(--gray-700);
+    font-size: var(--fs-note); font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.btn-action-lg { padding: 10px 26px; font-size: var(--fs-h3); }
+
+.inline-form { display: inline-flex; align-items: center; gap: var(--tap-gap); margin: 0; }
+.btn-danger {
+    background: var(--white); border: var(--border-w) solid var(--red-500) !important;
+    color: #b91c1c !important;
+}
+.btn-danger:hover { background: var(--red-100); }
+.is-shared { border-color: var(--green-500) !important; color: var(--green-700) !important; }
+.is-disabled { opacity: 0.45; pointer-events: none; }
+
+/* 分享表单（详情页）：一行放下输入框 + 按钮
+   ⚠️ 按钮必须 flex:0 0 auto —— 默认 flex-shrink:1 会把按钮挤窄，
+      "📢 分享到社区"这种带图标的文案会被压出重叠。 */
+.share-form { display: flex; flex-wrap: wrap; gap: var(--tap-gap); align-items: center; }
+.share-form .btn { flex: 0 0 auto; }
+.share-note {
+    flex: 1 1 240px; min-width: 200px;
+    min-height: var(--tap-min); padding: 8px 16px;
+    border: var(--border-w) solid var(--border-strong); border-radius: var(--radius-sm);
+    font-size: var(--fs-body); font-family: inherit; color: var(--gray-800);
+    background: var(--white);
+}
+.share-note:focus { outline: none; border-color: var(--green-500); box-shadow: 0 0 0 3px var(--green-100); }
+
+/* ---- 翻页 ---- */
+.pager {
+    display: flex; align-items: center; justify-content: center;
+    flex-wrap: wrap; gap: var(--sp-4); margin-bottom: var(--sp-5);
+}
+.pager-now { font-size: var(--fs-body); color: var(--gray-600); font-weight: 600; }
+
+/* ---- 同类推荐 / 区块操作 ---- */
+.related-block { margin-top: var(--sp-6); }
+.related-hint { font-size: var(--fs-note); color: var(--gray-500); margin-bottom: var(--sp-4); }
+.section-actions { display: flex; flex-wrap: wrap; gap: var(--tap-gap); align-items: center; }
+.empty-hint { font-size: var(--fs-note) !important; }
+
+.community-disclaimer {
+    margin-top: var(--sp-6); padding-top: var(--sp-4);
+    border-top: 1px dashed var(--gray-200);
+    color: var(--gray-500); font-size: var(--fs-note); line-height: 1.8;
+}
+
+/* 点赞/收藏后的小提示（不打断操作，2 秒自动消失） */
+.community-toast {
+    position: fixed; left: 50%; bottom: 32px; transform: translate(-50%, 20px);
+    max-width: 80vw; padding: 14px 26px;
+    background: var(--gray-900); color: var(--white);
+    border-radius: var(--radius-pill); box-shadow: var(--shadow-lg);
+    font-size: var(--fs-body); opacity: 0; pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease; z-index: 3000;
+}
+.community-toast.show { opacity: 1; transform: translate(-50%, 0); }
+.community-toast.is-error { background: #b91c1c; }
+
+/* 高对比模式下卡片边界要看得清（与其它卡片同一条规矩） */
+html[data-contrast="high"] .post-card,
+html[data-contrast="high"] .filter-panel { border: var(--border-w) solid var(--border); }
+
+/* ---- 响应式 ---- */
+@media (max-width: 768px) {
+    /* 小屏折中：顶部导航项降到 48px（iOS / Android 公认的触摸最小基线）。
+       若仍用 56px，导航换行后会把手机首屏占掉太多；按钮与表单控件
+       在小屏**仍保持 56px**，这里只对顶部导航这一处让步。 */
+    .nav-menu { gap: 8px; }
+    .nav-menu a { padding: 6px 10px; font-size: 0.8rem; min-height: 48px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .info-row { grid-template-columns: 1fr; }
+    .quick-actions { flex-direction: column; }
+    .recipe-cards { grid-template-columns: 1fr; }
+    .meal-cards { grid-template-columns: 1fr; }
+    /* 手机上卡片是整宽，碳水徽章靠右会被推到很远的边上看着像没关系，
+       改成紧跟餐次名字。 */
+    .meal-type { justify-content: flex-start; }
+    .meal-carb { margin-left: var(--sp-2); }
+    .form-row { grid-template-columns: 1fr; }
+    .page-header { flex-direction: column; align-items: flex-start; }
+    .recipe-list-item { flex-direction: column; align-items: flex-start; }
+    .recipe-list-actions { margin-left: 0; margin-top: 12px; }
+    .auth-card { padding: 24px; }
+    /* 社区：筛选维度改成上下排列，避免维度名和标签挤在一行 */
+    .filter-row { flex-direction: column; gap: var(--sp-2); }
+    .filter-row-name { width: auto; padding-top: 0; }
+    .community-bar { flex-direction: column; align-items: flex-start; }
+    .post-card { padding: var(--sp-4); }
+    .share-note { min-width: 100%; }
+}
+
+@media (max-width: 480px) {
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .page-title { font-size: 1.4rem; }
+    /* 手机竖屏（390px 实测）：品牌 + 5 个导航项塞不进一行，会被压成一排小字。
+       改成两行——第一行品牌，第二行导航按可用宽度平分。 */
+    .nav-container { flex-wrap: wrap; row-gap: 2px; }
+    .nav-menu { width: 100%; justify-content: space-between; gap: 4px; }
+    .nav-menu a { padding: 6px 6px; }
+    /* 字号按钮在窄屏贴右侧边界，省下 12px 给品牌名 */
+    .a11y-quick { margin-right: 0; }
+    /* 三维度选项：5 个两字选项（早餐/午餐/晚餐/加餐/夜宵）在 390px 下会把
+       「夜宵」挤到第二行，收紧左右内边距和间距后可排成一行。 */
+    .choice-row { gap: 8px; }
+    .choice-body { padding: 6px 10px; }
+}
+
+/* ============================================================
+   跟随系统设置（适老化第 5 步，2026-11-01）
+   ------------------------------------------------------------
+   前四步（字号 / 间距 / 不靠颜色分辨 / 高对比手动开关）都得用户**在本站里
+   再设一遍**。可老人换了手机，多半已经在自己系统里把字调大、开了「增强
+   对比度」「减弱动态效果」—— 再让他到我们网站里找一遍开关，等于白设。
+   这里直接读系统的三条偏好：
+
+   1) prefers-reduced-motion: reduce
+      ← iOS「减弱动态效果」/ Android「移除动画」/ Windows 关「显示动画」
+      做法只有一条：把过渡与动画压到 0.01ms。**不用 display:none** ——
+      元素还得在，只是不再"动"。老年人对滑动、渐显、漂浮这类动效容易头晕。
+
+   2) prefers-contrast: more
+      ← iOS「增强对比度」/ Android「高对比度文字」/ Windows 对比度主题的一部分
+      与手动开关**完全同一套 token**（下面逐行对齐），不另维护第二份色表。
+      test_r1_settings.py 里有断言逐行比对两块，改一处忘另一处会直接红。
+
+   3) forced-colors: active
+      ← Windows 高对比度主题（强制配色）。这条与上面不同：浏览器会把颜色
+      **强制替换**成系统色盘，我们设的 background / border 全部失效。所以只做
+      "补救"，不跟系统抢：
+        · 自绘开关（假轨道 + 圆点）在强制色下会变成一片空白，而且看不出开没开
+          → 把真 checkbox 放出来，交给系统画；
+        · 补 outline / 描边，保证"能不能点""点没点中"看得出来。
+      ⚠️ 绝不用 forced-color-adjust: none 硬保住我们的配色 —— 那等于把用户
+         特意开的高对比主题关掉，是更严重的无障碍问题。
+
+   ⚠️ 手动开关优先：用户在本站里明确关掉高对比时写 data-contrast="normal"，
+      `:not([data-contrast="normal"])` 让系统偏好不再生效。这条靠 a11y.js 的
+      applyContrast() 配合，两边缺一条就变成"关不掉"。
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+@media (prefers-contrast: more) {
+    html:not([data-contrast="normal"]) {
+        --gray-400: #4b5563;
+        --gray-500: #374151;
+        --gray-600: #1f2937;
+        --gray-700: #111827;
+        --green-400: #15803d;
+        --green-600: #166534;
+        --green-700: #14532d;
+        --border-w: 2px;
+        --border: var(--border-hc);
+        --border-strong: #6b7280;
+    }
+    /* 与手动开关同一条规矩：原本只有阴影、没有描边的卡片补一条实线 */
+    html:not([data-contrast="normal"]) .a11y-card,
+    html:not([data-contrast="normal"]) .auth-card,
+    html:not([data-contrast="normal"]) .info-card,
+    html:not([data-contrast="normal"]) .recipe-list-item,
+    html:not([data-contrast="normal"]) .stat-card,
+    html:not([data-contrast="normal"]) .post-card,
+    html:not([data-contrast="normal"]) .filter-panel { border: var(--border-w) solid var(--border); }
+    /* 「粗体文本」也要跟着系统走，否则系统开了增强对比度只是变黑、笔画还是细的 */
+    html:not([data-contrast="normal"]) body { font-weight: 600; }
+}
+
+@media (forced-colors: active) {
+    /* 自绘开关在强制色下是一块空白：把真 checkbox 放出来，轨道收掉 */
+    .a11y-switch-input {
+        position: static; width: auto; height: auto;
+        opacity: 1; pointer-events: auto;
+        margin-right: var(--sp-3);
+        accent-color: Highlight;
+    }
+    .a11y-switch-track { display: none; }
+
+    /* 只靠底色表达的标签补描边（颜色被系统接管后，底色区分会消失） */
+    .metric-tag,
+    .risk-alert-tag,
+    .visit-tag,
+    .gi-badge,
+    .gi-tag { border: 1px solid CanvasText; }
+
+    /* :focus 上原来把 outline 关了（靠 box-shadow 画焦点框），
+       强制色下 box-shadow 不显示，必须把 outline 还回去 */
+    .a11y-range:focus { outline: 2px solid Highlight; outline-offset: 2px; }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { outline: 2px solid Highlight; outline-offset: 1px; }
+}
+
+/* ============================================================
+   第 6 步：大字号模式的布局降级（2026-11-01）
+   ------------------------------------------------------------
+   起因：40px 档下 390 宽时，① 「生成食谱」这类四字按钮在两列网格里被挤成两行；
+   ② 品牌 + 字号按钮 + 5 个导航项占掉 3 行，把正文顶出首屏。
+
+   判据**只能用 <html data-reading="xl">**，不能用媒体查询：
+   媒体查询读不到 --reading-size（字号是用户在我们站里选的，只有 JS 知道）。
+   a11y.js 在 ≥30px 时挂这个属性，所以极窄屏 + 默认字号仍是原来的两列。
+
+   ⚠️ 阈值 30 是实测定的：默认 20 / 中档 24 两档下，390 宽每格内宽约 137px，
+      「生成食谱」在 24px 档才 78px 宽，两列塞得下；到 30 档就要 93px + 48px
+      内边距，装不下就折行。宁可早一档降级，也别在 32 那一档挤成两行。
+   ============================================================ */
+
+/* 折叠导航按钮：平时不存在（不占位、不可聚焦），只有大字档 + 窄屏才出现 */
+.nav-toggle {
+    display: none; align-items: center; gap: 6px;
+    min-height: 48px; padding: 6px 14px;
+    /* 字号写 px 不写 rem —— rem 会乘 --reading-scale，按到 40px 时按钮自己胀成 35px+ */
+    font-size: 16px; font-weight: 600; font-family: inherit;
+    color: var(--gray-800); background: var(--white);
+    border: var(--border-w) solid var(--border-strong);
+    border-radius: var(--radius-sm); cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    /* 两列 → 单列。.stats-grid 在 768 与 480 两处都被设成两列，
+       这里靠更高的选择器权重压过去（不去改那两处，普通字号仍要两列）。 */
+    html[data-reading="xl"] .stats-grid,
+    html[data-reading="xl"] .recipe-cards,
+    html[data-reading="xl"] .meal-cards { grid-template-columns: 1fr; }
+
+    /* 三维度选项：两字选项在 30px 档下也要 60px 一个，5 个一行放不下，
+       与其挤成一团不如踏踏实实一行一个。 */
+    html[data-reading="xl"] .choice-row--even { grid-template-columns: 1fr; }
+
+    /* ---- 导航折叠 ---- */
+    html[data-reading="xl"] .nav-container { flex-wrap: wrap; }
+    html[data-reading="xl"] .nav-toggle { display: inline-flex; }
+    html[data-reading="xl"] .nav-menu { display: none; }
+    html[data-reading="xl"] .nav-menu.is-open {
+        display: flex; flex-direction: column; align-items: stretch;
+        width: 100%; justify-content: flex-start; gap: 0;
+        padding-top: var(--sp-2);
+    }
+    html[data-reading="xl"] .nav-menu.is-open > li { width: 100%; }
+    html[data-reading="xl"] .nav-menu.is-open a { display: block; width: 100%; }
+    /* 折叠后下拉不再是浮层，直接把子项摊开：
+       触屏上 hover/浮层最容易点错，老人也不知道浮层在哪一层。 */
+    html[data-reading="xl"] .nav-menu.is-open .nav-dd-menu {
+        display: flex; position: static; min-width: 0;
+        background: transparent; border: 0; box-shadow: none;
+        padding: 0 0 0 var(--sp-5);
+    }
+    /* 下拉的「▾」在摊开后没有意义，换成缩进即可 */
+    html[data-reading="xl"] .nav-menu.is-open .nav-dd-toggle { color: var(--gray-700); }
+}
+
+/* 设置页「已跟随系统设置」提示条 */
+.a11y-sys-note {
+    margin-top: var(--sp-2);
+    font-size: var(--fs-note);
+    color: var(--green-700);
+    background: var(--green-50);
+    border-left: 3px solid var(--green-600);
+    border-radius: var(--radius-sm);
+    padding: var(--sp-2) var(--sp-3);
+    line-height: 1.7;
+}
+.a11y-sys-note[hidden] { display: none; }

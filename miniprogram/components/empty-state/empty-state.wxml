@@ -1,0 +1,9 @@
+<!-- components/empty-state/empty-state.wxml -->
+<view class="empty-state">
+  <view class="empty-icon">{{icon || '📭'}}</view>
+  <view class="empty-title">{{title || '暂无数据'}}</view>
+  <view class="empty-desc">{{description || ''}}</view>
+  <button wx:if="{{actionText}}" class="btn btn-primary" bindtap="onAction">
+    {{actionText}}
+  </button>
+</view>

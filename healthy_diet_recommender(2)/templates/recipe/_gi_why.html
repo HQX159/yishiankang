@@ -1,0 +1,90 @@
+{# 升糖标签「凭什么这么判」—— 依据展开块（R5 第 4 项，2026-10-20）
+   ------------------------------------------------------------
+   为什么要有这个块
+     页面上一直写着「白米饭 · 高升糖」，但没有任何一句说明凭什么。
+     免责声明（"仅供参考"）不算依据：免责是在说"别全信我"，依据是在说"你可以验我"。
+
+   设计取舍
+     · 结论在上、依据在下。主层（徽标 / 食材标签）一个字不改，不把数字怼给中老年用户。
+     · 只有想核对的人才会点开这个面板 —— 所以里面可以密一点。
+     · 与国标不一致的食材**必须写出来**，不能只挂对自己有利的数字。
+
+   交互（2026-10-29 改）
+     · 原来 <details> 整行都是点击区、又嵌在卡片里，容易误触也难点准。
+     · 改成独立胶囊按钮（只有按钮本身可点）+ 点按钮才出现下拉面板。
+     · 状态靠 [hidden] 控制；.gi-why-body 自己不许设 display，否则 [hidden] 会失效。
+
+   依赖：`utils.diabetes_advice.build_advice()` 返回的 advice
+     gi_source_long / gi_boundary / gi_rows / gi_rows_more /
+     gi_unlisted_count / unmatched_count / gi_note / known
+   ⚠️ 两个页面共用（食谱详情页、社区帖子详情页）—— 改这里两边同时生效。 #}
+<div class="gi-why">
+    <button type="button" class="gi-why-toggle" aria-expanded="false">凭什么这么判？看依据</button>
+    <div class="gi-why-body" hidden>
+        <p class="gi-why-line"><b>依据：</b>{{ advice.gi_source_long }}</p>
+        <p class="gi-why-line"><b>档位界线：</b>{{ advice.gi_boundary }}。</p>
+
+        {% if advice.gi_rows %}
+        <p class="gi-why-line"><b>每味食材的国标值：</b></p>
+        <ul class="gi-why-list">
+            {% for it in advice.gi_rows %}
+            <li>
+                <span class="gi-why-name">{{ it.name }}</span>
+                <span class="gi-why-val">GI {{ it.gi_text }}</span>
+                {%- if it.gi_src == 'near' %}<span class="gi-why-rel">参考同类</span>{% endif %}
+                {%- if it.gi_conflict %}
+                <span class="gi-why-adj">按国标算{{ it.gi_tier_label }}档，我们按家常做法取{{ it.label }}</span>
+                {%- endif %}
+            </li>
+            {% endfor %}
+            {% if advice.gi_rows_more %}
+            <li class="gi-why-more">还有 {{ advice.gi_rows_more }} 味也有国标值，这里不逐一列出。</li>
+            {% endif %}
+        </ul>
+        {% endif %}
+
+        {% if advice.gi_unlisted_count %}
+        {# 「国标没有数值」≠「完全没认出来」。前者档位是给了的、只是没有数字可挂；
+           后者主层（gi-muted）已经说过一遍，这里不重复。 #}
+        <p class="gi-why-line gi-why-miss">
+            另有 {{ advice.gi_unlisted_count }} 味食材
+            {%- if advice.gi_unlisted_names %}（{{ advice.gi_unlisted_names | join('、') }}{% if advice.gi_unlisted_more %} 等 {{ advice.gi_unlisted_count }} 味{% endif %}）{% endif -%}
+            在国标 GI 表里没有数值 —— 它们的档位按常见 GI 资料定，这里不挂数字。
+        </p>
+        {% endif %}
+
+        {% if advice.known %}
+        <p class="gi-why-line gi-why-rule">
+            整道菜取最高的那一味：只要有一味是高升糖，整道菜就按高提醒。
+        </p>
+        {% endif %}
+        <p class="gi-why-line gi-why-rule">
+            GI 只说「升糖有多快」，不说「能不能多吃」：五花肉、腊肉这类升糖确实慢，
+            但脂肪和热量高，吃多了体重、血脂、胰岛素抵抗都会跟着变差 ——
+            所以档位低的菜也可能另给一条提醒，两件事分开说。
+        </p>
+        <p class="gi-why-line gi-why-rule">{{ advice.gi_note }}</p>
+
+        {# 这一层只说"这道菜这几味"。整张表凭什么、哪些条目和国标不一致，
+           在单独的说明页里 —— 想深究的人往下一层点，不想看的人不受打扰。 #}
+        <p class="gi-why-line gi-why-more-link">
+            <a href="{{ url_for('recipe.gi_method') }}">整张表是怎么来的、哪些地方和国标不一样 →</a>
+        </p>
+    </div>
+</div>
+<script>
+(function () {
+    document.querySelectorAll('.gi-why-toggle').forEach(function (btn) {
+        if (btn.dataset.giWhyBound) return;
+        btn.dataset.giWhyBound = '1';
+        btn.addEventListener('click', function () {
+            var body = btn.nextElementSibling;
+            if (!body || !body.classList.contains('gi-why-body')) return;
+            var opening = body.hasAttribute('hidden');
+            if (opening) { body.removeAttribute('hidden'); } else { body.setAttribute('hidden', ''); }
+            btn.setAttribute('aria-expanded', opening ? 'true' : 'false');
+            btn.classList.toggle('is-open', opening);
+        });
+    });
+})();
+</script>

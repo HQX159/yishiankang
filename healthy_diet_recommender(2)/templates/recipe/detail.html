@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+{% block title %}{{ recipe.title }} - 益食安康{% endblock %}
+
+{% block content %}
+<div class="recipe-detail-container">
+    <div class="recipe-detail-header">
+        <a href="{{ url_for('recipe.get_recipes') }}" class="back-link">← 返回食谱列表</a>
+        <h1 class="recipe-detail-title">{{ recipe.title }}</h1>
+        <div class="recipe-detail-meta">
+            <span>⏱ {{ recipe.cooking_time or '未知' }} 分钟</span>
+            <span>🍽 {{ recipe.servings or '—' }} 人份</span>
+            <span>📅 {{ recipe.created_at.strftime('%Y-%m-%d') }}</span>
+        </div>
+        {% include 'recipe/_tags.html' %}
+    </div>
+
+    <div class="recipe-detail-body">
+        <!-- 控糖提示（糖尿病专项）— 放在最前，让糖友不用翻就能看到 -->
+        {% if advice %}
+        <div class="recipe-section gi-advice">
+            <h2>🩸 控糖提示</h2>
+
+            <div class="gi-head">
+                <span class="gi-badge gi-badge-{{ advice.tier }}">{{ advice.tier_label }}</span>
+                <span class="gi-head-note">按食材的升糖快慢，给这道菜定的档</span>
+            </div>
+
+            {% if advice.known %}
+            <div class="gi-metrics">
+                <div class="gi-metric">
+                    <div class="gi-metric-value">{{ advice.carb_text }}</div>
+                    <div class="gi-metric-label">碳水 · 一人份粗估</div>
+                </div>
+                <div class="gi-metric">
+                    <div class="gi-metric-value">{{ advice.sugar_text }}</div>
+                    <div class="gi-metric-label">糖 · 一人份粗估</div>
+                </div>
+                <div class="gi-metric">
+                    <div class="gi-metric-value">{{ advice.food_items | length }} 种</div>
+                    <div class="gi-metric-label">认出的食材</div>
+                </div>
+            </div>
+
+            <div class="gi-tags">
+                {% for it in advice.food_items[:12] %}
+                <span class="gi-tag gi-tag-{{ it.tier }}">{{ it.name }} · {{ it.label }}</span>
+                {% endfor %}
+                {% if advice.food_items | length > 12 %}
+                <span class="gi-tag gi-tag-more">等 {{ advice.food_items | length }} 种</span>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            {# 「凭什么这么判」—— 结论在上，依据在下。与社区详情页共用同一片段。 #}
+            {% include 'recipe/_gi_why.html' %}
+
+            {% if advice.high_names %}
+            <p class="gi-warn">⚠️ 这道菜里有升糖较快的食材：<b>{{ advice.high_names | join('、') }}</b>。
+                能换就换成同类的低升糖食材（白米饭 → 杂粮饭，土豆 / 南瓜 → 山药、西兰花），这一餐会更稳。</p>
+            {% endif %}
+
+            <p class="gi-portion"><b>建议份量：</b>{{ advice.portion_text }}</p>
+
+            {# R5 第 4 项：档位之外的第二件事 ——「低升糖」不等于「可以多吃」。
+               与社区详情页共用同一片段（改一处两边生效）。 #}
+            {% include 'recipe/_gi_caution.html' %}
+
+            {% if advice.unmatched_count %}
+            <p class="gi-muted">另有 {{ advice.unmatched_count }} 项食材暂时没收录，
+                没有计入上面的估算。</p>
+            {% endif %}
+
+            {% if advice.consult %}
+            <p class="gi-consult">💬 {{ advice.consult_text }}</p>
+            {% endif %}
+
+            <p class="gi-note">{{ advice.note }}</p>
+        </div>
+        {% endif %}
+
+        <!-- 食材清单 — 卡片式网格 -->
+        <div class="recipe-section recipe-ingredients">
+            <h2>🥕 所需食材</h2>
+            <ul class="ingredient-list">
+                {% for line in recipe.ingredients.split('\n') %}
+                    {% set item = line.strip(' -•·*') %}
+                    {% if item %}
+                    <li class="ingredient-item">{{ item }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- 烹饪步骤 — 编号卡片 -->
+        {% if steps %}
+        <div class="recipe-section recipe-steps">
+            <h2>👨‍🍳 烹饪步骤</h2>
+            <ol class="step-list">
+                {% for step in steps %}
+                <li class="step-item">{{ step }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+        {% endif %}
+
+        <!-- 营养信息 — 四个数字 + 一句话 + 细节折叠 -->
+        {% if nut %}
+        <div class="recipe-section recipe-nutrition">
+            <h2>📊 营养信息</h2>
+
+            {% if nut.metrics %}
+            <div class="gi-metrics nut-metrics">
+                {% for m in nut.metrics %}
+                <div class="gi-metric">
+                    <div class="gi-metric-value">{{ m.value }}</div>
+                    <div class="gi-metric-label">{{ m.label }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            <p class="nut-source">一人份估算，按食材用量推算</p>
+            {% endif %}
+
+            {% if nut.highlight %}
+            <div class="nut-lead">
+                <span class="nut-lead-tag">{{ nut.highlight.label }}</span>
+                <p class="nut-lead-text">{{ nut.highlight.text }}</p>
+            </div>
+            {% elif nut.fallback %}
+            <p class="nut-lead-text">{{ nut.fallback }}</p>
+            {% endif %}
+
+            {# 血糖偏高的风险提示：不折叠，必须一眼看到 #}
+            {% if nut.notice %}
+            <p class="nut-notice">⚠️ {{ nut.notice }}</p>
+            {% endif %}
+
+            {% if nut.points %}
+            <details class="nut-more">
+                <summary>还有 {{ nut.points | length }} 条饮食说明</summary>
+                <ul class="nut-points">
+                    {% for p in nut.points %}
+                    <li>
+                        {% if p.label %}<span class="nut-point-tag">{{ p.label }}</span>{% endif %}
+                        {{ p.text }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </details>
+            {% endif %}
+
+            {% if nut.disclaimer %}
+            <p class="nut-disclaimer">{{ nut.disclaimer }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    {# 直接播放服务端中文 MP3，避免系统语音引擎静默失败。 #}
+    <div class="tts-player" id="ttsPlayer">
+        <div class="tts-controls">
+            <a class="btn btn-outline" id="ttsBtn" href="{{ url_for('tts.recipe_audio', recipe_id=recipe.id) }}" target="_blank" rel="noopener" data-audio-url="{{ url_for('tts.recipe_audio', recipe_id=recipe.id) }}">
+                🔊 朗读食谱
+            </a>
+            <label class="tts-rate" for="ttsRate">
+                <span class="tts-rate-label">语速</span>
+                <select id="ttsRate" class="tts-rate-select">
+                    <option value="0.75">慢</option>
+                    <option value="1" selected>正常</option>
+                    <option value="1.25">快</option>
+                </select>
+            </label>
+            <button class="btn btn-outline tts-stop" id="ttsStop" hidden>⏹ 停止</button>
+        </div>
+        <div class="tts-progress-container" id="progressContainer" style="display:none;">
+            <div class="tts-track"><div class="tts-track-fill" id="ttsFill"></div></div>
+            <span class="tts-time" id="ttsTime">0 / 0 句</span>
+        </div>
+        <audio id="ttsAudio" src="{{ url_for('tts.recipe_audio', recipe_id=recipe.id) }}" controls preload="none" playsinline style="width:100%;margin-top:12px;" aria-label="食谱语音播放器"></audio>
+        <p class="form-hint">可以直接点播放器的 ▶ 收听。若页面播放没有反应，<a href="{{ url_for('tts.recipe_audio', recipe_id=recipe.id) }}" target="_blank" rel="noopener">打开语音单独播放</a>。</p>
+        <div id="ttsStatus" class="tts-status" role="status" aria-live="polite" style="display:none;"></div>
+    </div>
+
+    <!-- 换一道 + 收藏 + 分享到社区 -->
+    <div class="recipe-detail-actions">
+        <button class="btn btn-outline" id="regenBtn"
+                data-regen-url="{{ url_for('recipe.regenerate_recipe', recipe_id=recipe.id) }}"
+                title="用同样的饮食目的、口味和用餐时间，再生成一道不一样的">
+            🔄 换一道
+        </button>
+
+        <button class="btn btn-outline" id="favBtn" data-recipe-id="{{ recipe.id }}">
+            ⭐ 收藏食谱
+        </button>
+
+        {% if share_post %}
+        {# 已经分享过：给个入口回社区看，不再重复提交 #}
+        <a class="btn btn-outline is-shared"
+           href="{{ url_for('community.post_detail', post_id=share_post.id) }}">✅ 已分享到社区</a>
+        {% else %}
+        <form method="post" action="{{ url_for('community.share') }}" class="share-form"
+              onsubmit="return confirm('要把这道菜分享到社区吗？其他用户可以看到它，也可以点赞和收藏。');">
+            <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
+            <input type="text" name="note" class="share-note" maxlength="200"
+                   placeholder="想说一句？可以不填" aria-label="分享语，可不填">
+            <button type="submit" class="btn btn-primary">📢 分享到社区</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/recipe-audio.js') }}?v=20261106-native-fallback"></script>
+<script>
+(function() {
+    // ---- 收藏按钮 ----
+    document.getElementById('favBtn').addEventListener('click', function() {
+        var btn = this;
+        var recipeId = btn.dataset.recipeId;
+        btn.disabled = true;
+        fetch('/api/recipes/favorites/' + recipeId, { method: 'POST' })
+        .then(function(res) { return res.json(); })
+        .then(function() {
+            btn.disabled = false;
+            btn.textContent = '⭐ 已收藏';
+            btn.classList.add('favorited');
+        })
+        .catch(function() { btn.disabled = false; });
+    });
+    // ---- 换一道：沿用原三维度重新生成，成功后跳到新食谱 ----
+    // 生成要 10~30 秒，所以必须先把按钮锁住并给出等待提示，否则用户会连点导致叠好几道。
+    var regenBtn = document.getElementById('regenBtn');
+    if (regenBtn) {
+        regenBtn.addEventListener('click', function() {
+            var btn = this;
+            var original = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = '⏳ 正在换一道…（约 10~30 秒）';
+
+            fetch(btn.dataset.regenUrl, { method: 'POST' })
+            .then(function(res) {
+                return res.json().then(function(data) {
+                    return { ok: res.ok, data: data || {} };
+                });
+            })
+            .then(function(r) {
+                // 三种情况都由服务端给出该去哪：
+                // 200 去新食谱 / 401 去登录页 / 409（健康风险拦截）去生成页看就医提示
+                if (r.data.redirect_url) {
+                    window.location.href = r.data.redirect_url;
+                    return;
+                }
+                btn.disabled = false;
+                btn.textContent = original;
+                alert(r.data.message || '换一道没成功，请稍后再试');
+            })
+            .catch(function() {
+                btn.disabled = false;
+                btn.textContent = original;
+                alert('网络错误，换一道没成功，请检查网络后重试');
+            });
+        });
+    }
+})();
+</script>
+{% endblock %}

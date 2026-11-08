@@ -1,0 +1,35 @@
+.result-text {
+  background: #f9fafb;
+  padding: 24rpx;
+  border-radius: 16rpx;
+  font-size: 26rpx;
+  line-height: 1.8;
+  color: #4b5563;
+  max-height: 600rpx;
+  overflow-y: auto;
+}
+
+/* 指标偏高（未到危险）时的单行提醒 */
+.risk-warn-bar {
+  display: flex;
+  align-items: flex-start;
+  background: #fffbeb;
+  border: 1rpx solid #fde68a;
+  border-left: 8rpx solid #f59e0b;
+  border-radius: 12rpx;
+  padding: 20rpx 24rpx;
+  margin-top: 32rpx;
+}
+
+.risk-warn-icon {
+  font-size: 30rpx;
+  line-height: 1.6;
+  margin-right: 12rpx;
+}
+
+.risk-warn-text {
+  flex: 1;
+  color: #92400e;
+  font-size: 26rpx;
+  line-height: 1.7;
+}

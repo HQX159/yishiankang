@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}AI 生成食谱 - 益食安康{% endblock %}
+
+{% block content %}
+<div class="generate-container">
+    <h1 class="page-title">🤖 AI 智能生成食谱</h1>
+    <p class="page-subtitle">基于您的血糖等健康指标和现有食材，为您量身定制适合的食谱</p>
+
+    {# 报告指标达危险水平：不生成食谱，改为提示就医（表单直接收起，避免反复点必然失败的按钮） #}
+    {% if risk and risk.blocked %}
+    {% include 'health/_risk_alert.html' %}
+    {% else %}
+    <div class="generate-card">
+        <form method="POST" action="{{ url_for('recipe.generate_recipe') }}"
+              class="generate-form" id="generateForm">
+            <div class="form-group">
+                <label for="query">您想吃什么？（可选）</label>
+                <textarea id="query" name="query" rows="3"
+                          placeholder="例如：推荐一个适合控糖的午餐、清淡少油的家常菜、想喝点汤...&#10;留空则由 AI 根据您的健康报告和食材自动推荐"></textarea>
+            </div>
+
+            {# ── R4：三个可选维度 ──────────────────────────────────────
+               三个都可以不选（不选=默认档），不会阻断生成。
+               单选做成整块可点的卡片：老年用户不用精准点中那个小圆圈，
+               每块高度走 --tap-min（56px）。 #}
+            <div class="form-group">
+                <label>🎯 饮食目的</label>
+                <div class="choice-row choice-row--even" role="radiogroup" aria-label="饮食目的">
+                    {% for key, label, hint in purposes %}
+                    <label class="choice">
+                        <input type="radio" name="purpose" value="{{ key }}"
+                               {% if preset.purpose == key %}checked{% endif %}>
+                        <span class="choice-body">
+                            <b>{{ label }}</b>
+                            <em>{{ hint }}</em>
+                        </span>
+                    </label>
+                    {% endfor %}
+                </div>
+                {% if purpose_inferred %}
+                <p class="choice-note">📄 已根据您的健康报告默认选择「控糖」，随时可以改。</p>
+                {% endif %}
+            </div>
+
+            {# 口味与用餐时间各占整行：放进两列栅格里时每个 chip 只剩 ~290px，
+               "夜宵"之类的会被挤到第二行，看着不齐。 #}
+            <div class="form-group">
+                <label>🍲 口味偏好</label>
+                <div class="choice-row" role="radiogroup" aria-label="口味偏好">
+                    {% for key, label in flavors %}
+                    <label class="choice">
+                        <input type="radio" name="flavor" value="{{ key }}"
+                               {% if preset.flavor == key %}checked{% endif %}>
+                        <span class="choice-body"><b>{{ label }}</b></span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>🕐 用餐时间</label>
+                <div class="choice-row" role="radiogroup" aria-label="用餐时间">
+                    {% for key, label in meal_times %}
+                    <label class="choice">
+                        <input type="radio" name="meal_time" value="{{ key }}"
+                               {% if preset.meal_time == key %}checked{% endif %}>
+                        <span class="choice-body"><b>{{ label }}</b></span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="generate-info">
+                <h3>🔍 AI 将综合分析以下信息：</h3>
+                <ul>
+                    <li>📄 您最新的健康报告（BMI、血糖、血脂、过敏史等）</li>
+                    <li>🧊 冰箱中现有的食材</li>
+                    <li>📚 内置营养学知识库</li>
+                </ul>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-lg" id="submitBtn">
+                ✨ 开始生成个性化食谱
+            </button>
+        </form>
+    </div>
+    {% endif %}
+</div>
+
+<!-- 加载遮罩 -->
+<div id="loadingOverlay" style="display:none;">
+    <div class="loading-card">
+        <div class="loading-spinner"></div>
+        <h2>🤖 AI 正在为您生成食谱...</h2>
+        <p>正在分析健康数据 + 食材 + 营养知识库，预计需要 5-15 秒</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// 被拦截时表单不渲染（页面只显示「建议就医」卡片），所以要判空
+var generateForm = document.getElementById('generateForm');
+if (generateForm) {
+    generateForm.addEventListener('submit', function() {
+        var btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.textContent = '⏳ AI 生成中...';
+        document.getElementById('loadingOverlay').style.display = 'flex';
+    });
+}
+</script>
+{% endblock %}

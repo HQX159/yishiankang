@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}收藏夹 - 益食安康{% endblock %}
+
+{% block content %}
+<div class="recipe-list-container">
+    <h1 class="page-title">⭐ 我的收藏</h1>
+    <p class="page-subtitle">您收藏的食谱，方便随时回顾</p>
+
+    {% if recipes %}
+    <div class="recipe-list">
+        {% for recipe in recipes %}
+        <div class="recipe-list-item">
+            <div class="recipe-list-info">
+                <h3>
+                    <a href="{{ url_for('recipe.get_recipe', recipe_id=recipe.id) }}">{{ recipe.title }}</a>
+                    {% set adv = advices.get(recipe.id) %}
+                    {% if adv %}<span class="gi-badge gi-badge-{{ adv.tier }}">{{ adv.tier_label }}</span>{% endif %}
+                </h3>
+                <p class="recipe-list-meta">
+                    ⏱ {{ recipe.cooking_time or '未知' }} 分钟 ·
+                    🍽 {{ recipe.servings or '—' }} 人份 ·
+                    📅 {{ recipe.created_at.strftime('%Y-%m-%d') }}
+                </p>
+                {% include 'recipe/_tags.html' %}
+                <p class="recipe-list-ingredients">
+                    🥕 {{ recipe.ingredients[:100] }}{% if recipe.ingredients|length > 100 %}...{% endif %}
+                </p>
+            </div>
+            <div class="recipe-list-actions">
+                <a href="{{ url_for('recipe.get_recipe', recipe_id=recipe.id) }}" class="btn btn-sm btn-outline">查看</a>
+                <button class="btn btn-sm btn-outline btn-unfav" data-recipe-id="{{ recipe.id }}">取消收藏</button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">⭐</div>
+        <h2>收藏夹还是空的</h2>
+        <p>在食谱详情页点击收藏按钮，您喜欢的食谱就会出现在这里</p>
+        <a href="{{ url_for('recipe.get_recipes') }}" class="btn btn-primary">浏览食谱</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.querySelectorAll('.btn-unfav').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        var recipeId = this.dataset.recipeId;
+        var item = this.closest('.recipe-list-item');
+        fetch('/api/recipes/favorites/' + recipeId, { method: 'DELETE' })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            item.style.opacity = '0';
+            setTimeout(function() { item.remove(); }, 300);
+        });
+    });
+});
+</script>
+{% endblock %}
